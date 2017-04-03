@@ -5,6 +5,7 @@ package gli
  */
 
 enum class Target {
+    INVALID,
     _1D,
     _1D_ARRAY,
     _2D,
@@ -15,7 +16,7 @@ enum class Target {
     CUBE,
     CUBE_ARRAY;
 
-    @JvmField val i = ordinal
+    @JvmField val i = ordinal - 1 // invalid -> -1
 
     val isTarget1d: Boolean by lazy { this == _1D || this == _1D_ARRAY }
     val isTargetArray: Boolean by lazy { this == _1D_ARRAY || this == _2D_ARRAY || this == CUBE_ARRAY }

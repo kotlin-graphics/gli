@@ -12,7 +12,8 @@ object detail {
 
     // ----- gl.inl -----
 
-    fun translate(swizzles: gli.Swizzles) = gl.Swizzles(tableS[swizzles.r], tableS[swizzles.g], tableS[swizzles.b], tableS[swizzles.a])
+    fun translate(swizzles: gli.Swizzles) =
+            gl.Swizzles(tableS[swizzles.r.i], tableS[swizzles.g.i], tableS[swizzles.b.i], tableS[swizzles.a.i])
 
     val FORMAT_PROPERTY_BGRA_FORMAT_BIT = 1 shl 0
     val FORMAT_PROPERTY_BGRA_TYPE_BIT = 1 shl 1

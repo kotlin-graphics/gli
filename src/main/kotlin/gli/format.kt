@@ -314,22 +314,33 @@ enum class Swizzle {
     @JvmField val i = ordinal
 
     companion object {
-        val first = RED
-        val channelFirst = RED
-        val channelLast = ALPHA
-        val last = ONE
+        fun of(i: Int) = values().find { it.i == i }!!
     }
 
-    fun isChannel() = this in channelFirst..channelLast
+    fun isChannel() = this in SWIZZLE_CHANNEL_FIRST .. SWIZZLE_CHANNEL_LAST
 }
 
 val FORMAT_FIRST = Format.RG4_UNORM_PACK8
 val FORMAT_LAST = Format.RG3B2_UNORM_PACK8
 val FORMAT_INVALID = -1
-val FORMAT_COUNT = Format.values().size
-val SWIZZLE_COUNT = Swizzle.values().size
+val FORMAT_COUNT = FORMAT_LAST.i - FORMAT_FIRST.i + 1
 
-class Swizzles(x: Int, y: Int, z: Int, w: Int) : Vec4i(x, y, z, w) {
-    constructor(x: Swizzle, y: Swizzle, z: Swizzle, w: Swizzle) : this(x.i, y.i, z.i, w.i)
+val SWIZZLE_FIRST = Swizzle.RED
+val SWIZZLE_LAST = Swizzle.ONE
+val SWIZZLE_CHANNEL_FIRST = Swizzle.RED
+val SWIZZLE_CHANNEL_LAST = Swizzle.ALPHA
+val SWIZZLE_COUNT = SWIZZLE_LAST.i - SWIZZLE_FIRST.i + 1
+
+class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
+    constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
+    constructor(s: Swizzle) : this(s, s, s, s)
+
+    operator fun get(i: Int) = when (i) {
+        0 -> r
+        1 -> g
+        2 -> b
+        3 -> a
+        else -> throw Error()
+    }
 }
 
