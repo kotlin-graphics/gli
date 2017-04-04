@@ -41,4 +41,14 @@ class Texture2dArray : Texture {
                     texture.baseLayer + baseLayer, texture.maxLayer + maxLayer,
                     texture.baseFace, texture.maxFace,
                     texture.baseLevel + baseLevel, texture.maxLevel + maxLevel)
+
+    operator fun get(layer: Int): Texture2d {
+
+        assert(layer < layers())
+
+        return Texture2d(this, format,
+                baseLayer + layer, baseLayer + layer,
+                baseFace, maxFace,
+                baseLevel, maxLevel)
+    }
 }

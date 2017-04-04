@@ -13,7 +13,7 @@ object detail {
     // ----- gl.inl -----
 
     fun translate(swizzles: gli.Swizzles) =
-            gl.Swizzles(tableS[swizzles.r.i], tableS[swizzles.g.i], tableS[swizzles.b.i], tableS[swizzles.a.i])
+            GL.Swizzles(tableS[swizzles.r.i], tableS[swizzles.g.i], tableS[swizzles.b.i], tableS[swizzles.a.i])
 
     val FORMAT_PROPERTY_BGRA_FORMAT_BIT = 1 shl 0
     val FORMAT_PROPERTY_BGRA_TYPE_BIT = 1 shl 1
@@ -292,9 +292,9 @@ object detail {
         table
     }
 
-    internal val tableS: Array<gl.Swizzle> by lazy {
+    internal val tableS: Array<GL.Swizzle> by lazy {
 
-        val table = arrayOf(gl.Swizzle.RED, gl.Swizzle.GREEN, gl.Swizzle.BLUE, gl.Swizzle.ALPHA, gl.Swizzle.ZERO, gl.Swizzle.ONE)
+        val table = arrayOf(GL.Swizzle.RED, GL.Swizzle.GREEN, GL.Swizzle.BLUE, GL.Swizzle.ALPHA, GL.Swizzle.ZERO, GL.Swizzle.ONE)
 
         if (table.size != SWIZZLE_COUNT)
             throw Error("GLI error: swizzle descriptor list doesn't match number of supported swizzles")

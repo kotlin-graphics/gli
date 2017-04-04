@@ -32,8 +32,17 @@ enum class Target {
 
     class TargetIterator(val targetRange: TargetRange) : Iterator<Target> {
         var current = targetRange.start
-        override fun next() = Target.values()[current.i + 1]
-        override fun hasNext() = current != CUBE_ARRAY
+        var done = false
+        override fun next(): Target {
+            val res = current
+            if (current == targetRange.endInclusive)
+                done = true
+            else
+                current = Target.values()[current.ordinal + 1]
+            return res
+        }
+
+        override fun hasNext() = if (done) false else current <= targetRange.endInclusive
     }
 }
 

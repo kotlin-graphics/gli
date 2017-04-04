@@ -31,7 +31,6 @@ class Storage {
     private var extent = Vec3i(0)
 
     private var data: ByteBuffer? = null
-    private var dataTmp: ByteBuffer? = null
 
     constructor()
     constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int) {
@@ -50,8 +49,7 @@ class Storage {
 
         val size = layerSize(0, faces - 1, 0, levels - 1) * layers
         val order = ByteOrder.nativeOrder()
-        data = ByteBuffer.allocateDirect(size).order(order)
-        dataTmp = ByteBuffer.allocateDirect(size).order(order)
+        data = ByteBuffer.allocate(size).order(order)
     }
 
     fun empty() = data == null
@@ -158,9 +156,10 @@ class Storage {
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         val offset = baseOffset(layer, face, level)
         val size = levelSize(level)
+        val res = ByteBuffer.allocate(size)
         for (i in 0..size)
-            dataTmp!![i] = data!![offset + i]
-        return dataTmp!!
+            res[i] = data!![offset + i]
+        return res
     }
 
     override fun equals(other: Any?): Boolean {

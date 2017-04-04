@@ -2,11 +2,11 @@ package gli
 
 import gli.detail.FORMAT_PROPERTY_BGRA_FORMAT_BIT
 import gli.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
-import gli.gl.ExternalFormat.*
-import gli.gl.InternalFormat.*
-import gli.gl.TypeFormat.*
+import gli.GL.ExternalFormat.*
+import gli.GL.InternalFormat.*
+import gli.GL.TypeFormat.*
 import glm.vec._4.Vec4i
-import gli.gl.ExternalFormat.NONE as NONE_
+import gli.GL.ExternalFormat.NONE as NONE_
 
 /**
  * Created by elect on 02/04/17.
@@ -14,7 +14,7 @@ import gli.gl.ExternalFormat.NONE as NONE_
 
 
 /**  Translation class to convert GLI enums into OpenGL values  */
-class gl(val profile: Profile) {
+class GL(val profile: Profile) {
 
     private val tableF: Array<FormatDesc>
 
@@ -309,20 +309,20 @@ class gl(val profile: Profile) {
         val isExternalBGRA = ((formatDesc.properties has FORMAT_PROPERTY_BGRA_FORMAT_BIT) && !profile.hasSwizzle)
                 || (formatDesc.properties has FORMAT_PROPERTY_BGRA_TYPE_BIT)
 
-        return detail.translate(if(isExternalBGRA) gli.Swizzles(swizzles.b, swizzles.g, swizzles.r, swizzles.a) else swizzles)
+        return detail.translate(if (isExternalBGRA) gli.Swizzles(swizzles.b, swizzles.g, swizzles.r, swizzles.a) else swizzles)
     }
 
-    private val tableT: Array<gl.Target> by lazy {
+    private val tableT: Array<GL.Target> by lazy {
         val table = arrayOf(
-                gl.Target._1D,
-                gl.Target._1D_ARRAY,
-                gl.Target._2D,
-                gl.Target._2D_ARRAY,
-                gl.Target._3D,
-                gl.Target.RECT,
-                gl.Target.RECT_ARRAY,
-                gl.Target.CUBE,
-                gl.Target.CUBE_ARRAY)
+                GL.Target._1D,
+                GL.Target._1D_ARRAY,
+                GL.Target._2D,
+                GL.Target._2D_ARRAY,
+                GL.Target._3D,
+                GL.Target.RECT,
+                GL.Target.RECT_ARRAY,
+                GL.Target.CUBE,
+                GL.Target.CUBE_ARRAY)
 
         if (table.size != TARGET_COUNT) throw Error("GLI error: target descriptor list doesn't match number of supported targets")
 
@@ -650,7 +650,23 @@ class gl(val profile: Profile) {
         val hasSwizzle: Boolean by lazy { this == ES30 || this == GL33 }
     }
 
-    class Swizzles(x: Swizzle, y: Swizzle, z: Swizzle, w: Swizzle) : Vec4i(x.i, y.i, z.i, w.i)
+    class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
+        //        constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
+        constructor(s: Swizzle) : this(s, s, s, s)
+
+        operator fun get(i: Int) = when (i) {
+            0 -> r
+            1 -> g
+            2 -> b
+            3 -> a
+            else -> throw Error()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            return if (other !is Swizzles) false
+            else true
+        }
+    }
 
     class Format(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val swizzle: Swizzles)
 }
