@@ -4,6 +4,8 @@ import glm.f
 import glm.vec._3.Vec3i
 import glm.glm
 import glm.i
+import glm.vec._1.Vec1i
+import glm.vec._2.Vec2i
 
 /**
  * Created by elect on 02/04/17.
@@ -11,4 +13,6 @@ import glm.i
 
 infix fun Int.has(b: Int) = (this and b) != 0
 
-fun levels(extent:Vec3i) = glm.log2(glm.compMax(extent).f).i
+fun levels(extent: Vec3i) = glm.log2(glm.compMax(extent).f).i
+fun levels(extent: Vec2i) = glm.log2(glm.compMax(extent).f).i
+fun levels(extent: Vec1i) = glm.log2(glm.compMax(extent).f).i

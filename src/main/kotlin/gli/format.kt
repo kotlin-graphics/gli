@@ -331,7 +331,7 @@ val SWIZZLE_CHANNEL_FIRST = Swizzle.RED
 val SWIZZLE_CHANNEL_LAST = Swizzle.ALPHA
 val SWIZZLE_COUNT = SWIZZLE_LAST.i - SWIZZLE_FIRST.i + 1
 
-class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
+data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
     constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
     constructor(s: Swizzle) : this(s, s, s, s)
 

@@ -55,6 +55,7 @@ class Storage {
     }
 
     fun empty() = data == null
+    fun notEmpty() = !empty()
 
     fun blockCount(level: Int): Vec3i {
         assert(level in 0 until levels)
@@ -67,19 +68,19 @@ class Storage {
     }
 
     fun size(): Int {
-        assert(!empty())
+        assert(notEmpty())
         return data!!.size
     }
 
     fun data(): ByteBuffer {
-        assert(!empty())
+        assert(notEmpty())
         return data!!
     }
 
     /** Compute the relative memory offset to access the data for a specific layer, face and level  */
     fun baseOffset(layer: Int, face: Int, level: Int): Int {
 
-        assert(!empty())
+        assert(notEmpty())
         assert(layer in 0 until layers && face in 0 until faces && level in 0 until levels)
 
         val layerSize = layerSize(0, faces - 1, 0, levels - 1)
@@ -120,7 +121,7 @@ class Storage {
                 val blockIndex = Vec3i(0, blockIndexY, blockIndexZ)
                 val offsetSrc = storageSrc.imageOffset(blockIndexSrc + blockIndex, storageSrc.extent(levelSrc)) * storageSrc.blockSize
                 val offsetDst = imageOffset(blockIndexDst + blockIndex, extent(levelDst)) * blockSize
-                for (i in 0 .. blockSize * blockCount.x)
+                for (i in 0..blockSize * blockCount.x)
                     data!![baseOffsetDst + offsetDst + i] = storageSrc.data!![baseOffsetSrc + offsetSrc + i]
             }
     }
@@ -157,8 +158,22 @@ class Storage {
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         val offset = baseOffset(layer, face, level)
         val size = levelSize(level)
-        for (i in 0 .. size)
+        for (i in 0..size)
             dataTmp!![i] = data!![offset + i]
         return dataTmp!!
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other !is Storage)
+            false
+        else
+            layers == other.layers &&
+                    faces == other.faces &&
+                    levels == other.levels &&
+                    blockSize == other.blockSize &&
+                    blockCount == other.blockCount &&
+                    blockExtend == other.blockExtend &&
+                    extent == other.extent &&
+                    data == other.data
     }
 }

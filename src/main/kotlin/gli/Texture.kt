@@ -2,7 +2,11 @@ package gli
 
 import glm.set
 import glm.vec._3.Vec3i
+import glm.vec._4.Vec4b
+import glm.vec._4.Vec4ub
 import java.nio.ByteBuffer
+import kotlin.reflect.KClass
+import gli.Swizzle.*
 
 /**
  * Created by GBarbieri on 03.04.2017.
@@ -33,7 +37,6 @@ open class Texture {
         private set
 
     var swizzles = Swizzles(Swizzle.ZERO)
-        private set
         get() {
             val formatSwizzle = format.formatInfo.swizzles
             return Swizzles(
@@ -42,6 +45,7 @@ open class Texture {
                     if (field.b.isChannel()) formatSwizzle[field.b.i] else field.b,
                     if (field.a.isChannel()) formatSwizzle[field.a.i] else field.a)
         }
+        private set
 
     /** Create an empty texture instance    */
     constructor()
@@ -55,9 +59,11 @@ open class Texture {
      * @param levels Number of images in the texture mipmap chain.
      * @param swizzles A mechanism to swizzle the components of a texture before they are applied according to the texture environment.
      */
-    constructor(target: Target, format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int,
-                swizzles: Swizzles = Swizzles(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA)) {
+    constructor(target: Target, format: Format, extent: Vec3i,
+                layers: Int, faces: Int, levels: Int,
+                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) {
 
+        storage = Storage(format, extent, layers, faces, levels)
         this.target = target
         this.format = format
         baseLayer = 0; maxLayer = layers - 1
@@ -76,10 +82,12 @@ open class Texture {
      * different compatible texture target and texture format.
      */
     constructor(texture: Texture, target: Target, format: Format,
-                baseLayer: Int, maxLayer: Int, baseFace: Int, maxFace: Int, baseLevel: Int, maxLevel: Int,
-                swizzles: Swizzles = Swizzles(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA)) {
+                baseLayer: Int, maxLayer: Int,
+                baseFace: Int, maxFace: Int,
+                baseLevel: Int, maxLevel: Int,
+                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) {
 
-        this.storage = texture.storage
+        this.storage = texture.storage  // TODO check
         this.target = target
         this.format = format
         this.baseLayer = baseLayer; this.maxLayer = maxLayer
@@ -101,7 +109,7 @@ open class Texture {
      * This texture object is effectively a texture view where the target and format can be reinterpreted
      * with a different compatible texture target and texture format.  */
     constructor(texture: Texture, target: Target, format: Format,
-                swizzles: Swizzles = Swizzles(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA)) {
+                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) {
 
         storage = texture.storage
         this.target = target
@@ -123,43 +131,50 @@ open class Texture {
     }
 
     fun empty() = storage?.empty() ?: true
+    fun notEmpty() = !empty()
 
     fun layers() = if (empty()) 0 else maxLayer - baseLayer + 1
     fun faces() = if (empty()) 0 else maxFace - baseFace + 1
     fun levels() = if (empty()) 0 else maxLevel - baseLayer + 1
 
     fun size(): Int {
-        assert(!empty())
+        assert(notEmpty())
         return storage!!.size()
     }
 
     fun size(level: Int): Int {
-        assert(!empty())
+        assert(notEmpty())
         assert(level in 0..levels())
         return storage!!.levelSize(level)
     }
 
     fun data(): ByteBuffer {
-        assert(!empty())
+        assert(notEmpty())
         return storage!!.data()
     }
 
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
-        assert((!empty()))
+        assert((notEmpty()))
         assert(layer >= 0 && layer < layers() && face >= 0 && face < faces() && level >= 0 && level < levels())
         return storage!!.data(layer, face, level)
     }
 
     fun extent(level: Int = 0): Vec3i {
-        assert(!empty())
+        assert(notEmpty())
         assert(level in 0 until levels())
         return storage!!.extent(level)
     }
 
     fun clear() {
         val data = data()
-        for (i in 0..data.capacity())
+        for (i in 0 until data.capacity())
             data[i] = 0
+    }
+
+    fun clear(texel: Vec4b) {
+        val data = data()
+        for (i in 0 until data.capacity())
+            data[i] = texel[i % Vec4b.length]
     }
 
     fun copy(textureSrc: Texture,
@@ -177,7 +192,30 @@ open class Texture {
         val dst = data()
         val offset = storage!!.baseOffset(layerDst, faceDst, levelDst)
         val src = textureSrc.data(layerSrc, faceSrc, levelSrc)
-        for (i in 0..size(levelDst))
+        for (i in 0 until size(levelDst))
             dst[offset + i] = src[i]
+    }
+
+    fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {
+        Vec4b::class, Vec4ub::class -> {
+            val texel = Vec4b()
+            val data = data()
+            for (i in 0 until data.capacity() step Vec4b.length) {
+                texel.put(data, i)
+                for (j in 0 until Vec4b.length)
+                    data[i + j] = texel[swizzles[j].i]
+            }
+        }
+        else -> throw Error("unsupported texel type")
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other !is Texture) false
+        else storage == other.storage &&
+                target == other.target && format == other.format &&
+                baseLayer == other.baseLayer && maxLayer == other.maxLayer &&
+                baseFace == other.baseFace && maxFace == other.maxFace &&
+                baseLevel == other.baseLevel && maxLevel == other.maxLevel &&
+                swizzles == other.swizzles
     }
 }
