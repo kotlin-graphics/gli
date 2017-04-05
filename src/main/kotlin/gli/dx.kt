@@ -15,7 +15,7 @@ import glm.vec._4.Vec4i
 object dx {
 
     fun translate(format: gli.Format): dx.Format {
-        if (format.i !in FORMAT_FIRST.i..FORMAT_LAST.i) throw Error()
+        assert(format.i in FORMAT_FIRST.i..FORMAT_LAST.i)
         return table[format.i - FORMAT_FIRST.i]
     }
 
@@ -24,7 +24,7 @@ object dx {
 
     fun find(fourCC: D3dfmt, format: DxgiFormat): gli.Format {
 
-        if (!(fourCC == DX10 || fourCC == GLI1)) throw Error()
+        assert(fourCC == DX10 || fourCC == GLI1)
 
         var result = FORMAT_INVALID
 
@@ -59,7 +59,7 @@ object dx {
 
     fun GLI_MAKEFOURCC(ch0: Char, ch1: Char, ch2: Char, ch3: Char) = ch3.i shl 24 or ch2.i shl 16 or ch1.i shl 8 or ch0.i
 
-    enum class D3dfmt(@JvmField val i: Int) {
+    enum class D3dfmt(val i: Int) {
 
         UNKNOWN(0),
 
@@ -159,10 +159,14 @@ object dx {
 
         GLI1(GLI_MAKEFOURCC('G', 'L', 'I', '1')),
 
-        FORCE_DWORD(0x7fffffff)
+        FORCE_DWORD(0x7fffffff);
+
+        companion object {
+            fun of(i: Int) = values().find { it.i == i }!!
+        }
     }
 
-    enum class Dxgi_format_dds(@JvmField val i: Int) {
+    enum class Dxgi_format_dds(val i: Int) {
         UNKNOWN(0),
         R32G32B32A32_TYPELESS(1),
         R32G32B32A32_FLOAT(2),
@@ -324,7 +328,11 @@ object dx {
         ASTC_12X10_UNORM_SRGB(183),
         ASTC_12X12_TYPELESS(185),
         ASTC_12X12_UNORM(186),
-        ASTC_12X12_UNORM_SRGB(187),
+        ASTC_12X12_UNORM_SRGB(187);
+
+        companion object {
+            fun of(i: Int) = values().find { it.i == i }!!
+        }
     }
 
     enum class Dxgi_format_gli {
@@ -461,13 +469,17 @@ object dx {
         RGBA_ATCA_UNORM_GLI,
         RGBA_ATCI_UNORM_GLI;
 
-        @JvmField val i = ordinal
+        val i = ordinal
     }
 
     class DxgiFormat {
 
-        var dds: Dxgi_format_dds = Dxgi_format_dds.UNKNOWN
-        var gli: Dxgi_format_gli = Dxgi_format_gli.UNKNOWN
+        var dds = Dxgi_format_dds.UNKNOWN
+        var gli = Dxgi_format_gli.UNKNOWN
+
+        constructor(i: Int) {
+            dds = Dxgi_format_dds.of(i)
+        }
 
         constructor(dds: Dxgi_format_dds) {
             this.dds = dds
@@ -478,7 +490,7 @@ object dx {
         }
     }
 
-    enum class Ddpf(@JvmField val i: Int) {
+    enum class Ddpf(val i: Int) {
         ALPHAPIXELS(0x1),
         ALPHA(0x2),
         FOURCC(0x4),
@@ -488,8 +500,12 @@ object dx {
         LUMINANCE_ALPHA(LUMINANCE.i or ALPHA.i),
         RGBAPIXELS(RGB.i or ALPHAPIXELS.i),
         RGBA(RGB.i or ALPHA.i),
-        LUMINANCE_ALPHAPIXELS(LUMINANCE.i or ALPHAPIXELS.i)
-    };
+        LUMINANCE_ALPHAPIXELS(LUMINANCE.i or ALPHAPIXELS.i);
+
+        companion object {
+            fun of(i: Int) = values().find { it.i == i }!!
+        }
+    }
 
     class Format(val ddPixelFormat: Ddpf, val d3DFormat: D3dfmt, val dxgiFormat: DxgiFormat, val mask: Vec4i) {
         constructor(ddPixelFormat: Ddpf, d3DFormat: D3dfmt, dxgiFormatDDS: Dxgi_format_dds, mask: Vec4i)
@@ -499,7 +515,7 @@ object dx {
                 : this(ddPixelFormat, d3DFormat, DxgiFormat(dxgiFormatGLI), mask)
     }
 
-    private val table: Array<Format> by lazy {
+    private val table by lazy {
         val table = arrayOf(
                 Format(FOURCC, GLI1, RG4_UNORM_GLI, Vec4i(0x000F, 0x00F0, 0x0000, 0x0000)), //FORMAT_RG4_UNORM,
                 Format(FOURCC, GLI1, RGBA4_UNORM_GLI, Vec4i(0x000F, 0x00F0, 0x0F00, 0xF000)), //FORMAT_RGBA4_UNORM,
@@ -743,8 +759,7 @@ object dx {
                 Format(FOURCC, GLI1, R3G3B2_UNORM_GLI, Vec4i(0x70, 0x38, 0xC0, 0x00))                                    //FORMAT_RG3B2_UNORM,
         )
 
-        if (table.size != FORMAT_COUNT)
-            throw Error("GLI error: format descriptor list doesn't match number of supported formats")
+        assert(table.size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" })
 
         table
     }

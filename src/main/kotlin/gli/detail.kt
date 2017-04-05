@@ -2,7 +2,10 @@ package gli
 
 import gli.Swizzle.*
 import gli.detail.Cap.*
+import glm.BYTES
 import glm.vec._3.Vec3i
+import glm.vec._4.Vec4i
+import java.nio.ByteBuffer
 
 /**
  * Created by elect on 02/04/17.
@@ -13,35 +16,37 @@ object detail {
     // ----- gl.inl -----
 
     fun translate(swizzles: gli.Swizzles) =
-            GL.Swizzles(tableS[swizzles.r.i], tableS[swizzles.g.i], tableS[swizzles.b.i], tableS[swizzles.a.i])
+            gl.Swizzles(tableS[swizzles.r.i], tableS[swizzles.g.i], tableS[swizzles.b.i], tableS[swizzles.a.i])
 
     val FORMAT_PROPERTY_BGRA_FORMAT_BIT = 1 shl 0
     val FORMAT_PROPERTY_BGRA_TYPE_BIT = 1 shl 1
 
     // ----- format.inl ------
 
-    enum class Cap(@JvmField val i: Int) {
-        COMPRESSED_BIT(1 shl 0),
-        COLORSPACE_SRGB_BIT(1 shl 1),
-        NORMALIZED_BIT(1 shl 2),
-        SCALED_BIT(1 shl 3),
-        UNSIGNED_BIT(1 shl 4),
-        SIGNED_BIT(1 shl 5),
-        INTEGER_BIT(1 shl 6),
-        FLOAT_BIT(1 shl 7),
-        DEPTH_BIT(1 shl 8),
-        STENCIL_BIT(1 shl 9),
-        SWIZZLE_BIT(1 shl 10),
-        LUMINANCE_ALPHA_BIT(1 shl 11),
-        PACKED8_BIT(1 shl 12),
-        PACKED16_BIT(1 shl 13),
-        PACKED32_BIT(1 shl 14),
-        DDS_GLI_EXT_BIT(1 shl 15)
+    enum class Cap {
+        COMPRESSED_BIT,
+        COLORSPACE_SRGB_BIT,
+        NORMALIZED_BIT,
+        SCALED_BIT,
+        UNSIGNED_BIT,
+        SIGNED_BIT,
+        INTEGER_BIT,
+        FLOAT_BIT,
+        DEPTH_BIT,
+        STENCIL_BIT,
+        SWIZZLE_BIT,
+        LUMINANCE_ALPHA_BIT,
+        PACKED8_BIT,
+        PACKED16_BIT,
+        PACKED32_BIT,
+        DDS_GLI_EXT_BIT;
+
+        val i = 1 shl ordinal
     }
 
     class FormatInfo(val blockSize: Int, val blockExtend: Vec3i, val component: Int, val swizzles: Swizzles, val flags: Int)
 
-    internal val tableF: Array<FormatInfo> by lazy {
+    internal val tableF by lazy {
 
         val table = arrayOf(
                 FormatInfo(1, Vec3i(1, 1, 1), 2, Swizzles(RED, GREEN, ZERO, ONE), PACKED8_BIT.i or NORMALIZED_BIT.i or UNSIGNED_BIT.i or DDS_GLI_EXT_BIT.i), //FORMAT_R4G4_UNORM,
@@ -286,19 +291,145 @@ object detail {
                 FormatInfo(1, Vec3i(1, 1, 1), 3, Swizzles(RED, GREEN, BLUE, ONE), PACKED8_BIT.i or NORMALIZED_BIT.i or UNSIGNED_BIT.i or DDS_GLI_EXT_BIT.i)                                        //FORMAT_RG3B2_UNORM_PACK8,
         )
 
-        if (table.size != FORMAT_COUNT)
-            throw Error("GLI error: format descriptor list doesn't match number of supported formats")
+        assert(table.size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" })
 
         table
     }
 
-    internal val tableS: Array<GL.Swizzle> by lazy {
+    internal val tableS by lazy {
 
-        val table = arrayOf(GL.Swizzle.RED, GL.Swizzle.GREEN, GL.Swizzle.BLUE, GL.Swizzle.ALPHA, GL.Swizzle.ZERO, GL.Swizzle.ONE)
+        val table = arrayOf(gl.Swizzle.RED, gl.Swizzle.GREEN, gl.Swizzle.BLUE, gl.Swizzle.ALPHA, gl.Swizzle.ZERO, gl.Swizzle.ONE)
 
-        if (table.size != SWIZZLE_COUNT)
-            throw Error("GLI error: swizzle descriptor list doesn't match number of supported swizzles")
+        assert(table.size == SWIZZLE_COUNT, { "GLI error: swizzle descriptor list doesn't match number of supported swizzles" })
 
         table
+    }
+
+    // ----- load_dds.inl ------
+
+    val FOURCC_DDS = charArrayOf('D', 'D', 'S', ' ')
+
+    enum class DdsCubemapFlag(val i: Int) {
+
+        CUBEMAP(0x00000200),
+        CUBEMAP_POSITIVEX(0x00000400),
+        CUBEMAP_NEGATIVEX(0x00000800),
+        CUBEMAP_POSITIVEY(0x00001000),
+        CUBEMAP_NEGATIVEY(0x00002000),
+        CUBEMAP_POSITIVEZ(0x00004000),
+        CUBEMAP_NEGATIVEZ(0x00008000),
+        VOLUME(0x00200000),
+        CUBEMAP_ALLFACES(CUBEMAP_POSITIVEX.i or CUBEMAP_NEGATIVEX.i or CUBEMAP_POSITIVEY.i or CUBEMAP_NEGATIVEY.i or
+                CUBEMAP_POSITIVEZ.i or CUBEMAP_NEGATIVEZ.i)
+    }
+
+    enum class DdsFlag(val i: Int) {
+        CAPS(0x00000001),
+        HEIGHT(0x00000002),
+        WIDTH(0x00000004),
+        PITCH(0x00000008),
+        PIXELFORMAT(0x00001000),
+        MIPMAPCOUNT(0x00020000),
+        LINEARSIZE(0x00080000),
+        DEPTH(0x00800000)
+    }
+
+    enum class DdsSurfaceFlag(val i: Int) {
+
+        COMPLEX(0x00000008),
+        MIPMAP(0x00400000),
+        TEXTURE(0x00001000)
+    }
+
+    class DdsPixelFormat(data: ByteBuffer) {
+
+        var size = data.int
+        var flags = data.int
+        var fourCC = data.int
+        var bpp = data.int
+        var mask = Vec4i(data.int, data.int, data.int, data.int)
+
+        companion object {
+            val SIZE = 4 * Int.BYTES + Vec4i.SIZE
+        }
+    }
+
+    class DdsHeader(data: ByteBuffer) {
+
+        val size = data.int
+        val flags = data.int
+        val height = data.int
+        val width = data.int
+        val pitch = data.int
+        val depth = data.int
+        val mipMapLevels = data.int
+        val reserved = (0 until 11).map { data.int }
+        val format = DdsPixelFormat(data)
+        val surfaceFlags = data.int
+        val cubemapFlags = data.int
+        val reserved2 = (0 until 3).map { data.int }
+
+        companion object {
+            val SIZE = (7 + 11 + 2 + 3) * Int.BYTES + DdsPixelFormat.SIZE
+        }
+
+        init {
+            assert(SIZE == 124, { "DDS Header size mismatch" })
+        }
+    }
+
+    enum class D3d10resourceDimension {
+        UNKNOWN,
+        BUFFER,
+        TEXTURE1D,
+        TEXTURE2D,
+        TEXTURE3D;
+
+        val i = ordinal
+    }
+
+    enum class D3d10resourceMiscFlag(val i: Int) {
+        GENERATE_MIPS(0x01),
+        SHARED(0x02),
+        TEXTURECUBE(0x04),
+        SHARED_KEYEDMUTEX(0x10),
+        GDI_COMPATIBLE(0x20)
+    }
+
+    enum class DdsAlphaMode {
+        UNKNOWN,
+        STRAIGHT,
+        PREMULTIPLIED,
+        OPAQUE,
+        CUSTOM;
+
+        val i = ordinal
+    }
+
+    class DdsHeader10(
+            var format: Int,
+            var resourceDimension: Int,
+            var miscFlag: Int, // D3D10_RESOURCE_MISC_GENERATE_MIPS
+            var arraySize: Int,
+            var alphaFlags: Int)  // Should be 0 whenever possible to avoid D3D utility library to fail
+    {
+
+        constructor() : this(
+                dx.Dxgi_format_dds.UNKNOWN.i,
+                D3d10resourceDimension.UNKNOWN.i,
+                0,
+                0,
+                DdsAlphaMode.UNKNOWN.i)
+
+        constructor(data: ByteBuffer) : this(data.int, data.int, data.int, data.int, data.int)
+    }
+
+    /** Some formats have multiple fourcc values. This function allows remapping to the default fourcc value of a format    */
+    fun remapFourCC(fourCC: Int) = when (fourCC) {
+        dx.D3dfmt.BC4U.i -> dx.D3dfmt.ATI1
+        dx.D3dfmt.BC4S.i -> dx.D3dfmt.AT1N
+        dx.D3dfmt.BC5U.i -> dx.D3dfmt.ATI2
+        dx.D3dfmt.BC5S.i -> dx.D3dfmt.AT2N
+        else -> dx.D3dfmt.of(fourCC)
     }
 }

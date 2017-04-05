@@ -6,7 +6,6 @@ import glm.vec._4.Vec4b
 import glm.vec._4.Vec4ub
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
-import gli.Swizzle.*
 
 /**
  * Created by GBarbieri on 03.04.2017.
@@ -61,7 +60,7 @@ open class Texture {
      */
     constructor(target: Target, format: Format, extent: Vec3i,
                 layers: Int, faces: Int, levels: Int,
-                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) {
+                swizzles: Swizzles = Swizzles()) {
 
         storage = Storage(format, extent, layers, faces, levels)
         this.target = target
@@ -85,7 +84,7 @@ open class Texture {
                 baseLayer: Int, maxLayer: Int,
                 baseFace: Int, maxFace: Int,
                 baseLevel: Int, maxLevel: Int,
-                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) {
+                swizzles: Swizzles = Swizzles()) {
 
         this.storage = texture.storage  // TODO check
         this.target = target
@@ -108,8 +107,7 @@ open class Texture {
     /** Create a texture object by sharing an existing texture storage_type from another texture instance.
      * This texture object is effectively a texture view where the target and format can be reinterpreted
      * with a different compatible texture target and texture format.  */
-    constructor(texture: Texture, target: Target, format: Format,
-                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) {
+    constructor(texture: Texture, target: Target, format: Format, swizzles: Swizzles = Swizzles()) {
 
         storage = texture.storage
         this.target = target

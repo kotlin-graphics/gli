@@ -256,50 +256,49 @@ enum class Format {
 
     RG3B2_UNORM_PACK8;
 
-    @JvmField val i = ordinal - 1   // INVALID -> -1
+    val i = ordinal - 1   // INVALID -> -1
 
     companion object {
-        fun of(i: Int) = values()[i]
+        fun of(i: Int) = values().find { it.i == i } ?: INVALID
     }
 
     fun isValid() = this in FORMAT_FIRST..FORMAT_LAST
 
     val formatInfo: detail.FormatInfo by lazy {
-        if (this !in FORMAT_FIRST..FORMAT_LAST) throw Error()
-        if (i == FORMAT_INVALID) throw Error()
+        assert(this in FORMAT_FIRST..FORMAT_LAST)
         tableF[i - FORMAT_FIRST.i]
     }
 
-    val bitsPerPixel: Int by lazy { formatInfo.blockSize * 8 / (formatInfo.blockExtend.x * formatInfo.blockExtend.y * formatInfo.blockExtend.z) }
+    val bitsPerPixel by lazy { formatInfo.blockSize * 8 / (formatInfo.blockExtend.x * formatInfo.blockExtend.y * formatInfo.blockExtend.z) }
 
-    val isCompressed: Boolean by lazy { formatInfo.flags has COMPRESSED_BIT.i }
-    val isS3tcCompressed: Boolean by lazy { this in RGB_DXT1_UNORM_BLOCK8..RGBA_DXT5_SRGB_BLOCK16 }
+    val isCompressed by lazy { formatInfo.flags has COMPRESSED_BIT.i }
+    val isS3tcCompressed by lazy { this in RGB_DXT1_UNORM_BLOCK8..RGBA_DXT5_SRGB_BLOCK16 }
 
-    val isSrgb: Boolean by lazy { formatInfo.flags has COLORSPACE_SRGB_BIT.i }
+    val isSrgb by lazy { formatInfo.flags has COLORSPACE_SRGB_BIT.i }
 
-    val blockSize: Int by lazy { formatInfo.blockSize }
-    val blockExtend: Vec3i by lazy { formatInfo.blockExtend }
+    val blockSize by lazy { formatInfo.blockSize }
+    val blockExtend by lazy { formatInfo.blockExtend }
 
-    val componentCount: Int by lazy { formatInfo.component }
+    val componentCount by lazy { formatInfo.component }
 
-    val isUnsigned: Boolean by lazy { formatInfo.flags has UNSIGNED_BIT.i }
-    val isSigned: Boolean by lazy { formatInfo.flags has SIGNED_BIT.i }
+    val isUnsigned by lazy { formatInfo.flags has UNSIGNED_BIT.i }
+    val isSigned by lazy { formatInfo.flags has SIGNED_BIT.i }
 
-    val isInteger: Boolean by lazy { formatInfo.flags has INTEGER_BIT.i }
-    val isSignedInteger: Boolean by lazy { isInteger && isSigned }
-    val isUnsignedInteger: Boolean by lazy { isInteger && isUnsigned }
+    val isInteger by lazy { formatInfo.flags has INTEGER_BIT.i }
+    val isSignedInteger by lazy { isInteger && isSigned }
+    val isUnsignedInteger by lazy { isInteger && isUnsigned }
 
-    val isFloat: Boolean by lazy { formatInfo.flags has FLOAT_BIT.i }
+    val isFloat by lazy { formatInfo.flags has FLOAT_BIT.i }
 
-    val isNormalized: Boolean by lazy { formatInfo.flags has NORMALIZED_BIT.i }
-    val isUnorm: Boolean by lazy { isNormalized && isUnsigned }
-    val isSnorm: Boolean by lazy { isNormalized && isSigned }
+    val isNormalized by lazy { formatInfo.flags has NORMALIZED_BIT.i }
+    val isUnorm by lazy { isNormalized && isUnsigned }
+    val isSnorm by lazy { isNormalized && isSigned }
 
-    val isPacked: Boolean by lazy { (formatInfo.flags has PACKED8_BIT.i) || (formatInfo.flags has PACKED16_BIT.i) || (formatInfo.flags has PACKED32_BIT.i) }
+    val isPacked by lazy { (formatInfo.flags has PACKED8_BIT.i) || (formatInfo.flags has PACKED16_BIT.i) || (formatInfo.flags has PACKED32_BIT.i) }
 
-    val isDepth: Boolean by lazy { formatInfo.flags has DEPTH_BIT.i }
-    val isStencil: Boolean by lazy { formatInfo.flags has STENCIL_BIT.i }
-    val isDepthStencil: Boolean by lazy { isDepth && isStencil }
+    val isDepth by lazy { formatInfo.flags has DEPTH_BIT.i }
+    val isStencil by lazy { formatInfo.flags has STENCIL_BIT.i }
+    val isDepthStencil by lazy { isDepth && isStencil }
 
 
     operator fun rangeTo(that: Format): FormatRange = FormatRange(this, that)
@@ -334,13 +333,13 @@ enum class Swizzle {
     ZERO,
     ONE;
 
-    @JvmField val i = ordinal
+    val i = ordinal
 
     companion object {
         fun of(i: Int) = values().find { it.i == i }!!
     }
 
-    fun isChannel() = this in SWIZZLE_CHANNEL_FIRST .. SWIZZLE_CHANNEL_LAST
+    fun isChannel() = this in SWIZZLE_CHANNEL_FIRST..SWIZZLE_CHANNEL_LAST
 }
 
 val FORMAT_FIRST = Format.RG4_UNORM_PACK8
@@ -357,6 +356,7 @@ val SWIZZLE_COUNT = SWIZZLE_LAST.i - SWIZZLE_FIRST.i + 1
 data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
     constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
     constructor(s: Swizzle) : this(s, s, s, s)
+    constructor() : this(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA)
 
     operator fun get(i: Int) = when (i) {
         0 -> r

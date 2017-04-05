@@ -1,7 +1,6 @@
 package gli
 
 import glm.vec._3.Vec3i
-import gli.Swizzle.*
 
 /**
  * Created by GBarbieri on 04.04.2017.
@@ -14,11 +13,11 @@ class Texture3d : Texture {
     constructor() : super()
 
     /** Create a texture3d and allocate a new storage_linear.   */
-    constructor(format: Format, extent: Vec3i, levels: Int, swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) :
+    constructor(format: Format, extent: Vec3i, levels: Int, swizzles: Swizzles = Swizzles()) :
             super(Target._3D, format, extent, 1, 1, levels, swizzles)
 
     /** Create a texture3d and allocate a new storage_linear with a complete mipmap chain.  */
-    constructor(format: Format, extent: Vec3i, swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) :
+    constructor(format: Format, extent: Vec3i, swizzles: Swizzles = Swizzles()) :
             super(Target._3D, format, extent, 1, 1, gli.levels(extent), swizzles)
 
     /** Create a texture3d view with an existing storage_linear.    */
@@ -29,7 +28,7 @@ class Texture3d : Texture {
                 baseLayer: Int, maxLayer: Int,
                 baseFace: Int, maxFace: Int,
                 baseLevel: Int, maxLevel: Int,
-                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) :
+                swizzles: Swizzles = Swizzles()) :
             super(texture, Target._3D, format, baseLayer, maxLayer, baseFace, maxFace, baseLevel, maxLevel, swizzles)
 
     /** Create a texture3d view, reference a subset of an existing texture3d instance.  */

@@ -1,8 +1,7 @@
 package gli
 
-import glm.vec._3.Vec3i
-import gli.Swizzle.*
 import glm.vec._2.Vec2i
+import glm.vec._3.Vec3i
 
 /**
  * Created by GBarbieri on 04.04.2017.
@@ -15,11 +14,11 @@ class TextureCube : Texture {
     constructor() : super()
 
     /** Create a textureCube and allocate a new storage_linear.   */
-    constructor(format: Format, extent: Vec2i, levels: Int, swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) :
+    constructor(format: Format, extent: Vec2i, levels: Int, swizzles: Swizzles = Swizzles()) :
             super(Target.CUBE, format, Vec3i(extent, 1), 1, 6, levels, swizzles)
 
     /** Create a textureCube and allocate a new storage_linear with a complete mipmap chain.  */
-    constructor(format: Format, extent: Vec2i, swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) :
+    constructor(format: Format, extent: Vec2i, swizzles: Swizzles = Swizzles()) :
             super(Target.CUBE, format, Vec3i(extent, 1), 1, 6, gli.levels(extent), swizzles)
 
     /** Create a textureCube view with an existing storage_linear.    */
@@ -30,7 +29,7 @@ class TextureCube : Texture {
                 baseLayer: Int, maxLayer: Int,
                 baseFace: Int, maxFace: Int,
                 baseLevel: Int, maxLevel: Int,
-                swizzles: Swizzles = Swizzles(RED, GREEN, BLUE, ALPHA)) :
+                swizzles: Swizzles = Swizzles()) :
             super(texture, Target.CUBE, format, baseLayer, maxLayer, baseFace, maxFace, baseLevel, maxLevel, swizzles)
 
     /** Create a textureCube view, reference a subset of an existing textureCube instance.  */
