@@ -24,7 +24,17 @@ class coreGL :StringSpec() {
             formatA.type shouldBe GL.TypeFormat.U8
 
             // Swizzle is not supported by KTX, so we always return the constant default swizzle
-            formatA.swizzle shouldBe GL.Swizzles(GL.Swizzle.RED, GL.Swizzle.BLUE, GL.Swizzle.GREEN, GL.Swizzle.ALPHA)
+            formatA.swizzle shouldBe GL.Swizzles(GL.Swizzle.RED, GL.Swizzle.GREEN, GL.Swizzle.BLUE, GL.Swizzle.ALPHA)
+
+            val textureB = Texture2d(Format.BGR8_UNORM_PACK8, Vec2i(2), 1, Swizzles(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA))
+            val formatB = gl.translate(textureB.format, textureB.swizzles)
+
+            formatB.internal shouldBe GL.InternalFormat.RGB8_UNORM
+            formatB.external shouldBe GL.ExternalFormat.BGR
+            formatB.type shouldBe GL.TypeFormat.U8
+
+            // Swizzle is not supported by KTX, so we always return the constant default swizzle
+            formatA.swizzle shouldBe GL.Swizzles(GL.Swizzle.RED, GL.Swizzle.GREEN, GL.Swizzle.BLUE, GL.Swizzle.ALPHA)
         }
     }
 }

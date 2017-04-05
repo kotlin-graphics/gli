@@ -1,11 +1,10 @@
 package gli
 
-import gli.detail.FORMAT_PROPERTY_BGRA_FORMAT_BIT
-import gli.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
 import gli.GL.ExternalFormat.*
 import gli.GL.InternalFormat.*
 import gli.GL.TypeFormat.*
-import glm.vec._4.Vec4i
+import gli.detail.FORMAT_PROPERTY_BGRA_FORMAT_BIT
+import gli.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
 import gli.GL.ExternalFormat.NONE as NONE_
 
 /**
@@ -650,8 +649,8 @@ class GL(val profile: Profile) {
         val hasSwizzle: Boolean by lazy { this == ES30 || this == GL33 }
     }
 
-    class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
-        //        constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
+    data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
+//        constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
         constructor(s: Swizzle) : this(s, s, s, s)
 
         operator fun get(i: Int) = when (i) {
@@ -662,10 +661,10 @@ class GL(val profile: Profile) {
             else -> throw Error()
         }
 
-        override fun equals(other: Any?): Boolean {
-            return if (other !is Swizzles) false
-            else true
-        }
+//        override fun equals(other: Any?): Boolean {
+//            return if (other !is Swizzles) false
+//            else true
+//        }
     }
 
     class Format(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val swizzle: Swizzles)
