@@ -7,6 +7,9 @@ import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import glm.glm
+import glm.set
+import java.nio.ByteOrder
+import glm.vec._3.Vec3i
 
 /**
  * Created by GBarbieri on 05.04.2017.
@@ -16,15 +19,14 @@ import glm.glm
 /** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure. */
 fun loadDDS(uri: URI): Texture {
 
-//        FileInputStream fileInputStream = new FileInputStream(file);
-//        FileChannel fileChannel = fileInputStream . getChannel ();
-
     val channel = RandomAccessFile(File(uri), "r").channel
     val buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size())
 
-    loadDDS(buffer)
+    val texture = loadDDS(buffer.order(ByteOrder.nativeOrder()))
 
-    return Texture()
+    channel.close()
+
+    return texture
 }
 
 /** Loads a texture storage_linear from DDS file. Returns an empty storage_linear in case of failure.   */
@@ -101,14 +103,77 @@ fun loadDDS(data: ByteBuffer): Texture {
             }
         else if ((flags has dx.Ddpf.FOURCC.i) && (fourCC != dx.D3dfmt.DX10.i) && (fourCC != dx.D3dfmt.GLI1.i))
             dx.find(detail.remapFourCC(fourCC))
-        else if(fourCC == dx.D3dfmt.DX10.i || fourCC == dx.D3dfmt.GLI1.i)
+        else if (fourCC == dx.D3dfmt.DX10.i || fourCC == dx.D3dfmt.GLI1.i)
             dx.find(dx.D3dfmt.of(fourCC), dx.DxgiFormat(header10.format))
         else throw Error()
-
-        val mipMapCount = if(header.flags has detail.DdsFlag.MIPMAPCOUNT.i) header.mipMapLevels else 1
-        var faceCount = 1
-//        if(header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP.i)
-//            faceCount =
     }
-    return Texture()
+
+    val mipMapCount = if (header.flags has detail.DdsFlag.MIPMAPCOUNT.i) header.mipMapLevels else 1
+    var faceCount = 1
+    if (header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP.i)
+        faceCount = glm.bitCount(header.cubemapFlags and detail.DdsCubemapFlag.CUBEMAP_ALLFACES.i)
+
+    var depthCount = 1
+    if (header.cubemapFlags has detail.DdsCubemapFlag.VOLUME.i)
+        depthCount = header.depth
+
+    val texture = Texture(getTarget(header, header10), format, Vec3i(header.width, header.height, depthCount),
+            glm.max(header10.arraySize, 1), faceCount, mipMapCount)
+
+    assert(data.capacity() == data.position() + texture.size())
+
+    repeat(texture.size()) { texture.data()[it] = data.get()}
+
+    return texture
 }
+
+fun getTarget(header: detail.DdsHeader, header10: detail.DdsHeader10) = when {
+
+    header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP.i ->
+        if (header10.arraySize > 1) Target.CUBE_ARRAY
+        else Target.CUBE
+
+    header10.arraySize > 1 ->
+        if (header.flags has detail.DdsFlag.HEIGHT.i) Target._2D_ARRAY
+        else Target._1D_ARRAY
+
+    header10.resourceDimension == detail.D3d10resourceDimension.TEXTURE1D.i -> Target._1D
+
+    header10.resourceDimension == detail.D3d10resourceDimension.TEXTURE3D.i || (header.flags has detail.DdsFlag.DEPTH.i)
+            || (header.cubemapFlags has detail.DdsCubemapFlag.VOLUME.i) -> Target._3D
+
+    else -> Target._2D
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

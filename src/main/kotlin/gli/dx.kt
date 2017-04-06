@@ -28,20 +28,19 @@ object dx {
 
         var result = FORMAT_INVALID
 
-        for (formatIndex in FORMAT_FIRST.i..FORMAT_LAST.i) {
+        for (currentFormat in FORMAT_FIRST..FORMAT_LAST) {
 
-            val currentFormat = gli.Format.of(formatIndex)
             val info = currentFormat.formatInfo
 
-            val dxFormat = table[formatIndex - FORMAT_FIRST.i]
+            val dxFormat = table[currentFormat.i - FORMAT_FIRST.i]
 
             if (fourCC == GLI1 && (info.flags has detail.Cap.DDS_GLI_EXT_BIT.i) && dxFormat.dxgiFormat.gli == format.gli) {
-                result = formatIndex
+                result = currentFormat.i
                 break
             }
 
-            if (fourCC == DX10 && (info.flags has detail.Cap.DDS_GLI_EXT_BIT.i) && dxFormat.dxgiFormat.dds == format.dds) {
-                result = formatIndex
+            if (fourCC == DX10 && (info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT.i) && dxFormat.dxgiFormat.dds == format.dds) {
+                result = currentFormat.i
                 break
             }
         }
@@ -57,7 +56,7 @@ object dx {
         return ((dxFormat.ddPixelFormat.i has FOURCC.i) && dxFormat.d3DFormat == GLI1) || (target.isTargetArray || target.isTarget1d) && useDdsExt
     }
 
-    fun GLI_MAKEFOURCC(ch0: Char, ch1: Char, ch2: Char, ch3: Char) = ch3.i shl 24 or ch2.i shl 16 or ch1.i shl 8 or ch0.i
+    fun GLI_MAKEFOURCC(ch0: Char, ch1: Char, ch2: Char, ch3: Char) = (ch3.i shl 24) or (ch2.i shl 16) or (ch1.i shl 8) or ch0.i
 
     enum class D3dfmt(val i: Int) {
 
@@ -470,24 +469,21 @@ object dx {
         RGBA_ATCI_UNORM_GLI;
 
         val i = ordinal
+
+        companion object {
+            fun of(i: Int) = Dxgi_format_dds.values().find { it.i == i }!!
+        }
     }
 
-    class DxgiFormat {
+    class DxgiFormat(var i: Int = Dxgi_format_dds.UNKNOWN.i) {
 
-        var dds = Dxgi_format_dds.UNKNOWN
-        var gli = Dxgi_format_gli.UNKNOWN
+        val dds
+            get() = Dxgi_format_dds.of(i)
+        val gli
+            get() = Dxgi_format_gli.of(i)
 
-        constructor(i: Int) {
-            dds = Dxgi_format_dds.of(i)
-        }
-
-        constructor(dds: Dxgi_format_dds) {
-            this.dds = dds
-        }
-
-        constructor(gli: Dxgi_format_gli) {
-            this.gli = gli
-        }
+        constructor(dds: Dxgi_format_dds) : this(dds.i)
+        constructor(gli: Dxgi_format_gli) : this(gli.i)
     }
 
     enum class Ddpf(val i: Int) {
