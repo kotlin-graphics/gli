@@ -2,8 +2,6 @@ package gli
 
 import glm.glm
 import glm.vec.Vec4t
-import glm.vec._1.Vec1i
-import glm.vec._2.Vec2i
 import glm.vec._3.Vec3i
 import java.nio.ByteBuffer
 
@@ -14,7 +12,7 @@ import java.nio.ByteBuffer
 /** Image, representation for a single texture level    */
 class Image {
 
-    private var storage: Storage? = null
+    private lateinit var storage: Storage
 
     var format = Format.INVALID
         private set
@@ -35,7 +33,7 @@ class Image {
         storage = Storage(format, extent, 1, 1, 1)
         this.format = format
         baseLevel = 0
-        data = storage!!.data()
+        data = storage.data()
         size = computeSize(0)
     }
 
@@ -65,7 +63,7 @@ class Image {
     }
 
     /** Return whether the image instance is empty, no storage_linear or description have been assigned to the instance.    */
-    fun empty() = if (storage == null) true else storage!!.empty()
+    fun empty() = if (wasInit { storage }) storage.empty() else true
 
     fun notEmpty() = !empty()
 
@@ -74,8 +72,8 @@ class Image {
 
         assert(notEmpty())
 
-        val srcExtent = storage!!.extent(baseLevel)
-        val dstExtent = srcExtent * format.blockExtend / storage!!.blockExtend
+        val srcExtent = storage.extent(baseLevel)
+        val dstExtent = srcExtent * format.blockExtend / storage.blockExtend
 
         return glm.max(dstExtent, Vec3i(1))
     }
@@ -100,7 +98,7 @@ class Image {
     /** Clear the entire image storage_linear with zeros    */
     fun clear() {
         assert(notEmpty())
-        repeat(storage!!.data().capacity()) { storage!!.data().put(it, 0) }
+        repeat(storage.data().capacity()) { storage.data().put(it, 0) }
     }
 
     /** Clear the entire image storage_linear with Texel which type must match the image storage_linear format block size
@@ -125,11 +123,11 @@ class Image {
 //    template <typename genType>
 //    void store(extent_type const & TexelCoord, genType const & Data);
 
-    fun computeData(baseLayer: Int, baseFace: Int, baseLevel: Int) = storage!!.data(baseLayer, baseFace, baseLevel)
+    fun computeData(baseLayer: Int, baseFace: Int, baseLevel: Int) = storage.data(baseLayer, baseFace, baseLevel)
 
     fun computeSize(level: Int): Int {
         assert(notEmpty())
-        return storage!!.levelSize(level)
+        return storage.levelSize(level)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -142,7 +140,7 @@ class Image {
     }
 
     companion object {
-        fun textel_linear_addressing(extent:Vec3i, texelCoord: Vec3i):Int {
+        fun textel_linear_addressing(extent: Vec3i, texelCoord: Vec3i): Int {
             assert(glm.all(glm.lessThan(texelCoord, extent)))
             return texelCoord.x + extent.x * (texelCoord.y + extent.y * texelCoord.z)
         }

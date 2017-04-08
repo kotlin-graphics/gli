@@ -207,6 +207,8 @@ open class Texture {
         else -> throw Error("unsupported texel type")
     }
 
+    fun dispose() = storage.dispose()
+
     override fun equals(other: Any?): Boolean {
         return if (other !is Texture) false
         else storage == other.storage &&

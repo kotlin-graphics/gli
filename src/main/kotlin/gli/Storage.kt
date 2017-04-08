@@ -5,6 +5,7 @@ import glm.set
 import glm.size
 import glm.vec._2.Vec2i
 import glm.vec._3.Vec3i
+import uno.buffer.destroyBuffers
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -31,6 +32,7 @@ class Storage {
     private var extent = Vec3i(0)
 
     private lateinit var data: ByteBuffer
+    internal lateinit var tmp: ByteBuffer
 
     constructor()
     constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int) {
@@ -48,7 +50,9 @@ class Storage {
         assert(glm.all(glm.greaterThan(extent, Vec3i(0))))
 
         val size = layerSize(0, faces - 1, 0, levels - 1) * layers
-        data = ByteBuffer.allocate(size).order(ByteOrder.nativeOrder())
+        val order = ByteOrder.nativeOrder()
+        data = ByteBuffer.allocateDirect(size).order(order)
+        tmp = ByteBuffer.allocateDirect(size).order(order)
     }
 
     fun empty() = !wasInit { data }
@@ -155,10 +159,12 @@ class Storage {
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         val offset = baseOffset(layer, face, level)
         val size = levelSize(level)
-        val res = ByteBuffer.allocate(size).order(ByteOrder.nativeOrder())
-        repeat(size) { res[it] = data[offset + it] }
-        return res
+//        val res = ByteBuffer.allocate(size).order(ByteOrder.nativeOrder())
+        repeat(size) { tmp[it] = data[offset + it] }
+        return tmp
     }
+
+    fun dispose() = destroyBuffers(data, tmp)
 
     override fun equals(other: Any?): Boolean {
         return if (other !is Storage)
