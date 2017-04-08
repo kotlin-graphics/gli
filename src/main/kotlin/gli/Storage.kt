@@ -30,7 +30,7 @@ class Storage {
 
     private var extent = Vec3i(0)
 
-    private var data: ByteBuffer? = null
+    private lateinit var data: ByteBuffer
 
     constructor()
     constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int) {
@@ -48,11 +48,10 @@ class Storage {
         assert(glm.all(glm.greaterThan(extent, Vec3i(0))))
 
         val size = layerSize(0, faces - 1, 0, levels - 1) * layers
-        val order = ByteOrder.nativeOrder()
-        data = ByteBuffer.allocate(size).order(order)
+        data = ByteBuffer.allocate(size).order(ByteOrder.nativeOrder())
     }
 
-    fun empty() = data == null
+    fun empty() = !wasInit { data }
     fun notEmpty() = !empty()
 
     fun blockCount(level: Int): Vec3i {
@@ -67,12 +66,12 @@ class Storage {
 
     fun size(): Int {
         assert(notEmpty())
-        return data!!.size
+        return data.size
     }
 
     fun data(): ByteBuffer {
         assert(notEmpty())
-        return data!!
+        return data
     }
 
     /** Compute the relative memory offset to access the data for a specific layer, face and level  */
@@ -120,7 +119,7 @@ class Storage {
                 val offsetSrc = storageSrc.imageOffset(blockIndexSrc + blockIndex, storageSrc.extent(levelSrc)) * storageSrc.blockSize
                 val offsetDst = imageOffset(blockIndexDst + blockIndex, extent(levelDst)) * blockSize
                 for (i in 0..blockSize * blockCount.x)
-                    data!![baseOffsetDst + offsetDst + i] = storageSrc.data!![baseOffsetSrc + offsetSrc + i]
+                    data[baseOffsetDst + offsetDst + i] = storageSrc.data[baseOffsetSrc + offsetSrc + i]
             }
     }
 
@@ -156,9 +155,8 @@ class Storage {
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         val offset = baseOffset(layer, face, level)
         val size = levelSize(level)
-        val res = ByteBuffer.allocate(size)
-        for (i in 0..size)
-            res[i] = data!![offset + i]
+        val res = ByteBuffer.allocate(size).order(ByteOrder.nativeOrder())
+        repeat(size) { res[it] = data[offset + it] }
         return res
     }
 

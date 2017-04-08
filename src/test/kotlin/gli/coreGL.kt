@@ -3,6 +3,7 @@ package gli
 import glm.vec._2.Vec2i
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
+import java.io.InputStream
 
 /**
  * Created by GBarbieri on 03.04.2017.
