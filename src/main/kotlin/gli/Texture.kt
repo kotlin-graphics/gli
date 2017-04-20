@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 open class Texture {
 
-    private var storage: Storage? = null
+    protected lateinit var storage: Storage
 
     var target = Target.INVALID
 
@@ -128,7 +128,7 @@ open class Texture {
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && layers() >= 1 && faces() >= 1 && extent().y >= 1 && extent().z == 1))
     }
 
-    fun empty() = storage?.empty() ?: true
+    fun empty() = if (wasInit { storage }) storage.empty() else true
     fun notEmpty() = !empty()
 
     fun layers() = if (empty()) 0 else maxLayer - baseLayer + 1
@@ -137,30 +137,30 @@ open class Texture {
 
     fun size(): Int {
         assert(notEmpty())
-        return storage!!.size()
+        return storage.size()
     }
 
     fun size(level: Int): Int {
         assert(notEmpty())
         assert(level in 0..levels())
-        return storage!!.levelSize(level)
+        return storage.levelSize(level)
     }
 
     fun data(): ByteBuffer {
         assert(notEmpty())
-        return storage!!.data()
+        return storage.data()
     }
 
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
         assert(layer >= 0 && layer < layers() && face >= 0 && face < faces() && level >= 0 && level < levels())
-        return storage!!.data(layer, face, level)
+        return storage.data(layer, face, level)
     }
 
     fun extent(level: Int = 0): Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
-        return storage!!.extent(level)
+        return storage.extent(level)
     }
 
     fun clear() {
@@ -188,7 +188,7 @@ open class Texture {
         assert(levelDst < levels())
 
         val dst = data()
-        val offset = storage!!.baseOffset(layerDst, faceDst, levelDst)
+        val offset = storage.baseOffset(layerDst, faceDst, levelDst)
         val src = textureSrc.data(layerSrc, faceSrc, levelSrc)
         for (i in 0 until size(levelDst))
             dst[offset + i] = src[i]
@@ -206,6 +206,8 @@ open class Texture {
         }
         else -> throw Error("unsupported texel type")
     }
+
+    fun dispose() = storage.dispose()
 
     override fun equals(other: Any?): Boolean {
         return if (other !is Texture) false
