@@ -20,9 +20,9 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.elect86:glm:e4975b24b6d9eb1b8efb01aa561b8bd622fd4e7e'
+    compile 'com.github.elect86:glm:8b98e9b98e275276df999fd631663d347b43f509'
 
-    compile 'com.github.elect86:uno-sdk:c80ea0425a2913ecc2006d0fd475d7714028883c'
+    compile 'com.github.elect86:uno-sdk:5671e890f0c34b345c1296b177cbbc91c292c939'
 
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
