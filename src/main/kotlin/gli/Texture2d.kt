@@ -48,4 +48,9 @@ class Texture2d : Texture {
             images[level] = Image(storage, format, baseLayer, baseFace, baseLevel + level)
         return images[level]!!
     }
+
+    override fun dispose() {
+        super.dispose()
+        images.values.forEach(Image::dispose)
+    }
 }

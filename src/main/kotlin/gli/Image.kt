@@ -5,6 +5,7 @@ import glm.set
 import glm.vec.Vec4t
 import glm.vec._3.Vec3i
 import uno.buffer.byteBufferBig
+import uno.buffer.destroy
 import java.nio.ByteBuffer
 
 /**
@@ -150,4 +151,6 @@ class Image {
             return texelCoord.x + extent.x * (texelCoord.y + extent.y * texelCoord.z)
         }
     }
+
+    fun dispose() = data.destroy()
 }
