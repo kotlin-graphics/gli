@@ -39,9 +39,13 @@ class Texture2d : Texture {
                     texture.baseFace, texture.maxFace,
                     texture.baseLevel + baseLevel, texture.baseLevel + maxLevel)
 
+    private val images = mutableMapOf<Int, Image>()
+
     /** Create a view of the image identified by Level in the mipmap chain of the texture.  */
-    operator fun get(level: Int):Image {
+    operator fun get(level: Int): Image {
         assert(level < levels())
-        return Image(storage, format, baseLayer, baseFace, baseLevel + level)
+        if(!images.containsKey(level))
+            images[level] = Image(storage, format, baseLayer, baseFace, baseLevel + level)
+        return images[level]!!
     }
 }
