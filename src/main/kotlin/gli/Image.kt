@@ -1,6 +1,7 @@
 package gli
 
 import glm.glm
+import glm.set
 import glm.vec.Vec4t
 import glm.vec._3.Vec3i
 import uno.buffer.byteBufferBig
@@ -63,7 +64,7 @@ class Image {
         size = computeSize(baseLevel)
         data = byteBufferBig(size)
         val offset = storage.baseOffset(baseLayer, baseFace, baseLevel)
-        repeat(size) {data[it] == storage.data()[offset + it]}
+        repeat(size) {data[it] = storage.data()[offset + it]}
     }
 
     /** Return whether the image instance is empty, no storage_linear or description have been assigned to the instance.    */

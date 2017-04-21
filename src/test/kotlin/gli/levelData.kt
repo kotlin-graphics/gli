@@ -25,6 +25,15 @@ class levelData : StringSpec() {
                 println("size: (${texture[level].extent().x}, ${texture[level].extent().y})")
                 println("format: (${format.external}, type: ${format.type})")
                 println("data: (${texture[level].data()})")
+                val r = texture[level].data()[0]
+                val g = texture[level].data()[1]
+                val b = texture[level].data()[2]
+                val a = texture[level].data()[3]
+//                val r = texture.data()[0]
+//                val g = texture.data()[1]
+//                val b = texture.data()[2]
+//                val a = texture.data()[3]
+                println("pixel 0: ($r, $g, $b, $a)")
             }
             texture.dispose()
         }
