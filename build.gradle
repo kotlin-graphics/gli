@@ -21,13 +21,13 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.elect86:glm:8b98e9b98e275276df999fd631663d347b43f509'
+    compile 'com.github.elect86:glm:90a6ca088e7766d23112f64bcce49f759de412af'
 
     compile 'com.github.elect86:uno-sdk:3ffef78b7b4bf18db37f7889e916ff2d2936c9b9'
 
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
-    def joglVersion = '2.3.2'
+    ext.joglVersion = '2.3.2'
     compile "org.jogamp.gluegen:gluegen-rt-main:$joglVersion"
     compile "org.jogamp.jogl:jogl-all-main:$joglVersion"
 }
