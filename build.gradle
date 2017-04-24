@@ -21,7 +21,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.elect86:glm:90a6ca088e7766d23112f64bcce49f759de412af'
+    compile 'com.github.elect86:glm:d631edc89d9070dab1dc2b303334bf1102005691'
 
     compile 'com.github.elect86:uno-sdk:3ffef78b7b4bf18db37f7889e916ff2d2936c9b9'
 
@@ -38,3 +38,10 @@ repositories {
     maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
+
+task packageSources(type: Jar, dependsOn: 'classes') {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts { archives packageSources }
