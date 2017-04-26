@@ -5,7 +5,7 @@ import gli.dx.Ddpf.*
 import gli.dx.Dxgi_format_dds.*
 import gli.dx.Dxgi_format_gli.*
 import glm.i
-import glm.vec._4.Vec4i
+import glm.vec4.Vec4i
 
 /**
  * Created by elect on 02/04/17.

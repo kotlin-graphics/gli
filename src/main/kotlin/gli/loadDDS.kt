@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel
 import glm.glm
 import glm.set
 import java.nio.ByteOrder
-import glm.vec._3.Vec3i
+import glm.vec3.Vec3i
 
 /**
  * Created by GBarbieri on 05.04.2017.

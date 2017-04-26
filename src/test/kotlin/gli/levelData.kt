@@ -1,7 +1,6 @@
 package gli
 
 import io.kotlintest.specs.StringSpec
-import org.lwjgl.opengl.GL11
 
 /**
  * Created by GBarbieri on 21.04.2017.

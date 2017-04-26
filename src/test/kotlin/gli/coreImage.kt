@@ -1,8 +1,8 @@
 package gli
 
 import glm.set
-import glm.vec._3.Vec3i
-import glm.vec._4.Vec4b
+import glm.vec3.Vec3i
+import glm.vec4.Vec4b
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 

@@ -3,8 +3,8 @@ package gli
 import gli.Swizzle.*
 import gli.detail.Cap.*
 import glm.BYTES
-import glm.vec._3.Vec3i
-import glm.vec._4.Vec4i
+import glm.vec3.Vec3i
+import glm.vec4.Vec4i
 import java.nio.ByteBuffer
 
 /**
@@ -350,7 +350,7 @@ object detail {
         var mask = Vec4i(data.int, data.int, data.int, data.int)
 
         companion object {
-            val SIZE = 4 * Int.BYTES + Vec4i.SIZE
+            val SIZE = 4 * Int.BYTES + Vec4i.size
         }
     }
 

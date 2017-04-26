@@ -1,16 +1,11 @@
 package gli
 
-import glm.f
-import glm.vec._3.Vec3i
 import glm.glm
+import glm.f
 import glm.i
-import glm.vec._1.Vec1i
-import glm.vec._2.Vec2i
-import java.io.File
-import java.io.FileInputStream
-import java.io.RandomAccessFile
-import java.net.URI
-import java.nio.channels.FileChannel
+import glm.vec1.Vec1i
+import glm.vec2.Vec2i
+import glm.vec3.Vec3i
 
 /**
  * Created by elect on 02/04/17.

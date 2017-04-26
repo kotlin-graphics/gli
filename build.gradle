@@ -25,7 +25,7 @@ dependencies {
 
     compile 'com.github.elect86:uno-sdk:3ffef78b7b4bf18db37f7889e916ff2d2936c9b9'
 
-    testCompile("io.kotlintest:kotlintest:2.0.0")
+    testCompile 'com.github.elect86:kotlintest:b31cda5fb3f38606bb08f32c22f2177a98c634aa'
 
     def joglVersion = '2.3.2'
     compile "org.jogamp.gluegen:gluegen-rt-main:$joglVersion"

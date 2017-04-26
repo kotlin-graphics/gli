@@ -2,8 +2,8 @@ package gli
 
 import glm.glm
 import glm.set
-import glm.vec.Vec4t
-import glm.vec._3.Vec3i
+import glm.vec4.Vec4t
+import glm.vec3.Vec3i
 import uno.buffer.byteBufferBig
 import uno.buffer.destroy
 import java.nio.ByteBuffer
