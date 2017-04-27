@@ -21,9 +21,9 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.elect86:glm:02125abbc3cb587c5d4ef5c1f74de50a29d90515'
+    compile 'com.github.elect86:glm:c5c7ab9eb07208bc899247252f9ae49e38a4df95'
 
-    compile 'com.github.elect86:uno-sdk:2ee5ac1425936d1ec47ae1378909bf08644a86e0'
+    compile 'com.github.elect86:uno-sdk:811d4439cf736ee82724a4eac37a42bdf47c9c44'
 
     testCompile 'com.github.elect86:kotlintest:b31cda5fb3f38606bb08f32c22f2177a98c634aa'
 
