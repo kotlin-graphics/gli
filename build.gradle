@@ -1,6 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
+// jitpack
+apply plugin: 'maven'
+group = 'com.github.kotlin-graphics'
+
 buildscript {
 
     ext.kotlinVersion = '1.1.2'
@@ -21,7 +25,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.elect86:glm:c5c7ab9eb07208bc899247252f9ae49e38a4df95'
+    compile 'com.github.elect86:glm:058335f9da130e6ee96e70aeaae97a396acaa92b'
     compile 'com.github.elect86:uno-sdk:d021d6ec1a8d7e0bf626bb2fca063b8f7513f8a9'
 
 //    compile('com.github.elect86:glm:c5c7ab9eb0') { changing = true }
