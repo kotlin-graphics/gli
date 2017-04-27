@@ -26,7 +26,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     compile 'com.github.elect86:glm:058335f9da130e6ee96e70aeaae97a396acaa92b'
-    compile 'com.github.elect86:uno-sdk:d021d6ec1a8d7e0bf626bb2fca063b8f7513f8a9'
+//    compile 'com.github.elect86:uno-sdk:d021d6ec1a'
 
 //    compile('com.github.elect86:glm:c5c7ab9eb0') { changing = true }
 //    compile('com.github.elect86:uno-sdk:5d9be5c99411c4e6fe8bddb633f98330990813a4') { changing = true }
