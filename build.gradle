@@ -23,7 +23,11 @@ dependencies {
 
     compile 'com.github.elect86:glm:c5c7ab9eb07208bc899247252f9ae49e38a4df95'
 
-    compile 'com.github.elect86:uno-sdk:811d4439cf736ee82724a4eac37a42bdf47c9c44'
+    compile 'com.github.elect86:uno-sdk:d021d6ec1a8d7e0bf626bb2fca063b8f7513f8a9'
+
+//    compile('com.github.elect86:glm:c5c7ab9eb0') { changing = true }
+//
+//    compile('com.github.elect86:uno-sdk:5d9be5c99411c4e6fe8bddb633f98330990813a4') { changing = true }
 
     testCompile 'com.github.elect86:kotlintest:b31cda5fb3f38606bb08f32c22f2177a98c634aa'
 
@@ -45,3 +49,8 @@ task packageSources(type: Jar, dependsOn: 'classes') {
 }
 
 artifacts { archives packageSources }
+
+//configurations.all {
+//    // Check for updates every build
+//    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+//}
