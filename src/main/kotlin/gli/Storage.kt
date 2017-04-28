@@ -5,8 +5,8 @@ import glm.set
 import glm.size
 import glm.vec2.Vec2i
 import glm.vec3.Vec3i
-import uno.buffer.byteBufferBig
-import uno.buffer.destroyBuffers
+//import uno.buffer.byteBufferBig
+//import uno.buffer.destroyBuffers
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -155,14 +155,14 @@ class Storage {
         return faceSize(baseLevel, maxLevel) * (maxFace - baseFace + 1)
     }
 
-    fun data(layer: Int, face: Int, level: Int) = data(layer, face, level, byteBufferBig(levelSize(level)))
+    fun data(layer: Int, face: Int, level: Int) = data(layer, face, level, ByteBuffer.allocateDirect(levelSize(level)))
     fun data(layer: Int, face: Int, level: Int, res: ByteBuffer): ByteBuffer {
         val offset = baseOffset(layer, face, level)
         repeat(levelSize(level)) { res[it] = data[offset + it] }
         return res
     }
 
-    fun dispose() = destroyBuffers(data)
+    fun dispose() {}
 
     override fun equals(other: Any?): Boolean {
         return if (other !is Storage)
