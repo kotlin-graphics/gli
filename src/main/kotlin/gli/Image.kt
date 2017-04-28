@@ -4,8 +4,8 @@ import glm.glm
 import glm.set
 import glm.vec4.Vec4t
 import glm.vec3.Vec3i
-//import uno.buffer.byteBufferBig
-//import uno.buffer.destroy
+import uno.buffer.byteBufferBig
+import uno.buffer.destroy
 import java.nio.ByteBuffer
 
 /**
@@ -63,8 +63,7 @@ class Image {
         this.format = format
         this.baseLevel = baseLevel
         size = computeSize(baseLevel)
-//        data = byteBufferBig(size)
-        data = ByteBuffer.allocateDirect(size)
+        data = byteBufferBig(size)
         val offset = storage.baseOffset(baseLayer, baseFace, baseLevel)
         repeat(size) {data[it] = storage.data()[offset + it]}
     }
@@ -153,6 +152,5 @@ class Image {
         }
     }
 
-//    fun dispose() = data.destroy()
-    fun dispose() {}
+    fun dispose() = data.destroy()
 }
