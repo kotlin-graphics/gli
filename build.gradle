@@ -25,7 +25,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:91a4d7dad5a5c5634be471cf4d63ec4f21259d03'
+    compile 'com.github.kotlin-graphics:glm:c86a65913cdac916f3a202367b7a27b3495fc688'
     compile 'com.github.kotlin-graphics:uno-sdk:a0c1cefec9565661c0540ae8ce838600a9c4d559'
 
 //    compile('com.github.elect86:glm:c5c7ab9eb0') { changing = true }
