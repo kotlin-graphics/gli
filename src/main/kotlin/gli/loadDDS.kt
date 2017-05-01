@@ -16,7 +16,12 @@ import glm.vec3.Vec3i
  */
 
 
-/** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure. */
+/** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
+ *  @param path Path of the file to open including filaname and filename extension */
+fun loadDDS(path: String) = loadDDS(Texture::javaClass.javaClass.classLoader.getResource(path).toURI())
+
+/** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
+ *  @param uri Uri of the file to open including filaname and filename extension */
 fun loadDDS(uri: URI): Texture {
 
     val channel = RandomAccessFile(File(uri), "r").channel
@@ -122,7 +127,7 @@ fun loadDDS(data: ByteBuffer): Texture {
 
     assert(data.capacity() == data.position() + texture.size())
 
-    repeat(texture.size()) { texture.data()[it] = data.get()}
+    repeat(texture.size()) { texture.data()[it] = data.get() }
 
     return texture
 }

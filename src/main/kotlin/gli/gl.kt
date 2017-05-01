@@ -15,7 +15,7 @@ import gli.gl.ExternalFormat.NONE as NONE_
 /**  Translation class to convert GLI enums into OpenGL values  */
 object gl {
 
-    lateinit var profile: Profile
+    var profile = Profile.GL33
 
     fun translate(target: gli.Target) = tableT[target.i]
 
@@ -410,7 +410,7 @@ object gl {
 
         val i = ordinal
 
-        val hasSwizzle by lazy { this == ES30 || this == GL33 }
+        val hasSwizzle get() = this == ES30 || this == GL33
     }
 
     data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
