@@ -17,6 +17,8 @@ object gl {
 
     var profile = Profile.GL33
 
+    fun translate(texture: Texture) = translate(texture.target) to translate(texture.format, texture.swizzles)
+
     fun translate(target: gli.Target) = tableT[target.i]
 
     fun translate(format: gli.Format, swizzles: gli.Swizzles): Format {
