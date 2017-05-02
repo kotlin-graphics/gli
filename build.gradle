@@ -28,9 +28,6 @@ dependencies {
     compile 'com.github.kotlin-graphics:glm:4711d0f44930262d53f4c3b9a799edb4f6a4401d'
     compile 'com.github.kotlin-graphics:uno-sdk:3faa2cb28044564b80e8e2d2b4342a007142a083'
 
-//    compile('com.github.elect86:glm:c5c7ab9eb0') { changing = true }
-//    compile('com.github.elect86:uno-sdk:5d9be5c99411c4e6fe8bddb633f98330990813a4') { changing = true }
-
     testCompile 'com.github.elect86:kotlintest:b31cda5fb3f38606bb08f32c22f2177a98c634aa'
 
     def joglVersion = '2.3.2'
@@ -40,9 +37,9 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
     maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url 'https://jitpack.io' }
 }
 
 task packageSources(type: Jar, dependsOn: 'classes') {
@@ -51,8 +48,3 @@ task packageSources(type: Jar, dependsOn: 'classes') {
 }
 
 artifacts { archives packageSources }
-
-//configurations.all {
-//    // Check for updates every build
-//    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
-//}
