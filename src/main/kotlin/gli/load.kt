@@ -8,28 +8,41 @@ import java.awt.image.BufferedImage.TYPE_3BYTE_BGR
 import java.awt.image.BufferedImage.TYPE_4BYTE_ABGR
 import java.awt.image.DataBufferByte
 import java.io.File
+import java.net.URI
+import java.net.URL
+import java.nio.ByteBuffer
 import javax.imageio.ImageIO
 
 /**
  * Created by elect on 01/05/17.
  */
 
-fun load(path: String) {
+fun load(path: String) = load(Texture::class.java, path)
 
-    val ext = path.substringAfterLast('.').toLowerCase()
+fun load(context: Class<*>, path: String) = load(context.javaClass.classLoader.getResource(path))
 
-    when (ext) {
+fun load(url: URL) = load(url.toURI())
 
-        "dds" -> loadDDS(path)
-        "png" -> loadPNG(path)
-    }
+fun load(uri: URI) = load(File(uri))
+
+fun load(file: File) = when (file.extension) {
+    "dds" -> loadDDS(file)
+    "png" -> loadPNG(file)
+    else -> throw Error("unsupported extension: ${file.extension}")
 }
 
-fun loadPNG(path: String): Texture {
 
-    val file = File(Texture::javaClass.javaClass.classLoader.getResource(path).toURI())
+fun loadPNG(path: String) = loadPNG(Texture::class.java, path)
 
-    val image = ImageIO.read(file).flipY()
+fun loadPNG(context: Class<*>, path: String) = loadPNG(context.javaClass.classLoader.getResource(path))
+
+fun loadPNG(url: URL) = loadPNG(url.toURI())
+
+fun loadPNG(uri: URI) = loadPNG(File(uri))
+
+fun loadPNG(file: File) = loadPNG(ImageIO.read(file).flipY())
+
+fun loadPNG(image: BufferedImage): Texture {
 
     val data = (image.raster.dataBuffer as DataBufferByte).data
 
@@ -68,13 +81,14 @@ fun loadPNG(path: String): Texture {
 
     val texture = Texture(Target._2D, format, Vec3i(image.width, image.height, 1), 1, 1, 1)
 
-    repeat(texture.size()) { texture.data()[it] = data[it]}
+    repeat(texture.size()) { texture.data()[it] = data[it] }
 
     return texture
 }
 
 fun BufferedImage.toByteBuffer() = (raster.dataBuffer as DataBufferByte).data.toByteBuffer()
 
+// TODO credits JOGAMP
 fun BufferedImage.flipY(): BufferedImage {
 
     var scanline1: Any? = null

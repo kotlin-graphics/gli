@@ -10,6 +10,7 @@ import glm.glm
 import glm.set
 import java.nio.ByteOrder
 import glm.vec3.Vec3i
+import java.net.URL
 
 /**
  * Created by GBarbieri on 05.04.2017.
@@ -18,13 +19,19 @@ import glm.vec3.Vec3i
 
 /** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
  *  @param path Path of the file to open including filaname and filename extension */
-fun loadDDS(path: String) = loadDDS(Texture::javaClass.javaClass.classLoader.getResource(path).toURI())
+fun loadDDS(path: String) = loadDDS(Texture::class.java, path)
+
+fun loadDDS(context: Class<*>, path: String) = loadDDS(context.javaClass.classLoader.getResource(path))
+
+fun loadDDS(url: URL) = loadDDS(url.toURI())
+
+fun loadDDS(uri: URI) = loadDDS(File(uri))
 
 /** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
  *  @param uri Uri of the file to open including filaname and filename extension */
-fun loadDDS(uri: URI): Texture {
+fun loadDDS(file: File): Texture {
 
-    val channel = RandomAccessFile(File(uri), "r").channel
+    val channel = RandomAccessFile(file, "r").channel
     val buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size())
 
     val texture = loadDDS(buffer.order(ByteOrder.nativeOrder()))
