@@ -27,22 +27,22 @@ fun load(uri: URI) = load(File(uri))
 
 fun load(file: File) = when (file.extension) {
     "dds" -> loadDDS(file)
-    "png" -> loadPNG(file)
+    "jpeg", "jpg", "png", "gif", "bmp", "wbmp" -> loadImage(file)
     else -> throw Error("unsupported extension: ${file.extension}")
 }
 
 
-fun loadPNG(path: String) = loadPNG(Texture::class.java, path)
+fun loadImage(path: String) = loadImage(Texture::class.java, path)
 
-fun loadPNG(context: Class<*>, path: String) = loadPNG(context.javaClass.classLoader.getResource(path))
+fun loadImage(context: Class<*>, path: String) = loadImage(context.javaClass.classLoader.getResource(path))
 
-fun loadPNG(url: URL) = loadPNG(url.toURI())
+fun loadImage(url: URL) = loadImage(url.toURI())
 
-fun loadPNG(uri: URI) = loadPNG(File(uri))
+fun loadImage(uri: URI) = loadImage(File(uri))
 
-fun loadPNG(file: File) = loadPNG(ImageIO.read(file).flipY())
+fun loadImage(file: File) = loadImage(ImageIO.read(file).flipY())
 
-fun loadPNG(image: BufferedImage): Texture {
+fun loadImage(image: BufferedImage): Texture {
 
     val data = (image.raster.dataBuffer as DataBufferByte).data
 
