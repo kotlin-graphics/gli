@@ -26,7 +26,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     compile 'com.github.kotlin-graphics:glm:f0580a46e8677001b2b49b36e0a255ff52fb05fe'
-    compile 'com.github.kotlin-graphics:uno-sdk:0af69a0afa988bc7db6358ffb670e686a3617740'
+    compile 'com.github.kotlin-graphics:uno-sdk:64e5bb942b681326e63fbe91683c8ce7ba1aaeb6'
 
     testCompile 'com.github.elect86:kotlintest:b31cda5fb3f38606bb08f32c22f2177a98c634aa'
 
