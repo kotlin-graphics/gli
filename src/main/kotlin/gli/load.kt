@@ -2,7 +2,7 @@ package gli
 
 import glm.set
 import glm.vec3.Vec3i
-import uno.buffer.toByteBuffer
+import gli.buffer.toByteBuffer
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_3BYTE_BGR
 import java.awt.image.BufferedImage.TYPE_4BYTE_ABGR
@@ -10,7 +10,6 @@ import java.awt.image.DataBufferByte
 import java.io.File
 import java.net.URI
 import java.net.URL
-import java.nio.ByteBuffer
 import javax.imageio.ImageIO
 
 /**

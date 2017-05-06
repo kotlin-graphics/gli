@@ -5,8 +5,8 @@ import glm.set
 import glm.size
 import glm.vec2.Vec2i
 import glm.vec3.Vec3i
-import uno.buffer.byteBufferBig
-import uno.buffer.destroyBuffers
+import gli.buffer.byteBufferBig
+import gli.buffer.destroyBuffers
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

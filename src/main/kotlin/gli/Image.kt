@@ -4,8 +4,8 @@ import glm.glm
 import glm.set
 import glm.vec4.Vec4t
 import glm.vec3.Vec3i
-import uno.buffer.byteBufferBig
-import uno.buffer.destroy
+import gli.buffer.byteBufferBig
+import gli.buffer.destroy
 import java.nio.ByteBuffer
 
 /**
