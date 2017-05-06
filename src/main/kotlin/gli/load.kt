@@ -19,7 +19,7 @@ import javax.imageio.ImageIO
 
 fun load(path: String) = load(Texture::class.java, path)
 
-fun load(context: Class<*>, path: String) = load(context.javaClass.classLoader.getResource(path))
+fun load(context: Class<*>, path: String) = load(context.classLoader.getResource(path))
 
 fun load(url: URL) = load(url.toURI())
 
@@ -34,7 +34,7 @@ fun load(file: File) = when (file.extension) {
 
 fun loadImage(path: String) = loadImage(Texture::class.java, path)
 
-fun loadImage(context: Class<*>, path: String) = loadImage(context.javaClass.classLoader.getResource(path))
+fun loadImage(context: Class<*>, path: String) = loadImage(context.classLoader.getResource(path))
 
 fun loadImage(url: URL) = loadImage(url.toURI())
 

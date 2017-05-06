@@ -21,7 +21,7 @@ import java.net.URL
  *  @param path Path of the file to open including filaname and filename extension */
 fun loadDDS(path: String) = loadDDS(Texture::class.java, path)
 
-fun loadDDS(context: Class<*>, path: String) = loadDDS(context.javaClass.classLoader.getResource(path))
+fun loadDDS(context: Class<*>, path: String) = loadDDS(context.classLoader.getResource(path))
 
 fun loadDDS(url: URL) = loadDDS(url.toURI())
 
