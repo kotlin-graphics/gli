@@ -8,6 +8,7 @@ import java.nio.*
  * Created by elect on 05/03/17.
  */
 
+// TODO all internal
 
 fun FloatArray.toFloatBuffer(): FloatBuffer = GLBuffers.newDirectFloatBuffer(this)
 
