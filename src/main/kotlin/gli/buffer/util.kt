@@ -45,13 +45,13 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 
-fun ByteBuffer.destroy() = destroyBuffer(this)
-fun ShortBuffer.destroy() = destroyBuffer(this)
-fun IntBuffer.destroy() = destroyBuffer(this)
-fun LongBuffer.destroy() = destroyBuffer(this)
-fun FloatBuffer.destroy() = destroyBuffer(this)
-fun DoubleBuffer.destroy() = destroyBuffer(this)
-fun CharBuffer.destroy() = destroyBuffer(this)
+internal fun ByteBuffer.destroy() = destroyBuffer(this)
+internal fun ShortBuffer.destroy() = destroyBuffer(this)
+internal fun IntBuffer.destroy() = destroyBuffer(this)
+internal fun LongBuffer.destroy() = destroyBuffer(this)
+internal fun FloatBuffer.destroy() = destroyBuffer(this)
+internal fun DoubleBuffer.destroy() = destroyBuffer(this)
+internal fun CharBuffer.destroy() = destroyBuffer(this)
 
 // Oracle JRE / OpenJDK
 private val cleanerMethod = loadMethod("sun.nio.ch.DirectBuffer", "cleaner")
@@ -85,7 +85,7 @@ private fun loadMethod(className: String, methodName: String): Method? {
     }
 }
 
-fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(::destroyBuffer)
+internal fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(::destroyBuffer)
 
 /**
  * This function explicitly calls the Cleaner method of a direct buffer.
@@ -93,7 +93,7 @@ fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(::destr
  * @param toBeDestroyed
  * *            The direct buffer that will be "cleaned". Utilizes reflection.
  */
-fun destroyBuffer(toBeDestroyed: Buffer) {
+internal fun destroyBuffer(toBeDestroyed: Buffer) {
     try {
         if (freeMethod != null)
             freeMethod.invoke(toBeDestroyed)
