@@ -40,4 +40,15 @@ class TextureCube : Texture {
                     texture.baseLayer, texture.maxLayer,
                     texture.baseFace + baseFace, texture.maxFace + maxFace,
                     texture.baseLevel + baseLevel, texture.baseLevel + maxLevel)
+
+    /** Create a view of the texture identified by Face in the texture cube.  */
+    operator fun get(face: Int): Texture2d {
+        assert(face < faces())
+
+        return Texture2d(
+                this, format,
+                baseLayer, maxLayer,
+                baseFace + face, baseFace + face,
+                baseLevel, maxLevel)
+    }
 }
