@@ -33,7 +33,7 @@ class coreImage : StringSpec() {
             imageA.empty() shouldBe true
 
             val imageB = Image(Format.RGBA8_UNORM_PACK8, Vec3i(1))
-            imageB.size shouldBe Vec4b.SIZE
+            imageB.size shouldBe Vec4b.size
 
             Vec4b(255, 127, 0, 255) to imageB.data()
             imageB.notEmpty() shouldBe true
@@ -43,7 +43,7 @@ class coreImage : StringSpec() {
 
             val image = Image(Format.RGBA8_UINT_PACK8, Vec3i(1))
 
-            image.size shouldBe Vec4b.SIZE
+            image.size shouldBe Vec4b.size
             image.notEmpty() shouldBe true
             image.extent() shouldBe Vec3i(1)
         }

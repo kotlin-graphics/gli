@@ -21,11 +21,11 @@ class coreStorage : StringSpec() {
                     2, 1, 1)
 
             with(storage) {
-                blockSize shouldBe Vec4b.SIZE
-                levelSize(0) shouldBe Vec4b.SIZE * 2 * 2
-                faceSize(0, levels - 1) == Vec4b.SIZE * 2 * 2
-                layerSize(0, faces - 1, 0, levels - 1) shouldBe Vec4b.SIZE * 2 * 2
-                size() shouldBe Vec4b.SIZE * 2 * 2 * 2
+                blockSize shouldBe Vec4b.size
+                levelSize(0) shouldBe Vec4b.size * 2 * 2
+                faceSize(0, levels - 1) == Vec4b.size * 2 * 2
+                layerSize(0, faces - 1, 0, levels - 1) shouldBe Vec4b.size * 2 * 2
+                size() shouldBe Vec4b.size * 2 * 2 * 2
             }
         }
 
@@ -38,15 +38,15 @@ class coreStorage : StringSpec() {
 
             with(storage) {
 
-                blockSize shouldBe Vec4b.SIZE
+                blockSize shouldBe Vec4b.size
 
-                levelSize(0) shouldBe Vec4b.SIZE * 2 * 2
+                levelSize(0) shouldBe Vec4b.size * 2 * 2
 
-                faceSize(0, levels - 1) shouldBe Vec4b.SIZE * 2 * 2
+                faceSize(0, levels - 1) shouldBe Vec4b.size * 2 * 2
 
-                layerSize(0, faces - 1, 0, levels - 1) shouldBe Vec4b.SIZE * 2 * 2 * 6
+                layerSize(0, faces - 1, 0, levels - 1) shouldBe Vec4b.size * 2 * 2 * 6
 
-                size() shouldBe Vec4b.SIZE * 2 * 2 * 6
+                size() shouldBe Vec4b.size * 2 * 2 * 6
             }
         }
     }

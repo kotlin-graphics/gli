@@ -42,7 +42,7 @@ class coreTexture : StringSpec() {
 
             val texture = Texture(Target._2D, Format.RGBA8_UINT_PACK8, Vec3i(1), 1, 1, 1)
 
-            texture.size() shouldBe Vec4b.SIZE
+            texture.size() shouldBe Vec4b.size
             texture.format shouldBe Format.RGBA8_UINT_PACK8
             texture.levels() shouldBe 1
             texture.notEmpty() shouldBe true
