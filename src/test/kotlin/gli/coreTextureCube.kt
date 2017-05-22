@@ -86,19 +86,15 @@ class coreTextureCube : StringSpec() {
                         Vec4b(255, 255, 0, 255))
 
                 colors.forEachIndexed { i, it ->
-
                     val texture2D = textureCube[i]
                     for (pixelIndex in 0 until 4)
-                        texture2D.data()[pixelIndex * Vec4b.size] = it
-
-                    val d = texture2D.data()
-                    repeat(4){println("(${d[4 * it]}, ${d[1 + 4 * it]}, ${d[2 + 4 * it]}, ${d[3 + 4 * it]})")}
+                        texture2D.data()[pixelIndex] = it
                 }
 
-//                repeat(6) {
-//                    val d = textureCube.data()
-//                    println("(${d[4 * it]}, ${d[1 + 4 * it]}, ${d[2 + 4 * it]}, ${d[3 + 4 * it]})")
-//                }
+                repeat(6) {
+                    val d = textureCube.data()
+                    println("(${d[4 * it]}, ${d[1 + 4 * it]}, ${d[2 + 4 * it]}, ${d[3 + 4 * it]})")
+                }
 
                 for (texelIndex in 0 until textureCube.size() / Vec4b.size)
                     Vec4b(textureCube.data(), texelIndex * Vec4b.size) shouldBe colors[texelIndex]
