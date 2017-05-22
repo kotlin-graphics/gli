@@ -157,6 +157,11 @@ open class Texture {
         return storage.data(layer, face, level)
     }
 
+    fun pData(unitOffset: Int, texel: Vec4b) {
+        val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
+        texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
+    }
+
     fun extent(level: Int = 0): Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
