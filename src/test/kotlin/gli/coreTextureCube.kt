@@ -1,7 +1,6 @@
 package gli
 
 import glm.b
-import glm.glm
 import glm.set
 import glm.vec2.Vec2i
 import glm.vec4.Vec4b
@@ -88,7 +87,7 @@ class coreTextureCube : StringSpec() {
                 colors.forEachIndexed { i, it ->
                     val texture2D = textureCube[i]
                     for (pixelIndex in 0 until 4)
-                        texture2D.pData(pixelIndex, it)
+                        texture2D.setData(pixelIndex, it)
                 }
 
                 for (texelIndex in 0 until textureCube.size() / Vec4b.size)
@@ -106,7 +105,13 @@ class coreTextureCube : StringSpec() {
                 val size0 = textureA.size()
                 val size1 = textureB.size()
 
-                println(size0)
+                size0 shouldBe Vec4b.size * 5
+                size1 shouldBe Vec4b.size * 5
+
+                textureA.setData(0, Vec4b(255, 127, 0, 255))
+                textureB.setData(0, Vec4b(0, 127, 255, 255))
+
+//                textureA.
             }
         }
     }

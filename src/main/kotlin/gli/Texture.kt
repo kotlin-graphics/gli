@@ -46,6 +46,8 @@ open class Texture {
         }
         private set
 
+    lateinit var cache: Cache
+
     /** Create an empty texture instance    */
     constructor()
 
@@ -58,10 +60,14 @@ open class Texture {
      * @param levels Number of images in the texture mipmap chain.
      * @param swizzles A mechanism to swizzle the components of a texture before they are applied according to the texture environment.
      */
-    constructor(target: Target, format: Format, extent: Vec3i,
-                layers: Int, faces: Int, levels: Int,
-                swizzles: Swizzles = Swizzles()) {
-
+    constructor(target: Target,
+                format: Format,
+                extent: Vec3i,
+                layers: Int,
+                faces: Int,
+                levels: Int,
+                swizzles: Swizzles = Swizzles()
+    ) {
         storage = Storage(format, extent, layers, faces, levels)
         this.target = target
         this.format = format
@@ -69,6 +75,7 @@ open class Texture {
         baseFace = 0; maxFace = faces - 1
         baseLevel = 0; maxLevel = levels - 1
         this.swizzles = swizzles
+        this.cache = Cache(storage, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
 
         assert(target != Target.CUBE || (target == Target.CUBE && extent.x == extent.y))
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && extent.x == extent.y))
@@ -80,19 +87,22 @@ open class Texture {
      * This texture object is effectively a texture view where the target and format can be reinterpreted with a
      * different compatible texture target and texture format.
      */
-    constructor(texture: Texture, target: Target, format: Format,
+    constructor(texture: Texture,
+                target: Target,
+                format: Format,
                 baseLayer: Int, maxLayer: Int,
                 baseFace: Int, maxFace: Int,
                 baseLevel: Int, maxLevel: Int,
-                swizzles: Swizzles = Swizzles()) {
-
-        this.storage = texture.storage  // TODO check
+                swizzles: Swizzles = Swizzles()
+    ) {
+        storage = texture.storage
         this.target = target
         this.format = format
         this.baseLayer = baseLayer; this.maxLayer = maxLayer
         this.baseFace = baseFace; this.maxFace = maxFace
         this.baseLevel = baseLevel; this.maxLevel = maxLevel
         this.swizzles = swizzles
+        cache = Cache(storage, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
 
         assert(format.blockSize == texture.format.blockSize)
         assert(target != Target._1D || (target == Target._1D && layers() == 1 && faces() == 1 && extent().y == 1 && extent().z == 1))
@@ -107,8 +117,11 @@ open class Texture {
     /** Create a texture object by sharing an existing texture storage_type from another texture instance.
      * This texture object is effectively a texture view where the target and format can be reinterpreted
      * with a different compatible texture target and texture format.  */
-    constructor(texture: Texture, target: Target, format: Format, swizzles: Swizzles = Swizzles()) {
-
+    constructor(texture: Texture,
+                target: Target,
+                format: Format,
+                swizzles: Swizzles = Swizzles()
+    ) {
         storage = texture.storage
         this.target = target
         this.format = format
@@ -116,6 +129,7 @@ open class Texture {
         baseFace = texture.baseFace; maxFace = texture.maxFace
         baseLevel = texture.baseLevel; maxLevel = texture.maxLevel
         this.swizzles = swizzles
+        cache = Cache(storage, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
 
         if (empty()) return
 
@@ -131,13 +145,13 @@ open class Texture {
     fun empty() = if (wasInit { storage }) storage.empty() else true
     fun notEmpty() = !empty()
 
-    fun layers() = if (empty()) 0 else maxLayer - baseLayer + 1
+    fun layers() = if (empty()) 0 else maxLayer - baseLayer + 1 // TODO val get() ?
     fun faces() = if (empty()) 0 else maxFace - baseFace + 1
     fun levels() = if (empty()) 0 else maxLevel - baseLayer + 1
 
     fun size(): Int {
         assert(notEmpty())
-        return storage.size()
+        return cache.globalMemorySize
     }
 
     fun size(level: Int): Int {
@@ -151,15 +165,28 @@ open class Texture {
         return storage.data()
     }
 
+//    fun pData(): DataPointer {
+//        assert(notEmpty())
+//        DataPointer.data = storage.data()
+//        DataPointer.offset = storage.
+//        return storage.data()
+//    }
+
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
         assert(layer >= 0 && layer < layers() && face >= 0 && face < faces() && level >= 0 && level < levels())
         return storage.data(layer, face, level)
     }
 
-    fun pData(unitOffset: Int, texel: Vec4b) {
+    fun setData(unitOffset: Int, texel: Vec4b) {
         val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
         texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
+    }
+
+    fun getData(unitOffset: Int, texel: Vec4b = Vec4b()) : Vec4b {
+        val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
+        texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
+        return texel
     }
 
     fun extent(level: Int = 0): Vec3i {
