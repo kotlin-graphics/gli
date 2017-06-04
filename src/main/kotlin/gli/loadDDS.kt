@@ -1,15 +1,15 @@
 package gli
 
-import glm.b
+import glm_.b
 import java.io.File
 import java.io.RandomAccessFile
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import glm.glm
-import glm.set
+import glm_.glm
+import glm_.set
 import java.nio.ByteOrder
-import glm.vec3.Vec3i
+import glm_.vec3.Vec3i
 import java.net.URL
 
 /**

@@ -1,7 +1,7 @@
 package gli.buffer
 
 import com.jogamp.opengl.util.GLBuffers
-import glm.BYTES
+import glm_.BYTES
 import java.nio.*
 
 /**

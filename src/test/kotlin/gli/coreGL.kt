@@ -1,6 +1,6 @@
 package gli
 
-import glm.vec2.Vec2i
+import glm_.vec2.Vec2i
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 

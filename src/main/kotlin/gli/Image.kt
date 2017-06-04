@@ -1,9 +1,9 @@
 package gli
 
-import glm.glm
-import glm.set
-import glm.vec4.Vec4t
-import glm.vec3.Vec3i
+import glm_.glm
+import glm_.set
+import glm_.vec4.Vec4t
+import glm_.vec3.Vec3i
 import gli.buffer.byteBufferBig
 import gli.buffer.destroy
 import java.nio.ByteBuffer
@@ -120,7 +120,7 @@ class Image {
         assert(notEmpty())
         assert(!format.isCompressed)
 //        assert(Vec4t.SIZE) TODO
-        return res.put(data, textel_linear_addressing(extent(), texelCoord) * res.instanceSIZE())
+        return res.put(data, textel_linear_addressing(extent(), texelCoord) * res.instanceSize())
     }
 //
 //    /// Store the texel located at TexelCoord coordinates.

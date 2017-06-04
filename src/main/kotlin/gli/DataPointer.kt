@@ -1,6 +1,6 @@
 package gli
 
-import glm.vec4.Vec4b
+import glm_.vec4.Vec4b
 import java.nio.ByteBuffer
 
 object DataPointer {

@@ -2,8 +2,8 @@ package gli
 
 import gli.detail.Cap.*
 import gli.detail.tableF
-import glm.vec3.Vec3i
-import glm.vec4.Vec4i
+import glm_.vec3.Vec3i
+import glm_.vec4.Vec4i
 
 /**
  * Created by elect on 02/04/17.

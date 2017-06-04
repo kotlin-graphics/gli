@@ -1,10 +1,10 @@
 package gli
 
-import glm.b
-import glm.set
-import glm.vec2.Vec2i
-import glm.vec4.Vec4b
-import glm.vec4.Vec4ub
+import glm_.b
+import glm_.set
+import glm_.vec2.Vec2i
+import glm_.vec4.Vec4b
+import glm_.vec4.Vec4ub
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 

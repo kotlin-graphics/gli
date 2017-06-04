@@ -2,9 +2,9 @@ package gli
 
 import gli.Swizzle.*
 import gli.detail.Cap.*
-import glm.BYTES
-import glm.vec3.Vec3i
-import glm.vec4.Vec4i
+import glm_.BYTES
+import glm_.vec3.Vec3i
+import glm_.vec4.Vec4i
 import java.nio.ByteBuffer
 
 /**

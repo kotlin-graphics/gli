@@ -1,7 +1,7 @@
 package gli
 
-import glm.vec2.Vec2i
-import glm.vec3.Vec3i
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3i
 
 /**
  * Created by GBarbieri on 04.04.2017.

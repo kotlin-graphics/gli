@@ -1,10 +1,10 @@
 package gli
 
-import glm.glm
-import glm.set
-import glm.size
-import glm.vec2.Vec2i
-import glm.vec3.Vec3i
+import glm_.glm
+import glm_.set
+import glm_.size
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3i
 import gli.buffer.byteBufferBig
 import gli.buffer.destroyBuffers
 import java.nio.ByteBuffer

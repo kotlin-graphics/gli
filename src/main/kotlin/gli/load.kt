@@ -1,7 +1,7 @@
 package gli
 
-import glm.set
-import glm.vec3.Vec3i
+import glm_.set
+import glm_.vec3.Vec3i
 import gli.buffer.toByteBuffer
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_3BYTE_BGR
