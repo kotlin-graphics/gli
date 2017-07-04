@@ -32,15 +32,9 @@ package gli.buffer
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.jogamp.opengl.util.GLBuffers
-import java.lang.invoke.MethodHandles.*
-import java.lang.invoke.MethodType.methodType
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.nio.*
-import java.security.AccessController
-import java.security.PrivilegedAction
-import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -145,7 +139,7 @@ internal fun destroyBuffer(toBeDestroyed: Buffer) {
 
 fun main(args: Array<String>) {
 
-    val bb = GLBuffers.newDirectByteBuffer(1_000_000_000)
+    val bb = byteBufferBig(1_000_000_000)
 
     println(bb)
 

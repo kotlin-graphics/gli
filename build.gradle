@@ -7,7 +7,7 @@ group = 'com.github.kotlin-graphics'
 
 buildscript {
 
-    ext.kotlinVersion = '1.1.2-5'
+    ext.kotlinVersion = '1.2-M1'
 
     repositories {
         mavenCentral()
@@ -25,13 +25,13 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:b7b30f24e23586cb1d31f61996968e0c77476d21'
+    compile 'com.github.kotlin-graphics:glm:d7a80cc0d2be9f5844eb6a26ace8fc3775684e4b'
 
-    testCompile 'com.github.elect86:kotlintest:b31cda5fb3f38606bb08f32c22f2177a98c634aa'
+    testCompile 'com.github.elect86:kotlintest:43281b7e1b'
 
-    def joglVersion = '2.3.2'
-    compile "org.jogamp.gluegen:gluegen-rt-main:$joglVersion"
-    compile "org.jogamp.jogl:jogl-all-main:$joglVersion"
+//    def joglVersion = '2.3.2'
+//    compile "org.jogamp.gluegen:gluegen-rt-main:$joglVersion"
+//    compile "org.jogamp.jogl:jogl-all-main:$joglVersion"
 }
 
 repositories {
