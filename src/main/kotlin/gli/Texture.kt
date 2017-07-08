@@ -151,7 +151,7 @@ open class Texture {
 
     fun size(): Int {
         assert(notEmpty())
-        return cache.globalMemorySize
+        return cache.memorySize
     }
 
     fun size(level: Int): Int {
@@ -165,12 +165,12 @@ open class Texture {
         return storage.data()
     }
 
-//    fun pData(): DataPointer {
-//        assert(notEmpty())
-//        DataPointer.data = storage.data()
-//        DataPointer.offset = storage.
-//        return storage.data()
-//    }
+    fun pData(): DataPointer {
+        assert(notEmpty())
+        DataPointer.data = storage.data()
+        DataPointer.offset = TODO()//storage.ba
+        return DataPointer
+    }
 
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))

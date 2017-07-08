@@ -108,6 +108,7 @@ class coreTextureCube : StringSpec() {
                 size0 shouldBe Vec4b.size * 5
                 size1 shouldBe Vec4b.size * 5
 
+//                textureA.pData(0, Vec4b(255, 127, 0, 255))
                 textureA.setData(0, Vec4b(255, 127, 0, 255))
                 textureB.setData(0, Vec4b(0, 127, 255, 255))
 
