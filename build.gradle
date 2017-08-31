@@ -25,7 +25,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:1c62efcf7f2aa6622fc14e83e6ae603e64982d5c'
+    compile 'com.github.kotlin-graphics:glm:6495839e0823cf2048eee2eae8b977675663a93a'
 
     testCompile 'com.github.elect86:kotlintest:43281b7e1b'
 
