@@ -1,6 +1,6 @@
 ![gli](/src/main/resources/logo-mini.png)
 
-This is the Kotlin port of the original [OpenGL Image](http://gli.g-truc.net/) (*GLI*), a header only C++ image library for graphics software.
+This is the Kotlin port of the original [OpenGL Image](http://gli.g-truc.net/) (*GLI*), written by [g-truc](https://github.com/Groovounet) ([repository](https://github.com/g-truc/gli)), a header only C++ image library for graphics software.
 
 *GLI* provides classes and functions to load image files (*[KTX](https://www.khronos.org/opengles/sdk/tools/KTX/)* and *[DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943990%28v=vs.85%29.aspx)*), facilitate graphics APIs texture creation, compare textures, access texture texels, sample textures, convert textures, generate mipmaps, etc.
 
