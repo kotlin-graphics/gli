@@ -201,7 +201,9 @@ open class Texture {
             data[i] = 0
     }
 
-    fun clear(texel: Vec4b) {
+    fun clear(texel: Vec4ub) {
+        assert(notEmpty())
+        assert(format.blockSize == Vec4ub.size)
         val data = data()
         for (i in 0 until data.capacity())
             data[i] = texel[i % Vec4b.length]
