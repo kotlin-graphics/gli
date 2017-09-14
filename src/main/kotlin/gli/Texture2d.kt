@@ -44,9 +44,7 @@ class Texture2d : Texture {
     /** Create a view of the image identified by Level in the mipmap chain of the texture.  */
     operator fun get(level: Int): Image {
         assert(level < levels())
-        if(!images.containsKey(level))
-            images[level] = Image(storage, format, baseLayer, baseFace, baseLevel + level)
-        return images[level]!!
+        return images.computeIfAbsent(level, { Image(storage, format, baseLayer, baseFace, baseLevel + level) })
     }
 
     override fun dispose() {

@@ -26,7 +26,7 @@ class Image {
     var size = 0
         private set
 
-    private lateinit var data: ByteBuffer
+    private var data = 0L
 
     /** Create an empty image instance  */
     constructor()
@@ -57,7 +57,7 @@ class Image {
      *  This image object is effectively an image view where the layer, the face and the level allows identifying
      *  a specific subset of the image storage_linear source.
      *  This image object is effectively a image view where the format can be reinterpreted
-     * with a different compatible image format.    */
+     *  with a different compatible image format.    */
     constructor(storage: Storage, format: Format, baseLayer: Int, baseFace: Int, baseLevel: Int) {
         this.storage = storage
         this.format = format
@@ -129,7 +129,10 @@ class Image {
 //    template <typename genType>
 //    void store(extent_type const & TexelCoord, genType const & Data);
 
-    fun computeData(baseLayer: Int, baseFace: Int, baseLevel: Int) = storage.data(baseLayer, baseFace, baseLevel)
+    fun computeData(baseLayer: Int, baseFace: Int, baseLevel: Int) {
+        val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
+        return storage.data() + baseOffset
+    }
 
     fun computeSize(level: Int): Int {
         assert(notEmpty())

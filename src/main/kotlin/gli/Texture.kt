@@ -1,5 +1,6 @@
 package gli
 
+import glm_.b
 import glm_.set
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
@@ -13,7 +14,7 @@ import kotlin.reflect.KClass
 
 open class Texture {
 
-    protected lateinit var storage: Storage
+    protected var storage: Storage? = null
 
     var target = Target.INVALID
 
@@ -75,7 +76,7 @@ open class Texture {
         baseFace = 0; maxFace = faces - 1
         baseLevel = 0; maxLevel = levels - 1
         this.swizzles = swizzles
-        this.cache = Cache(storage, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
+        this.cache = Cache(storage!!, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
 
         assert(target != Target.CUBE || (target == Target.CUBE && extent.x == extent.y))
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && extent.x == extent.y))
@@ -102,7 +103,7 @@ open class Texture {
         this.baseFace = baseFace; this.maxFace = maxFace
         this.baseLevel = baseLevel; this.maxLevel = maxLevel
         this.swizzles = swizzles
-        cache = Cache(storage, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
+        cache = Cache(storage!!, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
 
         assert(format.blockSize == texture.format.blockSize)
         assert(target != Target._1D || (target == Target._1D && layers() == 1 && faces() == 1 && extent().y == 1 && extent().z == 1))
@@ -129,7 +130,7 @@ open class Texture {
         baseFace = texture.baseFace; maxFace = texture.maxFace
         baseLevel = texture.baseLevel; maxLevel = texture.maxLevel
         this.swizzles = swizzles
-        cache = Cache(storage, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
+        cache = Cache(storage!!, format, baseLayer, layers(), baseFace, maxFace, baseLevel, maxLevel)
 
         if (empty()) return
 
@@ -142,7 +143,7 @@ open class Texture {
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && layers() >= 1 && faces() >= 1 && extent().y >= 1 && extent().z == 1))
     }
 
-    fun empty() = if (wasInit { storage }) storage.empty() else true
+    fun empty() = storage?.empty() ?: true
     fun notEmpty() = !empty()
 
     fun layers() = if (empty()) 0 else maxLayer - baseLayer + 1 // TODO val get() ?
@@ -183,7 +184,7 @@ open class Texture {
         texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
     }
 
-    fun getData(unitOffset: Int, texel: Vec4b = Vec4b()) : Vec4b {
+    fun getData(unitOffset: Int, texel: Vec4b = Vec4b()): Vec4b {
         val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
         texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
         return texel
@@ -201,12 +202,30 @@ open class Texture {
             data[i] = 0
     }
 
-    fun clear(texel: Vec4ub) {
+    fun clear(texel: Vec4b) {
         assert(notEmpty())
         assert(format.blockSize == Vec4ub.size)
         val data = data()
         for (i in 0 until data.capacity())
             data[i] = texel[i % Vec4b.length]
+    }
+
+    inline fun <reified T : Any> clear(red: Int, green: Int, blue: Int, alpha: Int) {
+        assert(notEmpty())
+        val data = data()
+        if (T::class == Vec4b::class) {
+            assert(format.blockSize == Vec4b.size)
+            val r = red.b
+            val g = green.b
+            val b = blue.b
+            val a = alpha.b
+            for (i in 0 until data.capacity() step 4) {
+                data[i] = r
+                data[i + 1] = g
+                data[i + 2] = b
+                data[i + 3] = a
+            }
+        }
     }
 
     fun copy(textureSrc: Texture,
@@ -228,7 +247,7 @@ open class Texture {
             dst[offset + i] = src[i]
     }
 
-    fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {
+    inline fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {
         Vec4b::class, Vec4ub::class -> {
             val texel = Vec4b()
             val data = data()
