@@ -2,7 +2,6 @@ package gli
 
 import glm_.set
 import glm_.vec3.Vec3i
-import gli.buffer.toByteBuffer
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_3BYTE_BGR
 import java.awt.image.BufferedImage.TYPE_4BYTE_ABGR
@@ -85,7 +84,7 @@ fun loadImage(image: BufferedImage): Texture {
     return texture
 }
 
-fun BufferedImage.toByteBuffer() = (raster.dataBuffer as DataBufferByte).data.toByteBuffer()
+//fun BufferedImage.toByteBuffer() = (raster.dataBuffer as DataBufferByte).data.toByteBuffer() TODO
 
 // TODO credits JOGAMP
 fun BufferedImage.flipY(): BufferedImage {

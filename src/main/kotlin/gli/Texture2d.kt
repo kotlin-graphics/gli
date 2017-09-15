@@ -17,6 +17,10 @@ class Texture2d : Texture {
     constructor(format: Format, extent: Vec2i, levels: Int, swizzles: Swizzles = Swizzles()) :
             super(Target._2D, format, Vec3i(extent, 1), 1, 1, levels, swizzles)
 
+    /** vec3i extend    */
+    constructor(format: Format, extent: Vec3i, levels: Int, swizzles: Swizzles = Swizzles()) :
+            super(Target._2D, format, extent, 1, 1, levels, swizzles)
+
     /** Create a texture2d and allocate a new storage_linear with a complete mipmap chain.  */
     constructor(format: Format, extent: Vec2i, swizzles: Swizzles = Swizzles()) :
             super(Target._2D, format, Vec3i(extent, 1), 1, 1, gli.levels(extent), swizzles)
@@ -39,16 +43,15 @@ class Texture2d : Texture {
                     texture.baseFace, texture.maxFace,
                     texture.baseLevel + baseLevel, texture.baseLevel + maxLevel)
 
-    private val images = mutableMapOf<Int, Image>()
+    /** for duplicate   */
+    constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int, swizzles: Swizzles = Swizzles()) :
+            super(Target._2D, format, extent, layers, faces, levels, swizzles)
 
     /** Create a view of the image identified by Level in the mipmap chain of the texture.  */
     operator fun get(level: Int): Image {
         assert(level < levels())
-        return images.computeIfAbsent(level, { Image(storage, format, baseLayer, baseFace, baseLevel + level) })
+        return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
-    override fun dispose() {
-        super.dispose()
-        images.values.forEach(Image::dispose)
-    }
+    override fun dispose() = super.dispose()
 }

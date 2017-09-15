@@ -17,6 +17,10 @@ class Texture1d : Texture {
     constructor(format: Format, extent: Vec1i, levels: Int, swizzles: Swizzles = Swizzles()) :
             super(Target._1D, format, Vec3i(extent.x, 1, 1), 1, 1, levels, swizzles)
 
+    /** vec3i extend    */
+    constructor(format: Format, extent: Vec3i, levels: Int, swizzles: Swizzles = Swizzles()) :
+            super(Target._1D, format, extent, 1, 1, levels, swizzles)
+
     /** Create a texture1d and allocate a new storage_linear    */
     constructor(format: Format, extent: Vec1i, swizzles: Swizzles = Swizzles()) :
             super(Target._1D, format, Vec3i(extent.x, 1, 1), 1, 1, levels(extent), swizzles)
@@ -38,4 +42,16 @@ class Texture1d : Texture {
                     texture.baseLayer, texture.maxLayer,
                     texture.baseFace, texture.maxFace,
                     texture.baseLevel + baseLevel, texture.maxLevel + maxLevel)
+
+    /** for duplicate   */
+    constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int, swizzles: Swizzles = Swizzles()) :
+            super(Target._1D, format, extent, layers, faces, levels, swizzles)
+
+    /** Create a view of the image identified by Level in the mipmap chain of the texture.  */
+    operator fun get(level: Int): Image {
+        assert(level < levels())
+        return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
+    }
+
+    override fun dispose() = super.dispose()
 }

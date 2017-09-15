@@ -1,10 +1,13 @@
 package gli
 
+import gli.buffer.destroy
+import glm_.BYTES
 import glm_.b
 import glm_.set
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
+import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
@@ -39,11 +42,13 @@ open class Texture {
     var swizzles = Swizzles(Swizzle.ZERO)
         get() {
             val formatSwizzle = format.formatInfo.swizzles
-            return Swizzles(
-                    if (field.r.isChannel()) formatSwizzle[field.r.i] else field.r,
-                    if (field.g.isChannel()) formatSwizzle[field.g.i] else field.g,
-                    if (field.b.isChannel()) formatSwizzle[field.b.i] else field.b,
-                    if (field.a.isChannel()) formatSwizzle[field.a.i] else field.a)
+            return with(field) {
+                Swizzles(
+                        if (r.isChannel()) formatSwizzle[r.i] else r,
+                        if (g.isChannel()) formatSwizzle[g.i] else g,
+                        if (b.isChannel()) formatSwizzle[b.i] else b,
+                        if (a.isChannel()) formatSwizzle[a.i] else a)
+            }
         }
         private set
 
@@ -96,7 +101,7 @@ open class Texture {
                 baseLevel: Int, maxLevel: Int,
                 swizzles: Swizzles = Swizzles()
     ) {
-        storage = texture.storage
+        storage = Storage(texture.storage!!)
         this.target = target
         this.format = format
         this.baseLayer = baseLayer; this.maxLayer = maxLayer
@@ -123,7 +128,7 @@ open class Texture {
                 format: Format,
                 swizzles: Swizzles = Swizzles()
     ) {
-        storage = texture.storage
+        storage = Storage(texture.storage!!)
         this.target = target
         this.format = format
         baseLayer = texture.baseLayer; maxLayer = texture.maxLayer
@@ -148,7 +153,7 @@ open class Texture {
 
     fun layers() = if (empty()) 0 else maxLayer - baseLayer + 1 // TODO val get() ?
     fun faces() = if (empty()) 0 else maxFace - baseFace + 1
-    fun levels() = if (empty()) 0 else maxLevel - baseLayer + 1
+    fun levels() = if (empty()) 0 else maxLevel - baseLevel + 1
 
     fun size(): Int {
         assert(notEmpty())
@@ -158,73 +163,77 @@ open class Texture {
     fun size(level: Int): Int {
         assert(notEmpty())
         assert(level in 0..levels())
-        return storage.levelSize(level)
+        return storage!!.levelSize(level)
     }
 
     fun data(): ByteBuffer {
         assert(notEmpty())
-        return storage.data()
+        return memByteBuffer(cache.getBaseAddress(0, 0, 0), size())
     }
 
-    fun pData(): DataPointer {
-        assert(notEmpty())
-        DataPointer.data = storage.data()
-        DataPointer.offset = TODO()//storage.ba
-        return DataPointer
-    }
-
-    fun data(layer: Int, face: Int, level: Int): ByteBuffer {
+    fun data(layer: Int, face: Int, level: Int): Long {
         assert((notEmpty()))
-        assert(layer >= 0 && layer < layers() && face >= 0 && face < faces() && level >= 0 && level < levels())
-        return storage.data(layer, face, level)
+        assert(layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
+        return cache.getBaseAddress(layer, face, level)
     }
 
     fun setData(unitOffset: Int, texel: Vec4b) {
-        val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
-        texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
+        val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
+        texel.to(storage!!.data(), baseOffset + unitOffset * Vec4b.size)
     }
 
     fun getData(unitOffset: Int, texel: Vec4b = Vec4b()): Vec4b {
-        val baseOffset = storage.baseOffset(baseLayer, baseFace, baseLevel)
-        texel.to(storage.data(), baseOffset + unitOffset * Vec4b.size)
+        val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
+        texel.to(storage!!.data(), baseOffset + unitOffset * Vec4b.size)
         return texel
     }
 
     fun extent(level: Int = 0): Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
-        return storage.extent(level)
+        return storage!!.extent(level)
     }
 
-    fun clear() {
-        val data = data()
-        for (i in 0 until data.capacity())
-            data[i] = 0
-    }
+    fun clear() = data().run { for (i in 0 until capacity()) set(i, 0) }
 
     fun clear(texel: Vec4b) {
         assert(notEmpty())
         assert(format.blockSize == Vec4ub.size)
         val data = data()
-        for (i in 0 until data.capacity())
-            data[i] = texel[i % Vec4b.length]
+        for (i in 0 until data.capacity() step 4) {
+            data[i] = texel.r
+            data[i + 1] = texel.g
+            data[i + 2] = texel.b
+            data[i + 3] = texel.a
+        }
+    }
+
+    fun clear(texel: Long) {
+        assert(notEmpty())
+        assert(format.blockSize == Long.BYTES)
+        val data = data()
+        for (i in 0 until data.capacity() step Long.BYTES)
+            data.putLong(i, texel)
     }
 
     inline fun <reified T : Any> clear(red: Int, green: Int, blue: Int, alpha: Int) {
         assert(notEmpty())
         val data = data()
-        if (T::class == Vec4b::class) {
-            assert(format.blockSize == Vec4b.size)
-            val r = red.b
-            val g = green.b
-            val b = blue.b
-            val a = alpha.b
-            for (i in 0 until data.capacity() step 4) {
-                data[i] = r
-                data[i + 1] = g
-                data[i + 2] = b
-                data[i + 3] = a
+        when (T::class) {
+            Vec4b::class -> {
+                assert(format.blockSize == Vec4b.size)
+                val r = red.b
+                val g = green.b
+                val b = blue.b
+                val a = alpha.b
+                for (i in 0 until data.capacity() step 4) {
+                    data[i] = r
+                    data[i + 1] = g
+                    data[i + 2] = b
+                    data[i + 3] = a
+                }
             }
+            else -> throw Error()
         }
     }
 
@@ -241,13 +250,13 @@ open class Texture {
         assert(levelDst < levels())
 
         val dst = data()
-        val offset = storage.baseOffset(layerDst, faceDst, levelDst)
+        val offset = storage!!.baseOffset(layerDst, faceDst, levelDst)
         val src = textureSrc.data(layerSrc, faceSrc, levelSrc)
-        for (i in 0 until size(levelDst))
-            dst[offset + i] = src[i]
+//        for (i in 0 until size(levelDst)) TODO
+//            dst[offset + i] = src[i]
     }
 
-    inline fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {
+    fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {
         Vec4b::class, Vec4ub::class -> {
             val texel = Vec4b()
             val data = data()
@@ -260,15 +269,37 @@ open class Texture {
         else -> throw Error("unsupported texel type")
     }
 
-    open fun dispose() = storage.dispose()
+    open fun dispose() = storage?.data()?.destroy()
 
-    override fun equals(other: Any?): Boolean {
-        return if (other !is Texture) false
-        else storage == other.storage &&
-                target == other.target && format == other.format &&
-                baseLayer == other.baseLayer && maxLayer == other.maxLayer &&
-                baseFace == other.baseFace && maxFace == other.maxFace &&
-                baseLevel == other.baseLevel && maxLevel == other.maxLevel &&
-                swizzles == other.swizzles
+    override fun equals(other: Any?) = when {
+        other !is Texture -> false
+        empty() && other.empty() -> true
+        empty() != other.empty() -> false
+        target != other.target -> false
+        layers() != other.layers() -> false
+        faces() != other.faces() -> false
+        levels() != other.levels() -> false
+        format != other.format -> false
+        size() != other.size() -> false
+        else -> equalData(other)
+    }
+
+    fun equalData(b: Texture): Boolean {
+
+        assert(size() == b.size())
+
+        if (data() == b.data()) return true
+
+        for (layerIndex in 0 until layers())
+            for (faceIndex in 0 until faces())
+                for (levelIndex in 0 until levels()) {
+                    val size = size(levelIndex)
+                    val dataA = memByteBuffer(data(layerIndex, faceIndex, levelIndex), size)
+                    val dataB = memByteBuffer(b.data(layerIndex, faceIndex, levelIndex), size)
+                    for (i in 0 until size)
+                        if (dataA[i] != dataB[i])
+                            return false
+                }
+        return true
     }
 }

@@ -1,18 +1,13 @@
 package gli
 
+import gli.buffer.destroy
 import glm_.glm
-import glm_.set
 import glm_.size
+import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
-import gli.buffer.byteBufferBig
-import gli.buffer.destroy
-import gli.buffer.destroyBuffers
-import glm_.L
-import glm_.vec1.Vec1i
 import org.lwjgl.system.MemoryUtil
 import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 /**
  * Created by GBarbieri on 03.04.2017.
@@ -37,9 +32,19 @@ class Storage {
     private var extent = Vec3i(0)
 
     private var data: ByteBuffer? = null
-    private var dataPtr = MemoryUtil.NULL
 
     constructor()
+    constructor(storage: Storage) {
+        layers = storage.layers
+        faces = storage.faces
+        levels = storage.levels
+        blockSize = storage.blockSize
+        blockCount = Vec3i(storage.blockCount)
+        blockExtend = Vec3i(storage.blockExtend)
+        extent = Vec3i(storage.extent)
+        data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(storage.data), storage.data!!.remaining())
+    }
+
     constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int) {
         this.layers = layers
         this.faces = faces
@@ -54,9 +59,7 @@ class Storage {
         assert(levels >= 0)
         assert(glm.all(glm.greaterThan(extent, Vec3i(0))))
 
-        val size = layerSize(0, faces - 1, 0, levels - 1) * layers
-        dataPtr = MemoryUtil.nmemAlloc(size.L)
-        data = MemoryUtil.memByteBuffer(dataPtr, size)
+        data = MemoryUtil.memCalloc(layerSize(0, faces - 1, 0, levels - 1) * layers)
     }
 
     fun empty() = data == null
@@ -116,8 +119,8 @@ class Storage {
 
         val baseOffsetSrc = storageSrc.baseOffset(layerSrc, faceSrc, levelSrc)
         val baseOffsetDst = baseOffset(layerDst, faceDst, levelDst)
-        val imageSrc = storageSrc.dataPtr + baseOffsetSrc
-        val imageDst = dataPtr + baseOffsetDst
+        val imageSrc = MemoryUtil.memAddress(storageSrc.data) + baseOffsetSrc
+        val imageDst = MemoryUtil.memAddress(data) + baseOffsetDst
 
         for (blockIndexZ in 0 until blockCount.z)
             for (blockIndexY in 0 until blockCount.y) {
@@ -158,16 +161,14 @@ class Storage {
     fun destroy() = data?.destroy()
 
     override fun equals(other: Any?): Boolean {
-        return if (other !is Storage)
-            false
-        else
-            layers == other.layers &&
-                    faces == other.faces &&
-                    levels == other.levels &&
-                    blockSize == other.blockSize &&
-                    blockCount == other.blockCount &&
-                    blockExtend == other.blockExtend &&
-                    extent == other.extent &&
-                    data == other.data
+        return if (other !is Storage) false
+        else layers == other.layers &&
+                faces == other.faces &&
+                levels == other.levels &&
+                blockSize == other.blockSize &&
+                blockCount == other.blockCount &&
+                blockExtend == other.blockExtend &&
+                extent == other.extent &&
+                data == other.data
     }
 }

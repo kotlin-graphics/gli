@@ -2,6 +2,7 @@ package gli
 
 import glm_.vec3.Vec3i
 import glm_.glm
+import org.lwjgl.system.MemoryUtil.memAddress
 
 /** Pre compute at texture instance creation some information for faster access to texels   */
 class Cache(
@@ -15,7 +16,7 @@ class Cache(
     val faces = maxFace - baseFace + 1
     val levels = maxLevel - baseLevel + 1
 
-    private val baseOffsets = IntArray(layers * faces * levels)
+    private val baseAddresses = LongArray(layers * faces * levels)
     private val imageExtent = Array(16, { Vec3i() })
     private val imageMemorySize = IntArray(16)
 
@@ -30,8 +31,8 @@ class Cache(
                 for (level in 0 until levels) {
 
                     val index = indexCache(layer, face, level)
-
-                    baseOffsets[index] = storage.baseOffset(baseLayer + layer, baseFace + face, baseLevel + level)
+                    val offset = storage.baseOffset(baseLayer + layer, baseFace + face, baseLevel + level)
+                    baseAddresses[index] = memAddress(storage.data()) + offset
                 }
 
         for (level in 0 until levels) {
@@ -49,7 +50,7 @@ class Cache(
     private fun indexCache(layer: Int, face: Int, level: Int) = ((layer * faces) + face) * levels + level
 
     /** Base addresses of each images of a texture. */
-    fun baseAddress(layer: Int, face: Int, level: Int) = baseOffsets[indexCache(layer, face, level)]
+    fun baseAddress(layer: Int, face: Int, level: Int) = baseAddresses[indexCache(layer, face, level)]
 
     /** In texels   */
     fun extent(level: Int) = imageExtent[level]
@@ -59,4 +60,7 @@ class Cache(
 
     /** In bytes    */
     val memorySize get() = globalMemorySize
+
+    /** Base addresses of each images of a texture. */
+    fun getBaseAddress(layer:Int, face:Int, level:Int) = baseAddresses[indexCache(layer, face, level)]
 }
