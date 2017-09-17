@@ -50,7 +50,7 @@ class Storage {
         this.faces = faces
         this.levels = levels
         this.blockSize = format.blockSize
-        this.blockCount = glm.ceilMultiple(extent, format.blockExtend) / format.blockExtend
+        this.blockCount = glm.max(extent / format.blockExtend, 1)
         this.blockExtend = format.blockExtend
         this.extent = extent
 

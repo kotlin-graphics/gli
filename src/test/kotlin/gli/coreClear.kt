@@ -40,24 +40,28 @@ class coreClear : StringSpec() {
                 val textureE = gli.duplicate(textureC, 1, 2)
                 val textureF = Texture1d(textureC, 1, 2)
                 assert(textureE == textureF)
-//
-//                val textureG = gli.duplicate(textureD, 1, 2)
-//                val textureH = Texture2d(textureD, 1, 2)
-//                assert(textureG == textureH)
-//
-//                colors.last().let {
-//                    when (it) {
-//                        is Long -> {
-//                            textureG.clear(it)
-//                            textureH.clear(it)
-//                        }
-//                        else -> throw Error()
-//                    }
-//                    assert(textureG == textureH)
-//                }
-//                textureG.clear()
-//                textureH.clear()
-//                assert(textureG == textureH)
+
+                val textureG = gli.duplicate(textureD, 1, 2)
+                val textureH = Texture1d(textureD, 1, 2)
+                assert(textureG == textureH)
+
+                colors.last().let {
+                    when (it) {
+                        is Byte -> {
+                            textureG.clear(it)
+                            textureH.clear(it)
+                        }
+                        is Long -> {
+                            textureG.clear(it)
+                            textureH.clear(it)
+                        }
+                        else -> throw Error()
+                    }
+                    assert(textureG == textureH)
+                }
+                textureG.clear()
+                textureH.clear()
+                assert(textureG == textureH)
             }
 
             fun testTexture(size: Vec2i, format: Format, colors: List<Any>) {
@@ -87,6 +91,10 @@ class coreClear : StringSpec() {
 
                 colors.last().let {
                     when (it) {
+                        is Byte -> {
+                            textureG.clear(it)
+                            textureH.clear(it)
+                        }
                         is Long -> {
                             textureG.clear(it)
                             textureH.clear(it)
@@ -173,6 +181,18 @@ class coreClear : StringSpec() {
                 testTexture(Vec2i(i), Format.RGB_DXT1_UNORM_BLOCK8, colorDXT1)
                 testTexture(Vec3i(i), Format.RGB_DXT1_UNORM_BLOCK8, colorDXT1)
                 testTexture(Vec1i(i), Format.R8_UNORM_PACK8, colorR8_UNORM)
+//                testTexture<gli::texture1d>(gli::texture1d::extent_type(Sizes[i]), gli::FORMAT_R8_UNORM_PACK8, ColorR8_UNORM);
+//                Error += test_texture<gli::texture2d>(gli::texture2d::extent_type(Sizes[i]), gli::FORMAT_R8_UNORM_PACK8, ColorR8_UNORM);
+//                Error += test_texture<gli::texture3d>(gli::texture3d::extent_type(Sizes[i]), gli::FORMAT_R8_UNORM_PACK8, ColorR8_UNORM);
+//                Error += test_texture<gli::texture1d>(gli::texture1d::extent_type(Sizes[i]), gli::FORMAT_RGB8_UNORM_PACK8, ColorRGB8_UNORM);
+//                Error += test_texture<gli::texture2d>(gli::texture2d::extent_type(Sizes[i]), gli::FORMAT_RGB8_UNORM_PACK8, ColorRGB8_UNORM);
+//                Error += test_texture<gli::texture3d>(gli::texture3d::extent_type(Sizes[i]), gli::FORMAT_RGB8_UNORM_PACK8, ColorRGB8_UNORM);
+//                Error += test_texture<gli::texture1d>(gli::texture1d::extent_type(Sizes[i]), gli::FORMAT_RGBA8_UNORM_PACK8, ColorRGBA8_UNORM);
+//                Error += test_texture<gli::texture2d>(gli::texture2d::extent_type(Sizes[i]), gli::FORMAT_RGBA8_UNORM_PACK8, ColorRGBA8_UNORM);
+//                Error += test_texture<gli::texture3d>(gli::texture3d::extent_type(Sizes[i]), gli::FORMAT_RGBA8_UNORM_PACK8, ColorRGBA8_UNORM);
+//                Error += test_texture<gli::texture1d>(gli::texture1d::extent_type(Sizes[i]), gli::FORMAT_RGBA32_SFLOAT_PACK32, ColorRGBA32F);
+//                Error += test_texture<gli::texture2d>(gli::texture2d::extent_type(Sizes[i]), gli::FORMAT_RGBA32_SFLOAT_PACK32, ColorRGBA32F);
+//                Error += test_texture<gli::texture3d>(gli::texture3d::extent_type(Sizes[i]), gli::FORMAT_RGBA32_SFLOAT_PACK32, ColorRGBA32F)
             }
         }
     }

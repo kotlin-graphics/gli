@@ -41,7 +41,7 @@ class Texture1d : Texture {
             super(texture, Target._1D, texture.format,
                     texture.baseLayer, texture.maxLayer,
                     texture.baseFace, texture.maxFace,
-                    texture.baseLevel + baseLevel, texture.maxLevel + maxLevel)
+                    texture.baseLevel + baseLevel, texture.baseLevel + maxLevel)
 
     /** for duplicate   */
     constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int, swizzles: Swizzles = Swizzles()) :

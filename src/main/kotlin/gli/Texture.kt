@@ -208,6 +208,14 @@ open class Texture {
         }
     }
 
+    fun clear(texel: Byte) {
+        assert(notEmpty())
+        assert(format.blockSize == Byte.BYTES)
+        val data = data()
+        for (i in 0 until data.capacity() step Byte.BYTES)
+            data[i] = texel
+    }
+
     fun clear(texel: Long) {
         assert(notEmpty())
         assert(format.blockSize == Long.BYTES)
