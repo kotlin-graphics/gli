@@ -3,6 +3,7 @@ package gli_
 import gli_.buffer.destroy
 import glm_.BYTES
 import glm_.b
+import glm_.glm
 import glm_.set
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
@@ -11,6 +12,7 @@ import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KClass
 
 /**
@@ -324,6 +326,37 @@ open class Texture {
         else -> throw Error("unsupported texel type")
     }
 
+//    template <typename gen_type>
+//    inline gen_type texture::load(extent_type const& TexelCoord, size_type Layer,  size_type Face, size_type Level) const
+//    {
+//        GLI_ASSERT(!this->empty());
+//        GLI_ASSERT(!is_compressed(this->format()));
+//        GLI_ASSERT(block_size(this->format()) == sizeof(gen_type));
+//
+//        size_type const ImageOffset = this->Storage->image_offset(TexelCoord, this->extent(Level));
+//        GLI_ASSERT(ImageOffset < this->size<gen_type>(Level));
+//
+//        return *(this->data<gen_type>(Layer, Face, Level) + ImageOffset);
+//    }
+
+    fun store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: Any) {
+
+        assert(notEmpty() && !format.isCompressed)
+        assert(glm.all(glm.lessThan(texelCoord, extent(level))))
+
+        when (texel) {
+            is Vec4b -> {
+                assert(format.blockSize == Vec4b.size)
+
+                val imageOffset = storage!!.imageOffset(texelCoord, extent(level))
+                assert(imageOffset < size(level) / Vec4b.size)
+
+                data<Vec4b>(layer, face, level)[imageOffset] = texel
+            }
+            else -> throw Error()
+        }
+    }
+
     open fun dispose() = storage?.data()?.destroy()
 
     override fun equals(other: Any?) = when {
@@ -339,7 +372,7 @@ open class Texture {
         else -> equalData(other)
     }
 
-    fun equalData(b: Texture): Boolean {
+    private fun equalData(b: Texture): Boolean {
 
         assert(size() == b.size())
 

@@ -53,5 +53,12 @@ class Texture2d : Texture {
         return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
+//    inline gen_type texture2d::load(extent_type const& TexelCoord, size_type Level) const
+//    {
+//        return this->texture::load<gen_type>(texture::extent_type(TexelCoord, 0), 0, 0, Level);
+//    }
+
+    fun store(texelCoord:Vec2i, level:Int, texel: Any) = super.store(Vec3i(texelCoord, 0), 0, 0, level, texel)
+
     override fun dispose() = super.dispose()
 }
