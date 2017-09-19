@@ -3,11 +3,13 @@ package gli_
 import gli_.detail.has
 import gli_.detail.or
 import gli_.dx.has
-import gli_.dx.or
-import java.io.File
-import java.io.RandomAccessFile
+import glm_.b
+import glm_.set
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
 
 interface saveDds {
 
@@ -19,28 +21,43 @@ interface saveDds {
         else -> if (dxFormat.ddPixelFormat has dx.Ddpf.FOURCC) dxFormat.d3DFormat else dx.D3dfmt.UNKNOWN
     }
 
+
+    fun getDimension(target: Target): Int {
+
+        val table = arrayOf(
+                detail.D3d10resourceDimension.TEXTURE1D,        //TARGET_1D,
+                detail.D3d10resourceDimension.TEXTURE1D,        //TARGET_1D_ARRAY,
+                detail.D3d10resourceDimension.TEXTURE2D,        //TARGET_2D,
+                detail.D3d10resourceDimension.TEXTURE2D,        //TARGET_2D_ARRAY,
+                detail.D3d10resourceDimension.TEXTURE3D,        //TARGET_3D,
+                detail.D3d10resourceDimension.TEXTURE2D,        //TARGET_RECT,
+                detail.D3d10resourceDimension.TEXTURE2D,        //TARGET_RECT_ARRAY,
+                detail.D3d10resourceDimension.TEXTURE2D,        //TARGET_CUBE,
+                detail.D3d10resourceDimension.TEXTURE2D         //TARGET_CUBE_ARRAY
+        )
+        assert(table.size == TARGET_COUNT, { "Table needs to be updated" })
+        return table[target.i].i
+    }
+
     /** Save a texture storage_linear to a DDS file.
      *  @param texture Source texture to save
-     *  @param path Path for where to save the file. It must include the filaname and filename extension.
+     *  @param filename string for where to save the file. It must include the filaname and filename extension.
      *  This function ignores the filename extension in the path and save to DDS anyway but keep the requested filename extension.
      *  @return returns false if the function fails to save the file.   */
     fun saveDds(texture: Texture, filename: String): Boolean {
 
         if (texture.empty()) return false
 
-        val stream = RandomAccessFile(filename, "w")
-        val channel = stream.channel
-        if(!channel.isOpen) return false
-
-        val result = saveDds(texture, channel)
+        return saveDds(texture, Paths.get(filename))
     }
 
     /** Save a texture storage_linear to a DDS file.
      *
      *  @param texture Source texture to save
-     *  @param channel Storage for the DDS container. The function resizes the containers to fit the necessary storage_linear.
+     *  @param path path for where to save the file. It must include the filaname and filename extension.
+     *  This function ignores the filename extension in the path and save to DDS anyway but keep the requested filename extension.
      *  @return Returns false if the function fails to save the file.   */
-    fun saveDds(texture: Texture, channel: FileChannel): Boolean {
+    fun saveDds(texture: Texture, path: Path): Boolean {
 
         if (texture.empty()) return false
 
@@ -53,7 +70,7 @@ interface saveDds {
                 if (requireDX10Header) detail.DdsHeader10.SIZE else 0)
 
         var offset = 0
-        for (c in detail.FOURCC_DDS) buffer.putChar(offset++, c)
+        for (c in detail.FOURCC_DDS) buffer[offset++] = c.b
 
         val header = detail.DdsHeader()
 
@@ -96,22 +113,28 @@ interface saveDds {
             if (texture.extent().z > 1)
                 cubemapFlags = cubemapFlags or detail.DdsCubemapFlag.VOLUME
         }
-        offset += sizeof(detail::dds_header)
+        header.to(buffer, offset)
+        offset += detail.DdsHeader.SIZE
 
         if (requireDX10Header) {
-            detail::dds_header10& Header10 = *reinterpret_cast<detail::dds_header10*>(&Memory[0]+Offset)
-            offset += sizeof(detail::dds_header10)
-
-            Header10.ArraySize = static_cast < std::uint32_t > (Texture.layers())
-            Header10.ResourceDimension = detail::get_dimension(Texture.target())
-            Header10.MiscFlag = 0//Storage.levels() > 0 ? detail::D3D10_RESOURCE_MISC_GENERATE_MIPS : 0;
-            Header10.Format = dxFormat.DXGIFormat
-            Header10.AlphaFlags = detail::DDS_ALPHA_MODE_UNKNOWN
+            val header10 = detail.DdsHeader10().apply {
+                arraySize = texture.layers()
+                resourceDimension = getDimension(texture.target)
+                miscFlag = 0    //Storage.levels() > 0 ? detail::D3D10_RESOURCE_MISC_GENERATE_MIPS : 0;
+                format = dxFormat.dxgiFormat.i
+                alphaFlags = detail.DdsAlphaMode.UNKNOWN.i
+            }
+            header10.to(buffer, offset)
+            offset += detail.DdsHeader10.SIZE
         }
 
+        val data = texture.data()
+        for(i in 0 until texture.size())
+            buffer[offset++] = data[i]
 
-        val channel = Files.n
-        std::memcpy(& Memory [0] + offset, Texture.data(), Texture.size())
+        FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
+            while(buffer.hasRemaining()) it.write(buffer)
+        }
 
         return true
     }

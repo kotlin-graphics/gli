@@ -372,6 +372,14 @@ object detail {
 
         constructor()
 
+        fun to(buffer: ByteBuffer, index: Int) {
+            buffer.putInt(index, size)
+            buffer.putInt(index + Int.BYTES, flags)
+            buffer.putInt(index + Int.BYTES * 2, fourCC)
+            buffer.putInt(index + Int.BYTES * 3, bpp)
+            mask.to(buffer, index + Int.BYTES * 4)
+        }
+
         companion object {
             val SIZE = 4 * Int.BYTES + Vec4i.size
         }
@@ -408,6 +416,19 @@ object detail {
         }
 
         constructor()
+
+        fun to(buffer: ByteBuffer, index: Int) {
+            buffer.putInt(index, size)
+            buffer.putInt(index + Int.BYTES, flags)
+            buffer.putInt(index + Int.BYTES * 2, height)
+            buffer.putInt(index + Int.BYTES * 3, width)
+            buffer.putInt(index + Int.BYTES * 4, pitch)
+            buffer.putInt(index + Int.BYTES * 5, depth)
+            buffer.putInt(index + Int.BYTES * 6, mipMapLevels)
+            format.to(buffer, index + Int.BYTES * (7 + 11))
+            buffer.putInt(index + Int.BYTES * (7 + 11 + 1), surfaceFlags)
+            buffer.putInt(index + Int.BYTES * (7 + 11 + 2), cubemapFlags)
+        }
 
         companion object {
             val SIZE = (7 + 11 + 2 + 3) * Int.BYTES + DdsPixelFormat.SIZE
@@ -464,6 +485,14 @@ object detail {
             miscFlag = data.int
             arraySize = data.int
             alphaFlags = data.int
+        }
+
+        fun to(buffer: ByteBuffer, index: Int) {
+            buffer.putInt(index, format)
+            buffer.putInt(index + Int.BYTES, resourceDimension)
+            buffer.putInt(index + Int.BYTES * 2, miscFlag)
+            buffer.putInt(index + Int.BYTES * 3, arraySize)
+            buffer.putInt(index + Int.BYTES * 4, alphaFlags)
         }
 
         companion object {

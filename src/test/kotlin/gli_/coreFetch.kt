@@ -17,7 +17,7 @@ class coreFetch : StringSpec() {
                 textureA.store(Vec2i(1, 1), 0, 3)
                 textureA.store(Vec2i(0, 1), 0, 4)
                 textureA.store(Vec2i(0, 0), 1, 5)
-                gli.saveDds(TextureA, "r8_unorm_4pixels.dds")
+                gli.saveDds(textureA, "r8_unorm_4pixels.dds")
             }
         }
     }

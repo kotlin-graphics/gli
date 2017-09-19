@@ -4,6 +4,7 @@ package gli_
 object gli :
         clear,
         levels,
+        saveDds,
         view {
 
     val gl = gli_.gl
