@@ -60,7 +60,4 @@ class Cache(
 
     /** In bytes    */
     val memorySize get() = globalMemorySize
-
-    /** Base addresses of each images of a texture. */
-    fun getBaseAddress(layer:Int, face:Int, level:Int) = baseAddresses[indexCache(layer, face, level)]
 }

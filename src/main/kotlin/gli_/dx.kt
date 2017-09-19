@@ -6,6 +6,8 @@ import gli_.dx.Dxgi_format_dds.*
 import gli_.dx.Dxgi_format_gli.*
 import glm_.i
 import glm_.vec4.Vec4i
+import gli_.detail.has
+import gli_.detail.hasnt
 
 /**
  * Created by elect on 02/04/17.
@@ -34,12 +36,12 @@ object dx {
 
             val dxFormat = table[currentFormat.i - FORMAT_FIRST.i]
 
-            if (fourCC == GLI1 && (info.flags has detail.Cap.DDS_GLI_EXT_BIT.i) && dxFormat.dxgiFormat.gli == format.gli) {
+            if (fourCC == GLI1 && (info.flags has detail.Cap.DDS_GLI_EXT_BIT) && dxFormat.dxgiFormat.gli == format.gli) {
                 result = currentFormat.i
                 break
             }
 
-            if (fourCC == DX10 && (info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT.i) && dxFormat.dxgiFormat.dds == format.dds) {
+            if (fourCC == DX10 && (info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT) && dxFormat.dxgiFormat.dds == format.dds) {
                 result = currentFormat.i
                 break
             }
@@ -51,9 +53,9 @@ object dx {
 
         val dxFormat = translate(format)
 
-        val useDdsExt = format.formatInfo.flags has detail.Cap.DDS_GLI_EXT_BIT.i
+        val useDdsExt = format.formatInfo.flags has detail.Cap.DDS_GLI_EXT_BIT
 
-        return ((dxFormat.ddPixelFormat.i has FOURCC.i) && dxFormat.d3DFormat == GLI1) || (target.isTargetArray || target.isTarget1d) && useDdsExt
+        return ((dxFormat.ddPixelFormat.i has FOURCC) && dxFormat.d3DFormat == GLI1) || (target.isTargetArray || target.isTarget1d) && useDdsExt
     }
 
     fun GLI_MAKEFOURCC(ch0: Char, ch1: Char, ch2: Char, ch3: Char) = (ch3.i shl 24) or (ch2.i shl 16) or (ch1.i shl 8) or ch0.i
@@ -502,6 +504,12 @@ object dx {
             fun of(i: Int) = values().find { it.i == i }!!
         }
     }
+
+    infix fun Ddpf.has(b: Ddpf) = (i and b.i) != 0
+    infix fun Int.has(b: Ddpf) = (this and b.i) != 0
+    infix fun Int.hasnt(b: Ddpf) = (this and b.i) == 0
+    infix fun Ddpf.or(b: Ddpf) = i or b.i
+    infix fun Int.or(b: Ddpf) = this or b.i
 
     class Format(val ddPixelFormat: Ddpf, val d3DFormat: D3dfmt, val dxgiFormat: DxgiFormat, val mask: Vec4i) {
         constructor(ddPixelFormat: Ddpf, d3DFormat: D3dfmt, dxgiFormatDDS: Dxgi_format_dds, mask: Vec4i)

@@ -106,9 +106,9 @@ class Storage {
         return coord.x + coord.y * extend.x
     }
 
-    fun imageOffset(coord: Vec3i, extend: Vec3i): Int {
-        assert(glm.all(glm.lessThan(coord, extend)))
-        return coord.x + coord.y * extend.x + coord.z * extend.x * extend.y
+    fun imageOffset(coord: Vec3i, extent: Vec3i): Int {
+        assert(glm.all(glm.lessThan(coord, extent)))
+        return coord.x + coord.y * extent.x + coord.z * extent.x * extent.y
     }
 
     /** Copy a subset of a specific image of a texture  */

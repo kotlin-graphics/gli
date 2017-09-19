@@ -12,7 +12,6 @@ import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KClass
 
 /**
@@ -167,16 +166,16 @@ open class Texture {
     fun size(level: Int): Int {
         assert(notEmpty())
         assert(level in 0..levels())
-        return storage!!.levelSize(level)
+        return cache.memorySize(level)
     }
 
     fun data(): ByteBuffer {
         assert(notEmpty())
-        return memByteBuffer(cache.getBaseAddress(0, 0, 0), size())
+        return memByteBuffer(cache.baseAddress(0, 0, 0), size())
     }
 
     inline fun <reified T> data() = when (T::class) {
-        Vec4b::class -> Vec4bData.apply { data = data() }
+        Vec4b::class -> vec4bData.apply { data = data() }
         else -> throw Error()
     }
 
@@ -184,11 +183,12 @@ open class Texture {
         assert((notEmpty()))
         assert(layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
         val size = storage!!.levelSize(level)
-        return memByteBuffer(cache.getBaseAddress(layer, face, level), size)
+        return memByteBuffer(cache.baseAddress(layer, face, level), size)
     }
 
-    inline fun <reified T> data(layer: Int, face: Int, level: Int) = when (T::class) {
-        Vec4b::class -> Vec4bData.apply { data = data(layer, face, level) }
+    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter = when (T::class) {
+        Vec4b::class -> vec4bData.apply { data = data(layer, face, level) }
+        Byte::class -> byteData.apply { data = data(layer, face, level) }
         else -> throw Error()
     }
 
@@ -206,7 +206,7 @@ open class Texture {
     fun extent(level: Int = 0): Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
-        return storage!!.extent(level)
+        return cache.extent(level)
     }
 
     fun clear() = data().run { for (i in 0 until capacity()) set(i, 0) }
@@ -342,16 +342,17 @@ open class Texture {
     fun store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: Any) {
 
         assert(notEmpty() && !format.isCompressed)
-        assert(glm.all(glm.lessThan(texelCoord, extent(level))))
+        val extent = extent(level)
+        assert(glm.all(glm.lessThan(texelCoord, extent)))
 
         when (texel) {
-            is Vec4b -> {
-                assert(format.blockSize == Vec4b.size)
+            is Byte -> {
+                assert(format.blockSize == Byte.BYTES)
 
-                val imageOffset = storage!!.imageOffset(texelCoord, extent(level))
-                assert(imageOffset < size(level) / Vec4b.size)
+                val imageOffset = storage!!.imageOffset(texelCoord, extent)
+                assert(imageOffset < size(level) / Byte.BYTES)
 
-                data<Vec4b>(layer, face, level)[imageOffset] = texel
+                data<Byte>(layer, face, level)[imageOffset] = texel
             }
             else -> throw Error()
         }

@@ -11,6 +11,9 @@ import glm_.set
 import java.nio.ByteOrder
 import glm_.vec3.Vec3i
 import java.net.URL
+import gli_.dx.has
+import gli_.dx.or
+import gli_.detail.has
 
 /**
  * Created by GBarbieri on 05.04.2017.
@@ -54,7 +57,7 @@ fun loadDDS(data: ByteBuffer): Texture {
     val header = detail.DdsHeader(data)
 
     val header10 = with(header.format) {
-        if ((flags has dx.Ddpf.FOURCC.i) && (fourCC == dx.D3dfmt.DX10.i || fourCC == dx.D3dfmt.GLI1.i))
+        if (flags has dx.Ddpf.FOURCC && (fourCC == dx.D3dfmt.DX10.i || fourCC == dx.D3dfmt.GLI1.i))
             detail.DdsHeader10(data)
         else
             detail.DdsHeader10()
@@ -63,7 +66,7 @@ fun loadDDS(data: ByteBuffer): Texture {
     fun has(format: Format) = glm.all(glm.equal(header.format.mask, dx.translate(format).mask))
 
     val format = with(header.format) {
-        if ((flags has (dx.Ddpf.RGB.i or dx.Ddpf.ALPHAPIXELS.i or dx.Ddpf.ALPHA.i or dx.Ddpf.YUV.i or dx.Ddpf.LUMINANCE.i)) && bpp != 0)
+        if ((flags has (dx.Ddpf.RGB or dx.Ddpf.ALPHAPIXELS or dx.Ddpf.ALPHA or dx.Ddpf.YUV or dx.Ddpf.LUMINANCE)) && bpp != 0)
             when (bpp) {
                 8 -> {
                     when {
@@ -141,12 +144,12 @@ fun loadDDS(data: ByteBuffer): Texture {
 
 fun getTarget(header: detail.DdsHeader, header10: detail.DdsHeader10) = when {
 
-    header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP.i ->
+    header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP ->
         if (header10.arraySize > 1) Target.CUBE_ARRAY
         else Target.CUBE
 
     header10.arraySize > 1 ->
-        if (header.flags has detail.DdsFlag.HEIGHT.i) Target._2D_ARRAY
+        if (header.flags has detail.DdsFlag.HEIGHT) Target._2D_ARRAY
         else Target._1D_ARRAY
 
     header10.resourceDimension == detail.D3d10resourceDimension.TEXTURE1D.i -> Target._1D

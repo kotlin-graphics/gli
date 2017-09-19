@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.b
 import glm_.vec2.Vec2i
 import io.kotlintest.specs.StringSpec
 
@@ -11,12 +12,12 @@ class coreFetch : StringSpec() {
 
             val textureA = Texture2d(Format.R8_UNORM_PACK8, Vec2i(2))
             run {
-                textureA.store(Vec2i( 0), 0, Vec1b(1));
-                textureA.store<glm::u8vec1>(gli::texture2d::extent_type(1, 0), 0, glm::u8vec1(2));
-                textureA.store<glm::u8vec1>(gli::texture2d::extent_type(1, 1), 0, glm::u8vec1(3));
-                textureA.store<glm::u8vec1>(gli::texture2d::extent_type(0, 1), 0, glm::u8vec1(4));
-                textureA.store<glm::u8vec1>(gli::texture2d::extent_type(0, 0), 1, glm::u8vec1(5));
-                gli::save_dds(TextureA, "r8_unorm_4pixels.dds");
+                textureA.store(Vec2i(0, 0), 0, 1.b)
+                textureA.store(Vec2i(1, 0), 0, 2.b)
+                textureA.store(Vec2i(1, 1), 0, 3)
+                textureA.store(Vec2i(0, 1), 0, 4)
+                textureA.store(Vec2i(0, 0), 1, 5)
+                gli.saveDds(TextureA, "r8_unorm_4pixels.dds")
             }
         }
     }

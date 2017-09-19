@@ -1,9 +1,8 @@
 package gli_
 
 import gli_.detail.Cap.*
+import gli_.detail.has
 import gli_.detail.tableF
-import glm_.vec3.Vec3i
-import glm_.vec4.Vec4i
 
 /**
  * Created by elect on 02/04/17.
@@ -271,33 +270,33 @@ enum class Format {
 
     val bitsPerPixel by lazy { formatInfo.blockSize * 8 / (formatInfo.blockExtend.x * formatInfo.blockExtend.y * formatInfo.blockExtend.z) }
 
-    val isCompressed by lazy { formatInfo.flags has COMPRESSED_BIT.i }
+    val isCompressed by lazy { formatInfo.flags has COMPRESSED_BIT }
     val isS3tcCompressed by lazy { this in RGB_DXT1_UNORM_BLOCK8..RGBA_DXT5_SRGB_BLOCK16 }
 
-    val isSrgb by lazy { formatInfo.flags has COLORSPACE_SRGB_BIT.i }
+    val isSrgb by lazy { formatInfo.flags has COLORSPACE_SRGB_BIT }
 
     val blockSize by lazy { formatInfo.blockSize }
     val blockExtend by lazy { formatInfo.blockExtend }
 
     val componentCount by lazy { formatInfo.component }
 
-    val isUnsigned by lazy { formatInfo.flags has UNSIGNED_BIT.i }
-    val isSigned by lazy { formatInfo.flags has SIGNED_BIT.i }
+    val isUnsigned by lazy { formatInfo.flags has UNSIGNED_BIT }
+    val isSigned by lazy { formatInfo.flags has SIGNED_BIT }
 
-    val isInteger by lazy { formatInfo.flags has INTEGER_BIT.i }
+    val isInteger by lazy { formatInfo.flags has INTEGER_BIT }
     val isSignedInteger by lazy { isInteger && isSigned }
     val isUnsignedInteger by lazy { isInteger && isUnsigned }
 
-    val isFloat by lazy { formatInfo.flags has FLOAT_BIT.i }
+    val isFloat by lazy { formatInfo.flags has FLOAT_BIT }
 
-    val isNormalized by lazy { formatInfo.flags has NORMALIZED_BIT.i }
+    val isNormalized by lazy { formatInfo.flags has NORMALIZED_BIT }
     val isUnorm by lazy { isNormalized && isUnsigned }
     val isSnorm by lazy { isNormalized && isSigned }
 
-    val isPacked by lazy { (formatInfo.flags has PACKED8_BIT.i) || (formatInfo.flags has PACKED16_BIT.i) || (formatInfo.flags has PACKED32_BIT.i) }
+    val isPacked by lazy { formatInfo.flags has PACKED8_BIT || formatInfo.flags has PACKED16_BIT || formatInfo.flags has PACKED32_BIT }
 
-    val isDepth by lazy { formatInfo.flags has DEPTH_BIT.i }
-    val isStencil by lazy { formatInfo.flags has STENCIL_BIT.i }
+    val isDepth by lazy { formatInfo.flags has DEPTH_BIT }
+    val isStencil by lazy { formatInfo.flags has STENCIL_BIT }
     val isDepthStencil by lazy { isDepth && isStencil }
 
 

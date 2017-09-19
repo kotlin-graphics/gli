@@ -3,7 +3,6 @@ package gli_
 import gli_.buffer.destroy
 import glm_.BYTES
 import glm_.glm
-import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4
@@ -116,7 +115,7 @@ class Image {
     }
 
     inline fun <reified T> data() = when (T::class) {
-        Vec4b::class -> Vec4bData.apply { data = data()!! }
+        Vec4b::class -> vec4bData.apply { data = data()!! }
         else -> throw Error()
     }
 

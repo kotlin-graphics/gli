@@ -44,6 +44,9 @@ object detail {
         val i = 1 shl ordinal
     }
 
+    infix fun Int.has(b: Cap) = (this and b.i) != 0
+    infix fun Int.hasnt(b: Cap) = (this and b.i) == 0
+
     class FormatInfo(val blockSize: Int, val blockExtend: Vec3i, val component: Int, val swizzles: Swizzles, val flags: Int)
 
     internal val tableF by lazy {
@@ -323,6 +326,10 @@ object detail {
                 CUBEMAP_POSITIVEZ.i or CUBEMAP_NEGATIVEZ.i)
     }
 
+    infix fun Int.has(b: DdsCubemapFlag) = (this and b.i) != 0
+    infix fun Int.hasnt(b: DdsCubemapFlag) = (this and b.i) == 0
+    infix fun Int.or(b: DdsCubemapFlag) = this or b.i
+
     enum class DdsFlag(val i: Int) {
         CAPS(0x00000001),
         HEIGHT(0x00000002),
@@ -334,6 +341,10 @@ object detail {
         DEPTH(0x00800000)
     }
 
+    infix fun Int.has(b: DdsFlag) = (this and b.i) != 0
+    infix fun DdsFlag.or(flag: DdsFlag) = i or flag.i
+    infix fun Int.or(flag: DdsFlag) = this or flag.i
+
     enum class DdsSurfaceFlag(val i: Int) {
 
         COMPLEX(0x00000008),
@@ -341,33 +352,62 @@ object detail {
         TEXTURE(0x00001000)
     }
 
-    class DdsPixelFormat(data: ByteBuffer) {
+    infix fun DdsSurfaceFlag.or(flag: DdsSurfaceFlag) = i or flag.i
 
-        var size = data.int
-        var flags = data.int
-        var fourCC = data.int
-        var bpp = data.int
-        var mask = Vec4i(data.int, data.int, data.int, data.int)
+    class DdsPixelFormat {
+
+        var size = 0
+        var flags = 0
+        var fourCC = 0
+        var bpp = 0
+        var mask = Vec4i()
+
+        constructor(buffer: ByteBuffer) {
+            size = buffer.int
+            flags = buffer.int
+            fourCC = buffer.int
+            bpp = buffer.int
+            mask.put(buffer.int, buffer.int, buffer.int, buffer.int)
+        }
+
+        constructor()
 
         companion object {
             val SIZE = 4 * Int.BYTES + Vec4i.size
         }
     }
 
-    class DdsHeader(data: ByteBuffer) {
+    class DdsHeader {
 
-        val size = data.int
-        val flags = data.int
-        val height = data.int
-        val width = data.int
-        val pitch = data.int
-        val depth = data.int
-        val mipMapLevels = data.int
-        val reserved = (0 until 11).map { data.int }
-        val format = DdsPixelFormat(data)
-        val surfaceFlags = data.int
-        val cubemapFlags = data.int
-        val reserved2 = (0 until 3).map { data.int }
+        var size = 0
+        var flags = 0
+        var height = 0
+        var width = 0
+        var pitch = 0
+        var depth = 0
+        var mipMapLevels = 0
+        var reserved1 = IntArray(11)
+        var format = DdsPixelFormat()
+        var surfaceFlags = 0
+        var cubemapFlags = 0
+        var reserved2 = IntArray(3)
+
+        constructor(buffer: ByteBuffer) {
+            size = buffer.int
+            flags = buffer.int
+            height = buffer.int
+            width = buffer.int
+            pitch = buffer.int
+            depth = buffer.int
+            mipMapLevels = buffer.int
+            for (i in reserved1.indices) reserved1[i] = buffer.int
+            format = DdsPixelFormat(buffer)
+            surfaceFlags = buffer.int
+            cubemapFlags = buffer.int
+            for (i in reserved2.indices) reserved2[i] = buffer.int
+        }
+
+        constructor()
 
         companion object {
             val SIZE = (7 + 11 + 2 + 3) * Int.BYTES + DdsPixelFormat.SIZE
@@ -406,22 +446,33 @@ object detail {
         val i = ordinal
     }
 
-    class DdsHeader10(
-            var format: Int,
-            var resourceDimension: Int,
-            var miscFlag: Int, // D3D10_RESOURCE_MISC_GENERATE_MIPS
-            var arraySize: Int,
-            var alphaFlags: Int)  // Should be 0 whenever possible to avoid D3D utility library to fail
-    {
+    class DdsHeader10 {
 
-        constructor() : this(
-                dx.Dxgi_format_dds.UNKNOWN.i,
-                D3d10resourceDimension.UNKNOWN.i,
-                0,
-                0,
-                DdsAlphaMode.UNKNOWN.i)
+        var format = dx.Dxgi_format_dds.UNKNOWN.i
+        var resourceDimension = D3d10resourceDimension.UNKNOWN.i
+        /** D3D10_RESOURCE_MISC_GENERATE_MIPS   */
+        var miscFlag = 0
+        var arraySize = 0
+        /** Should be 0 whenever possible to avoid D3D utility library to fail  */
+        var alphaFlags = DdsAlphaMode.UNKNOWN.i
 
-        constructor(data: ByteBuffer) : this(data.int, data.int, data.int, data.int, data.int)
+        constructor()
+
+        constructor(data: ByteBuffer) {
+            format = data.int
+            resourceDimension = data.int
+            miscFlag = data.int
+            arraySize = data.int
+            alphaFlags = data.int
+        }
+
+        companion object {
+            val SIZE = 5 * Int.BYTES
+        }
+
+        init {
+            assert(SIZE == 20, { "DDS DX10 Extended Header size mismatch" })
+        }
     }
 
     /** Some formats have multiple fourcc values. This function allows remapping to the default fourcc value of a format    */
