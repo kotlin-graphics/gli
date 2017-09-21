@@ -14,7 +14,7 @@
 //
 //            val TEXTURE_DIFFUSE = "kueken7_rgba8_srgb.dds"
 //
-//            val texture = Texture2d(gli.loadDDS(javaClass.getResource("/$TEXTURE_DIFFUSE").toURI()))
+//            val texture = Texture2d(gli.loadDds(javaClass.getResource("/$TEXTURE_DIFFUSE").toURI()))
 //            gl.profile = gl.Profile.GL32
 //
 //            val format = gl.translate(texture.format, texture.swizzles)

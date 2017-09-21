@@ -59,6 +59,7 @@ class Texture2d : Texture {
 //    }
 
     fun store(texelCoord:Vec2i, level:Int, texel: Any) = super.store(Vec3i(texelCoord, 0), 0, 0, level, texel)
+    inline fun <reified T>load(texelCoord:Vec2i, level:Int) = super.load<T>(Vec3i(texelCoord, 0), 0, 0, level)
 
     override fun dispose() = super.dispose()
 }

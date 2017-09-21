@@ -5,6 +5,9 @@ import glm_.BYTES
 import glm_.b
 import glm_.glm
 import glm_.set
+import glm_.vec1.Vec1b
+import glm_.vec2.Vec2b
+import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4
@@ -151,6 +154,10 @@ open class Texture {
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && layers() >= 1 && faces() >= 1 && extent().y >= 1 && extent().z == 1))
     }
 
+    constructor(texture: Texture) {
+
+    }
+
     fun empty() = storage?.empty() ?: true
     fun notEmpty() = !empty()
 
@@ -186,9 +193,16 @@ open class Texture {
         return memByteBuffer(cache.baseAddress(layer, face, level), size)
     }
 
-    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter = when (T::class) {
-        Vec4b::class -> vec4bData.apply { data = data(layer, face, level) }
-        Byte::class -> byteData.apply { data = data(layer, face, level) }
+    inline fun <reified T> data(layer: Int, face: Int, level: Int) = when (T::class.java) {
+        Vec1b::class.java -> vec1bData.apply { data = data(layer, face, level) }
+        Vec2b::class.java -> vec2bData.apply { data = data(layer, face, level) }
+        Vec3b::class.java -> vec3bData.apply { data = data(layer, face, level) }
+        Vec4b::class.java -> vec4bData.apply { data = data(layer, face, level) }
+        Vec3::class.java -> vec3Data.apply { data = data(layer, face, level) }
+        Vec4::class.java -> vec4Data.apply { data = data(layer, face, level) }
+        java.lang.Byte::class.java -> byteData.apply { data = data(layer, face, level) }
+        java.lang.Integer::class.java -> intData.apply { data = data(layer, face, level) }
+        java.lang.Long::class.java -> longData.apply { data = data(layer, face, level) }
         else -> throw Error()
     }
 
@@ -326,18 +340,25 @@ open class Texture {
         else -> throw Error("unsupported texel type")
     }
 
-//    template <typename gen_type>
-//    inline gen_type texture::load(extent_type const& TexelCoord, size_type Layer,  size_type Face, size_type Level) const
-//    {
-//        GLI_ASSERT(!this->empty());
-//        GLI_ASSERT(!is_compressed(this->format()));
-//        GLI_ASSERT(block_size(this->format()) == sizeof(gen_type));
-//
-//        size_type const ImageOffset = this->Storage->image_offset(TexelCoord, this->extent(Level));
-//        GLI_ASSERT(ImageOffset < this->size<gen_type>(Level));
-//
-//        return *(this->data<gen_type>(Layer, Face, Level) + ImageOffset);
-//    }
+    inline fun <reified T>load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
+        assert(notEmpty() && !format.isCompressed)
+        when (T::class) {
+            java.lang.Byte::class -> assert(format.blockSize == Byte.BYTES)
+            java.lang.Integer::class -> assert(format.blockSize == Int.BYTES)
+            java.lang.Long::class -> assert(format.blockSize == Long.BYTES)
+            Vec1b::class -> assert(format.blockSize == Vec1b.size)
+            Vec2b::class -> assert(format.blockSize == Vec2b.size)
+            Vec3b::class -> assert(format.blockSize == Vec3b.size)
+            Vec4b::class -> assert(format.blockSize == Vec4b.size)
+            Vec3::class -> assert(format.blockSize == Vec3.size)
+            Vec4::class -> assert(format.blockSize == Vec4.size)
+            else -> throw Error()
+        }
+        val imageOffset = storage!!.imageOffset(texelCoord, extent(level))
+        assert(imageOffset < size(level))
+
+        return data<T>(layer, face, level)[imageOffset] as T
+    }
 
     fun store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: Any) {
 
@@ -345,14 +366,44 @@ open class Texture {
         val extent = extent(level)
         assert(glm.all(glm.lessThan(texelCoord, extent)))
 
+        val imageOffset = storage!!.imageOffset(texelCoord, extent)
+
         when (texel) {
             is Byte -> {
-                assert(format.blockSize == Byte.BYTES)
-
-                val imageOffset = storage!!.imageOffset(texelCoord, extent)
-                assert(imageOffset < size(level) / Byte.BYTES)
-
+                assert(format.blockSize == Byte.BYTES && imageOffset < size(level) / Byte.BYTES)
                 data<Byte>(layer, face, level)[imageOffset] = texel
+            }
+            is Int -> {
+                assert(format.blockSize == Int.BYTES && imageOffset < size(level) / Int.BYTES)
+                data<Int>(layer, face, level)[imageOffset] = texel
+            }
+            is Long -> {
+                assert(format.blockSize == Long.BYTES && imageOffset < size(level) / Long.BYTES)
+                data<Long>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec1b -> {
+                assert(format.blockSize == Vec1b.size && imageOffset < size(level) / Vec1b.size)
+                data<Vec1b>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec2b -> {
+                assert(format.blockSize == Vec2b.size && imageOffset < size(level) / Vec2b.size)
+                data<Vec2b>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec3b -> {
+                assert(format.blockSize == Vec3b.size && imageOffset < size(level) / Vec3b.size)
+                data<Vec3b>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec4b -> {
+                assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
+                data<Vec4b>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec3 -> {
+                assert(format.blockSize == Vec3.size && imageOffset < size(level) / Vec3.size)
+                data<Vec3>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec4 -> {
+                assert(format.blockSize == Vec4.size && imageOffset < size(level) / Vec4.size)
+                data<Vec4>(layer, face, level)[imageOffset] = texel
             }
             else -> throw Error()
         }

@@ -48,5 +48,5 @@ enum class Target {
 
 val TARGET_FIRST = Target._1D
 val TARGET_LAST = Target.CUBE_ARRAY
-val TARGET_COUNT = Target.values().size
+val TARGET_COUNT = Target.values().size - 1 // INVALID
 val TARGET_INVALID = -1

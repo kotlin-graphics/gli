@@ -1,9 +1,15 @@
 package gli_
 
+import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Paths
+
 
 object gli :
         clear,
         levels,
+        load,
+        loadDds,
         saveDds,
         view {
 
@@ -24,3 +30,7 @@ inline fun wasInit(f: () -> Unit): Boolean {
     }
     return true
 }
+
+fun pathOf(filename: String, vararg more: String) = Paths.get(filename, *more)
+fun pathOf(uri: URI) = Paths.get(uri)
+fun uriOf(str: String) = URI.create(str)

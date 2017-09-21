@@ -426,8 +426,8 @@ object detail {
             buffer.putInt(index + Int.BYTES * 5, depth)
             buffer.putInt(index + Int.BYTES * 6, mipMapLevels)
             format.to(buffer, index + Int.BYTES * (7 + 11))
-            buffer.putInt(index + Int.BYTES * (7 + 11 + 1), surfaceFlags)
-            buffer.putInt(index + Int.BYTES * (7 + 11 + 2), cubemapFlags)
+            buffer.putInt(index + Int.BYTES * (7 + 11 + 1) + DdsPixelFormat.SIZE, surfaceFlags)
+            buffer.putInt(index + Int.BYTES * (7 + 11 + 2) + DdsPixelFormat.SIZE, cubemapFlags)
         }
 
         companion object {

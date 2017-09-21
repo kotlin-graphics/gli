@@ -59,7 +59,7 @@
 //
 //    fun test(params: Pair<String, Format>) {
 //
-//        val textureA = gli.loadDDS(javaClass.getResource("/" + params.first).toURI())
+//        val textureA = gli.loadDds(javaClass.getResource("/" + params.first).toURI())
 //        assert(textureA.format == params.second)
 //    }
 //}

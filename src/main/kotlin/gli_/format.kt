@@ -261,7 +261,7 @@ enum class Format {
         fun of(i: Int) = values().find { it.i == i } ?: INVALID
     }
 
-    fun isValid() = this in FORMAT_FIRST..FORMAT_LAST
+    val isValid get() = this in FORMAT_FIRST..FORMAT_LAST
 
     val formatInfo: detail.FormatInfo by lazy {
         assert(this in FORMAT_FIRST..FORMAT_LAST)

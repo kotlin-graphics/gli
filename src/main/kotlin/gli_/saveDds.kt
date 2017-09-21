@@ -6,6 +6,7 @@ import gli_.dx.has
 import glm_.b
 import glm_.set
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -66,8 +67,9 @@ interface saveDds {
         val requireDX10Header = dxFormat.d3DFormat == dx.D3dfmt.GLI1 || dxFormat.d3DFormat == dx.D3dfmt.DX10 ||
                 texture.target.isTargetArray || texture.target.isTarget1d
 
-        val buffer = ByteBuffer.allocate(texture.size() + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE +
-                if (requireDX10Header) detail.DdsHeader10.SIZE else 0)
+        var capacity = texture.size() + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE
+        if (requireDX10Header) capacity += detail.DdsHeader10.SIZE
+        val buffer = ByteBuffer.allocate(capacity).order(ByteOrder.nativeOrder())
 
         var offset = 0
         for (c in detail.FOURCC_DDS) buffer[offset++] = c.b
@@ -129,11 +131,11 @@ interface saveDds {
         }
 
         val data = texture.data()
-        for(i in 0 until texture.size())
+        for (i in 0 until texture.size())
             buffer[offset++] = data[i]
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
-            while(buffer.hasRemaining()) it.write(buffer)
+            while (buffer.hasRemaining()) it.write(buffer)
         }
 
         return true
