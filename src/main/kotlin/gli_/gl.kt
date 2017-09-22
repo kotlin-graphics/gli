@@ -16,6 +16,10 @@ import gli_.gl.ExternalFormat.NONE as NONE_
 object gl {
 
     var profile = Profile.GL33
+        set(value) {
+            field = value
+            updateTable()
+        }
 
     fun translate(texture: Texture) = translate(texture.target) to translate(texture.format, texture.swizzles)
 
@@ -65,36 +69,7 @@ object gl {
         table
     }
 
-//    private class FormatDesc(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val properties: Int)
-
-    private class FormatDesc(
-            private val internalFun: () -> InternalFormat,
-            private val externalFun: () -> ExternalFormat,
-            private val typeFun: () -> TypeFormat,
-            val properties: Int) {
-
-        val internal
-            get() = internalFun.invoke()
-        val external
-            get() = externalFun.invoke()
-        val type
-            get() = typeFun.invoke()
-
-        constructor(internal: InternalFormat, external: ExternalFormat, type: TypeFormat, properties: Int) :
-                this({ internal }, { external }, { type }, properties)
-
-        constructor(internal: InternalFormat, external: () -> ExternalFormat, type: TypeFormat, properties: Int) :
-                this({ internal }, external, { type }, properties)
-
-        constructor(internal: () -> InternalFormat, external: () -> ExternalFormat, type: TypeFormat, properties: Int) :
-                this(internal, external, { type }, properties)
-
-        constructor(internal: InternalFormat, external: ExternalFormat, type: () -> TypeFormat, properties: Int) :
-                this({ internal }, { external }, type, properties)
-
-        constructor(internal: () -> InternalFormat, external: ExternalFormat, type: TypeFormat, properties: Int) :
-                this(internal, { external }, { type }, properties)
-    }
+    private class FormatDesc(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val properties: Int)
 
     enum class InternalFormat(val i: Int) {
 
@@ -443,35 +418,37 @@ object gl {
 
     class Format(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val swizzles: Swizzles)
 
-    private val tableF by lazy {
+    private lateinit var tableF: Array<FormatDesc>
 
-        val hasSwizzle = { profile.hasSwizzle }
-        val externalBGR = { if (hasSwizzle.invoke()) ExternalFormat.RGB else ExternalFormat.BGR }
-        val externalBGRA = { if (hasSwizzle.invoke()) ExternalFormat.RGBA else ExternalFormat.BGRA }
-        val externalBGRInt = { if (hasSwizzle.invoke()) ExternalFormat.RGB_INTEGER else ExternalFormat.BGR_INTEGER }
-        val externalBGRAInt = { if (hasSwizzle.invoke()) ExternalFormat.RGBA_INTEGER else ExternalFormat.BGRA_INTEGER }
+    fun updateTable() {
 
-        val externalSRGB8 = { if (profile != Profile.ES20) ExternalFormat.RGB else ExternalFormat.SRGB_EXT }
-        val externalSRGB8_A8 = { if (profile != Profile.ES20) ExternalFormat.RGBA else ExternalFormat.SRGB_ALPHA_EXT }
+        val hasSwizzle = profile.hasSwizzle
+        val externalBGR = if (hasSwizzle) ExternalFormat.RGB else ExternalFormat.BGR
+        val externalBGRA = if (hasSwizzle) ExternalFormat.RGBA else ExternalFormat.BGRA
+        val externalBGRInt = if (hasSwizzle) ExternalFormat.RGB_INTEGER else ExternalFormat.BGR_INTEGER
+        val externalBGRAInt = if (hasSwizzle) ExternalFormat.RGBA_INTEGER else ExternalFormat.BGRA_INTEGER
 
-        val InternalBGRA = { if (profile == Profile.ES20) InternalFormat.BGRA8_UNORM else InternalFormat.RGBA8_UNORM }
-        val InternalRGBETC = { if (profile == Profile.ES20) InternalFormat.RGB_ETC else InternalFormat.RGB_ETC2 }
+        val externalSRGB8 = if (profile != Profile.ES20) ExternalFormat.RGB else ExternalFormat.SRGB_EXT
+        val externalSRGB8_A8 = if (profile != Profile.ES20) ExternalFormat.RGBA else ExternalFormat.SRGB_ALPHA_EXT
 
-        val InternalLuminance8 = { if (hasSwizzle.invoke()) InternalFormat.R8_UNORM else InternalFormat.LUMINANCE8 }
-        val InternalAlpha8 = { if (hasSwizzle.invoke()) InternalFormat.R8_UNORM else InternalFormat.ALPHA8 }
-        val InternalLuminanceAlpha8 = { if (hasSwizzle.invoke()) InternalFormat.RG8_UNORM else InternalFormat.LUMINANCE8_ALPHA8 }
+        val internalBGRA = if (profile == Profile.ES20) InternalFormat.BGRA8_UNORM else InternalFormat.RGBA8_UNORM
+        val internalRGBETC = if (profile == Profile.ES20) InternalFormat.RGB_ETC else InternalFormat.RGB_ETC2
 
-        val InternalLuminance16 = { if (hasSwizzle.invoke()) InternalFormat.R16_UNORM else InternalFormat.LUMINANCE16 }
-        val InternalAlpha16 = { if (hasSwizzle.invoke()) InternalFormat.R16_UNORM else InternalFormat.ALPHA16 }
-        val InternalLuminanceAlpha16 = { if (hasSwizzle.invoke()) InternalFormat.RG16_UNORM else InternalFormat.LUMINANCE16_ALPHA16 }
+        val internalLuminance8 = if (hasSwizzle) InternalFormat.R8_UNORM else InternalFormat.LUMINANCE8
+        val internalAlpha8 = if (hasSwizzle) InternalFormat.R8_UNORM else InternalFormat.ALPHA8
+        val internalLuminanceAlpha8 = if (hasSwizzle) InternalFormat.RG8_UNORM else InternalFormat.LUMINANCE8_ALPHA8
 
-        val ExternalLuminance = { if (hasSwizzle.invoke()) ExternalFormat.RED else ExternalFormat.LUMINANCE }
-        val ExternalAlpha = { if (hasSwizzle.invoke()) ExternalFormat.RED else ExternalFormat.ALPHA }
-        val ExternalLuminanceAlpha = { if (hasSwizzle.invoke()) ExternalFormat.RG else ExternalFormat.LUMINANCE_ALPHA }
+        val internalLuminance16 = if (hasSwizzle) InternalFormat.R16_UNORM else InternalFormat.LUMINANCE16
+        val internalAlpha16 = if (hasSwizzle) InternalFormat.R16_UNORM else InternalFormat.ALPHA16
+        val internalLuminanceAlpha16 = if (hasSwizzle) InternalFormat.RG16_UNORM else InternalFormat.LUMINANCE16_ALPHA16
 
-        val typeF16 = { if (profile == Profile.ES20) TypeFormat.F16_OES else TypeFormat.F16 }
+        val externalLuminance = if (hasSwizzle) ExternalFormat.RED else ExternalFormat.LUMINANCE
+        val externalAlpha = if (hasSwizzle) ExternalFormat.RED else ExternalFormat.ALPHA
+        val externalLuminanceAlpha = if (hasSwizzle) ExternalFormat.RG else ExternalFormat.LUMINANCE_ALPHA
 
-        val res = arrayOf(
+        val typeF16 = if (profile == Profile.ES20) TypeFormat.F16_OES else TypeFormat.F16
+
+        tableF = arrayOf(
                 FormatDesc(RG4_EXT, RG, UINT8_RG4_REV_GTC, 0), //FORMAT_R4G4_UNORM,
                 FormatDesc(RGBA4, RGBA, UINT16_RGBA4_REV, 0), //FORMAT_RGBA4_UNORM,
                 FormatDesc(RGBA4, RGBA, UINT16_RGBA4, FORMAT_PROPERTY_BGRA_TYPE_BIT), //FORMAT_BGRA4_UNORM,
@@ -521,7 +498,7 @@ object gl {
                 FormatDesc(RGBA8I, RGBA_INTEGER, I8, 0), //FORMAT_RGBA8_SINT_PACK8,
                 FormatDesc(SRGB8_ALPHA8, externalSRGB8_A8, U8, 0), //FORMAT_RGBA8_SRGB_PACK8,
 
-                FormatDesc(InternalBGRA, externalBGRA, U8, FORMAT_PROPERTY_BGRA_FORMAT_BIT), //FORMAT_BGRA8_UNORM_PACK8,
+                FormatDesc(internalBGRA, externalBGRA, U8, FORMAT_PROPERTY_BGRA_FORMAT_BIT), //FORMAT_BGRA8_UNORM_PACK8,
                 FormatDesc(RGBA8_SNORM, externalBGRA, I8, FORMAT_PROPERTY_BGRA_FORMAT_BIT), //FORMAT_BGRA8_SNORM_PACK8,
                 FormatDesc(RGBA8_USCALED_GTC, externalBGRA, U8, FORMAT_PROPERTY_BGRA_FORMAT_BIT), //FORMAT_BGRA8_USCALED_PACK8,
                 FormatDesc(RGBA8_SSCALED_GTC, externalBGRA, I8, FORMAT_PROPERTY_BGRA_FORMAT_BIT), //FORMAT_BGRA8_SSCALED_PACK8,
@@ -643,7 +620,7 @@ object gl {
                 FormatDesc(RGB_BP_UNORM, NONE_, NONE, 0), //FORMAT_RGB_BP_UNORM,
                 FormatDesc(SRGB_BP_UNORM, NONE_, NONE, 0), //FORMAT_RGB_BP_SRGB,
 
-                FormatDesc(InternalRGBETC, NONE_, NONE, 0), //FORMAT_RGB_ETC2_UNORM_BLOCK8,
+                FormatDesc(internalRGBETC, NONE_, NONE, 0), //FORMAT_RGB_ETC2_UNORM_BLOCK8,
                 FormatDesc(SRGB8_ETC2, NONE_, NONE, 0), //FORMAT_RGB_ETC2_SRGB_BLOCK8,
                 FormatDesc(RGBA_PUNCHTHROUGH_ETC2, NONE_, NONE, 0), //FORMAT_RGBA_ETC2_PUNCHTHROUGH_UNORM,
                 FormatDesc(SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, NONE_, NONE, 0), //FORMAT_RGBA_ETC2_PUNCHTHROUGH_SRGB,
@@ -701,20 +678,18 @@ object gl {
                 FormatDesc(ATC_RGBA_EXPLICIT_ALPHA, NONE_, NONE, 0), //FORMAT_RGBA_ATCA_UNORM_BLOCK16,
                 FormatDesc(ATC_RGBA_INTERPOLATED_ALPHA, NONE_, NONE, 0), //FORMAT_RGBA_ATCI_UNORM_BLOCK16,
 
-                FormatDesc(InternalLuminance8, ExternalLuminance, U8, 0), //FORMAT_L8_UNORM_PACK8,
-                FormatDesc(InternalAlpha8, ExternalAlpha, U8, 0), //FORMAT_A8_UNORM_PACK8,
-                FormatDesc(InternalLuminanceAlpha8, ExternalLuminanceAlpha, U8, 0), //FORMAT_LA8_UNORM_PACK8,
-                FormatDesc(InternalLuminance16, ExternalLuminance, U16, 0), //FORMAT_L16_UNORM_PACK16,
-                FormatDesc(InternalAlpha16, ExternalAlpha, U16, 0), //FORMAT_A16_UNORM_PACK16,
-                FormatDesc(InternalLuminanceAlpha16, ExternalLuminanceAlpha, U16, 0), //FORMAT_LA16_UNORM_PACK16,
+                FormatDesc(internalLuminance8, externalLuminance, U8, 0), //FORMAT_L8_UNORM_PACK8,
+                FormatDesc(internalAlpha8, externalAlpha, U8, 0), //FORMAT_A8_UNORM_PACK8,
+                FormatDesc(internalLuminanceAlpha8, externalLuminanceAlpha, U8, 0), //FORMAT_LA8_UNORM_PACK8,
+                FormatDesc(internalLuminance16, externalLuminance, U16, 0), //FORMAT_L16_UNORM_PACK16,
+                FormatDesc(internalAlpha16, externalAlpha, U16, 0), //FORMAT_A16_UNORM_PACK16,
+                FormatDesc(internalLuminanceAlpha16, externalLuminanceAlpha, U16, 0), //FORMAT_LA16_UNORM_PACK16,
 
                 FormatDesc(RGB8_UNORM, externalBGRA, U8, 0), //FORMAT_BGRX8_UNORM,
                 FormatDesc(SRGB8, externalBGRA, U8, 0), //FORMAT_BGRX8_SRGB,
 
                 FormatDesc(RG3B2, RGB, UINT8_RG3B2_REV, 0)                    //FORMAT_RG3B2_UNORM,
         )
-        assert(res.size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" })
-
-        res
+                .apply { assert(size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" }) }
     }
 }
