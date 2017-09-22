@@ -36,12 +36,12 @@ object dx {
 
             val dxFormat = table[currentFormat.i - FORMAT_FIRST.i]
 
-            if (fourCC == GLI1 && (info.flags has detail.Cap.DDS_GLI_EXT_BIT) && dxFormat.dxgiFormat.gli == format.gli) {
+            if (fourCC == GLI1 && info.flags has detail.Cap.DDS_GLI_EXT_BIT && dxFormat.dxgiFormat.gli == format.gli) {
                 result = currentFormat.i
                 break
             }
 
-            if (fourCC == DX10 && (info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT) && dxFormat.dxgiFormat.dds == format.dds) {
+            if (fourCC == DX10 && info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT && dxFormat.dxgiFormat.dds == format.dds) {
                 result = currentFormat.i
                 break
             }

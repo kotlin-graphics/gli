@@ -5,18 +5,15 @@ import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 import java.nio.file.Files
 
-class coreLoadGen1dArray : StringSpec() {
+class coreLoadGenCube : StringSpec() {
 
     init {
 
-        "load 1d array" {
+        "load cube" {
 
             for (format in FORMAT_FIRST..FORMAT_LAST) {
 
-                val target = Target._1D_ARRAY
-
-                if ((format.isCompressed && (target.isTarget1d || target == Target._3D)) || target.isTargetRect)
-                    continue
+                val target = Target.CUBE
 
                 val layers = if (target.isTargetArray) 2 else 1
                 val faces = if (target.isTargetCube) 6 else 1
@@ -25,21 +22,21 @@ class coreLoadGen1dArray : StringSpec() {
                 val texture = Texture(target, format, blockExtent * Vec3i(blockExtent.y, blockExtent.x, 1), layers, faces, 2)
                 texture.clear()
 
-                "test1d_array.dds".let {
+                "test_cube.dds".let {
                     gli.save(texture, it)
                     val textureDDS = gli.load(it)
                     texture shouldBe textureDDS
                     Files.delete(pathOf(it))
                 }
 
-                "test1d_array.ktx".let {
+                "test_cube.ktx".let {
                     gli.save(texture, it)
                     val textureKTX = gli.load(it)
                     texture shouldBe textureKTX
                     Files.delete(pathOf(it))
                 }
 
-                "test1d_array.kmg".let {
+                "test_cube.kmg".let {
                     gli.save(texture, it)
                     val textureKMG = gli.load(it)
                     texture shouldBe textureKMG

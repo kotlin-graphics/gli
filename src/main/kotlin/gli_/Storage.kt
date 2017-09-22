@@ -55,9 +55,7 @@ class Storage {
         this.blockExtend = format.blockExtend
         this.extent = extent
 
-        assert(layers >= 0)
-        assert(faces >= 0)
-        assert(levels >= 0)
+        assert(layers >= 0 && faces >= 0 && levels >= 0)
         assert(glm.all(glm.greaterThan(extent, Vec3i(0))))
 
         data = MemoryUtil.memCalloc(layerSize(0, faces - 1, 0, levels - 1) * layers)

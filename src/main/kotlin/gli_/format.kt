@@ -263,10 +263,7 @@ enum class Format {
 
     val isValid get() = this in FORMAT_FIRST..FORMAT_LAST
 
-    val formatInfo: detail.FormatInfo by lazy {
-        assert(this in FORMAT_FIRST..FORMAT_LAST)
-        tableF[i - FORMAT_FIRST.i]
-    }
+    val formatInfo by lazy { tableF[i - FORMAT_FIRST.i] }
 
     val bitsPerPixel by lazy { formatInfo.blockSize * 8 / (formatInfo.blockExtend.x * formatInfo.blockExtend.y * formatInfo.blockExtend.z) }
 

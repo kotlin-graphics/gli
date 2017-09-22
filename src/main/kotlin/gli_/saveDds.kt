@@ -4,7 +4,9 @@ import gli_.buffer.bufferBig
 import gli_.detail.has
 import gli_.detail.or
 import gli_.dx.has
+import glm_.L
 import glm_.b
+import glm_.size
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.channels.FileChannel
@@ -134,6 +136,7 @@ interface saveDds {
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
             data.ptr = 0
             while (data.hasRemaining()) it.write(data)
+            it.truncate(data.size.L)
         }
 
         return true

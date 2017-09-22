@@ -28,23 +28,26 @@ class coreLoadGen1d : StringSpec() {
                 if(format == Format.L8_UNORM_PACK8)
                     println()
 
-                var filename = "test1d.dds"
-                gli.save(texture, filename)
-                val textureDDS = gli.load(filename)
-                texture shouldBe textureDDS
-                Files.delete(pathOf(filename))
+                "test1d.dds".let {
+                    gli.save(texture, it)
+                    val textureDDS = gli.load(it)
+                    texture shouldBe textureDDS
+                    Files.delete(pathOf(it))
+                }
 
-                filename = "test1d.ktx"
-                gli.save(texture, filename)
-                val textureKTX = gli.load(filename)
-                texture shouldBe textureKTX
-                Files.delete(pathOf(filename))
+                "test1d.ktx".let {
+                    gli.save(texture, it)
+                    val textureKTX = gli.load(it)
+                    texture shouldBe textureKTX
+                    Files.delete(pathOf(it))
+                }
 
-                filename = "test1d.kmg"
-                gli.save(texture, filename)
-                val textureKMG = gli.load(filename)
-                texture shouldBe textureKMG
-                Files.delete(pathOf(filename))
+                "test1d.kmg".let {
+                    gli.save(texture, it)
+                    val textureKMG = gli.load(it)
+                    texture shouldBe textureKMG
+                    Files.delete(pathOf(it))
+                }
             }
         }
     }

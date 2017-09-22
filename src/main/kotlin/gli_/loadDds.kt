@@ -7,6 +7,7 @@ import gli_.dx.or
 import glm_.b
 import glm_.glm
 import glm_.i
+import glm_.size
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memCopy
@@ -128,7 +129,7 @@ interface loadDds {
         val texture = Texture(getTarget(header, header10), format, Vec3i(header.width, header.height, depthCount),
                 glm.max(header10.arraySize, 1), faceCount, mipMapCount)
 
-        assert(data.capacity() == data.position() + texture.size())
+        assert(data.size == data.ptr + texture.size())
 
         memCopy(memAddress(data), memAddress(texture.data()), texture.size())
 
