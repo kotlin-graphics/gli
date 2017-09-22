@@ -44,6 +44,10 @@ enum class Target {
 
         override fun hasNext() = if (done) false else current <= targetRange.endInclusive
     }
+
+    companion object {
+        fun of(int: Int) = values().first { it.i == int }
+    }
 }
 
 val TARGET_FIRST = Target._1D

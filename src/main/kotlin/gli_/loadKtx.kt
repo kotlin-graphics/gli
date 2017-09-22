@@ -1,53 +1,96 @@
 package gli_
 
+import gli_.buffer.bufferBig
+import glm_.BYTES
+import glm_.glm
+import glm_.i
+import glm_.size
+import glm_.vec3.Vec3i
+import org.lwjgl.system.MemoryUtil.memAddress
+import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.channels.FileChannel
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
 
 interface loadKtx {
 
-    fun loadKtx10(data: ByteBuffer)    {
+    /** Loads a texture storage_linear from KTX memory. Returns an empty storage_linear in case of failure.
+     *  @param filename String of the file to open including filaname and filename extension */
+    fun loadKtx(filename: String) = loadKtx(Paths.get(filename))
 
-        val header = ktx.Header10(data)
+    /** Loads a texture storage_linear from KTX file. Returns an empty storage_linear in case of failure.
+     *  @param path Path of the file to open including filaname and filename extension  */
+    fun loadKtx(path: Path): Texture {
 
-        var offset = ktx.Header10.size
-
-        // Skip key value data
-        offset += header.bytesOfKeyValueData
-
-        gl.profile = gl.Profile.KTX
-        val format = gl.find(
-                gl.InternalFormat.>(Header.GLInternalFormat),
-                static_cast<gli::gl::external_format>(Header.GLFormat),
-                static_cast<gli::gl::type_format>(Header.GLType));
-        GLI_ASSERT(format != static_cast<format>(gli::FORMAT_INVALID));
-
-        texture::size_type const BlockSize = block_size(format);
-
-        texture Texture(
-                detail::get_target(Header),
-        format,
-        texture::extent_type(
-                Header.PixelWidth,
-                std::max<texture::size_type>(Header.PixelHeight, 1),
-        std::max<texture::size_type>(Header.PixelDepth, 1)),
-        std::max<texture::size_type>(Header.NumberOfArrayElements, 1),
-        std::max<texture::size_type>(Header.NumberOfFaces, 1),
-        std::max<texture::size_type>(Header.NumberOfMipmapLevels, 1));
-
-        for(texture::size_type Level = 0, Levels = Texture.levels(); Level < Levels; ++Level)
-        {
-            offset += sizeof(std::uint32_t);
-
-            for(texture::size_type Layer = 0, Layers = Texture.layers(); Layer < Layers; ++Layer)
-            for(texture::size_type Face = 0, Faces = Texture.faces(); Face < Faces; ++Face)
-            {
-                texture::size_type const FaceSize = Texture.size(Level);
-
-                std::memcpy(Texture.data(Layer, Face, Level), Data + Offset, FaceSize);
-
-                offset += std::max(BlockSize, glm::ceilMultiple(FaceSize, static_cast<texture::size_type>(4)));
+        val buffer = FileChannel.open(path, StandardOpenOption.READ).use { channel ->
+            bufferBig(channel.size().i).also {
+                while (channel.read(it) > 0) Unit
+                it.position(0)
+                it.order(ByteOrder.nativeOrder())
             }
         }
 
-        return Texture;
+        return loadKtx(buffer)
+    }
+
+    /** Loads a texture storage_linear from KTX memory. Returns an empty storage_linear in case of failure.
+     *  @param data buffer of the texture container data to read  */
+    fun loadKtx(data: ByteBuffer): Texture {
+
+        assert(data.size >= ktx.Header10.size)
+
+        // KTX10
+        run {
+            if (ktx.FOURCC_KTX10.all { it == data.get() })
+                return loadKtx10(data)
+        }
+
+        return Texture()
+    }
+
+    private fun loadKtx10(data: ByteBuffer): Texture {
+
+        val header = ktx.Header10(data)
+
+        // Skip key value data
+        data.ptr += header.bytesOfKeyValueData
+
+        gl.profile = gl.Profile.KTX
+        val format = gl.find(
+                gl.InternalFormat.of(header.glInternalFormat),
+                gl.ExternalFormat.of(header.glFormat),
+                gl.TypeFormat.of(header.glType))
+        assert(format != Format.INVALID)
+
+        val blockSize = format.blockSize
+
+        val texture = Texture(
+                target = header.target,
+                format = format,
+                extent = Vec3i(
+                        x = header.pixelWidth,
+                        y = glm.max(header.pixelHeight, 1),
+                        z = glm.max(header.pixelDepth, 1)),
+                layers = glm.max(header.numberOfArrayElements, 1),
+                faces = glm.max(header.numberOfFaces, 1),
+                levels = glm.max(header.numberOfMipmapLevels, 1))
+
+        for (level in 0 until texture.levels()) {
+
+            data.ptr += Int.BYTES
+
+            for (layer in 0 until texture.layers())
+                for (face in 0 until texture.faces()) {
+
+                    val faceSize = texture.size(level)
+                    val dst = texture.data(layer, face, level)
+                    memCopy(memAddress(data), memAddress(dst), faceSize)
+                    data.ptr += glm.max(blockSize, glm.ceilMultiple(faceSize, 4))
+                }
+        }
+        return texture
     }
 }

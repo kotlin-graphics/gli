@@ -1,10 +1,10 @@
 package gli_
 
+import gli_.detail.FORMAT_PROPERTY_BGRA_FORMAT_BIT
+import gli_.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
 import gli_.gl.ExternalFormat.*
 import gli_.gl.InternalFormat.*
 import gli_.gl.TypeFormat.*
-import gli_.detail.FORMAT_PROPERTY_BGRA_FORMAT_BIT
-import gli_.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
 import gli_.gl.ExternalFormat.NONE as NONE_
 
 /**
@@ -315,7 +315,11 @@ object gl {
         RGB16_USCALED_GTC(0xF00E),
         RGB16_SSCALED_GTC(0xF00F),
         RGBA16_USCALED_GTC(0xF010),
-        RGBA16_SSCALED_GTC(0xF011),
+        RGBA16_SSCALED_GTC(0xF011);
+
+        companion object {
+            fun of(int: Int) = values().first { it.i == int }
+        }
     }
 
     enum class ExternalFormat(val i: Int) {
@@ -342,7 +346,11 @@ object gl {
         LUMINANCE_ALPHA(0x190A), //GL_LUMINANCE_ALPHA
 
         SRGB_EXT(0x8C40), //SRGB_EXT
-        SRGB_ALPHA_EXT(0x8C42)            //SRGB_ALPHA_EXT
+        SRGB_ALPHA_EXT(0x8C42);          //SRGB_ALPHA_EXT
+
+        companion object {
+            fun of(int: Int) = values().first { it.i == int }
+        }
     }
 
     enum class TypeFormat(val i: Int) {
@@ -376,7 +384,11 @@ object gl {
         UINT32_RGB10A2_REV(0x8368), //GL_UNSIGNED_INT_2_10_10_10_REV
 
         UINT8_RG4_REV_GTC(0xFFFD),
-        UINT16_A1RGB5_GTC(0xFFFC)
+        UINT16_A1RGB5_GTC(0xFFFC);
+
+        companion object {
+            fun of(int: Int) = values().first { it.i == int }
+        }
     }
 
     enum class Target(val i: Int) {

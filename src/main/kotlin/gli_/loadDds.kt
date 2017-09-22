@@ -7,8 +7,10 @@ import gli_.dx.or
 import glm_.b
 import glm_.glm
 import glm_.i
-import glm_.set
 import glm_.vec3.Vec3i
+import org.lwjgl.system.MemoryUtil.memAddress
+import org.lwjgl.system.MemoryUtil.memCopy
+import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
@@ -26,6 +28,8 @@ interface loadDds {
      *  @param filename String of the file to open including filaname and filename extension */
     fun loadDds(filename: String) = loadDds(Paths.get(filename))
 
+    fun loadDds(uri: URI) = loadDds(Paths.get(uri))
+
     /** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
      *  @param uri Uri of the file to open including filaname and filename extension */
     fun loadDds(path: Path): Texture {
@@ -34,10 +38,11 @@ interface loadDds {
             bufferBig(channel.size().i).also {
                 while (channel.read(it) > 0) Unit
                 it.position(0)
+                it.order(ByteOrder.nativeOrder())
             }
         }
 
-        return loadDds(buffer.order(ByteOrder.nativeOrder()))
+        return loadDds(buffer)
     }
 
     /** Loads a texture storage_linear from DDS file. Returns an empty storage_linear in case of failure.   */
@@ -64,51 +69,43 @@ interface loadDds {
         val format = with(header.format) {
             if ((flags has (dx.Ddpf.RGB or dx.Ddpf.ALPHAPIXELS or dx.Ddpf.ALPHA or dx.Ddpf.YUV or dx.Ddpf.LUMINANCE)) && bpp != 0)
                 when (bpp) {
-                    8 -> {
-                        when {
-                            has(Format.RG4_UNORM_PACK8) -> Format.RG4_UNORM_PACK8
-                            has(Format.RG4_UNORM_PACK8) -> Format.RG4_UNORM_PACK8
-                            has(Format.L8_UNORM_PACK8) -> Format.L8_UNORM_PACK8
-                            has(Format.A8_UNORM_PACK8) -> Format.A8_UNORM_PACK8
-                            has(Format.R8_UNORM_PACK8) -> Format.R8_UNORM_PACK8
-                            has(Format.RG3B2_UNORM_PACK8) -> Format.RG3B2_UNORM_PACK8
-                            else -> throw Error()
-                        }
+                    8 -> when {
+                        has(Format.RG4_UNORM_PACK8) -> Format.RG4_UNORM_PACK8
+                        has(Format.RG4_UNORM_PACK8) -> Format.RG4_UNORM_PACK8
+                        has(Format.L8_UNORM_PACK8) -> Format.L8_UNORM_PACK8
+                        has(Format.A8_UNORM_PACK8) -> Format.A8_UNORM_PACK8
+                        has(Format.R8_UNORM_PACK8) -> Format.R8_UNORM_PACK8
+                        has(Format.RG3B2_UNORM_PACK8) -> Format.RG3B2_UNORM_PACK8
+                        else -> throw Error()
                     }
-                    16 -> {
-                        when {
-                            has(Format.RGBA4_UNORM_PACK16) -> Format.RGBA4_UNORM_PACK16
-                            has(Format.BGRA4_UNORM_PACK16) -> Format.BGRA4_UNORM_PACK16
-                            has(Format.R5G6B5_UNORM_PACK16) -> Format.R5G6B5_UNORM_PACK16
-                            has(Format.B5G6R5_UNORM_PACK16) -> Format.B5G6R5_UNORM_PACK16
-                            has(Format.RGB5A1_UNORM_PACK16) -> Format.RGB5A1_UNORM_PACK16
-                            has(Format.BGR5A1_UNORM_PACK16) -> Format.BGR5A1_UNORM_PACK16
-                            has(Format.LA8_UNORM_PACK8) -> Format.LA8_UNORM_PACK8
-                            has(Format.RG8_UNORM_PACK8) -> Format.RG8_UNORM_PACK8
-                            has(Format.L16_UNORM_PACK16) -> Format.L16_UNORM_PACK16
-                            has(Format.A16_UNORM_PACK16) -> Format.A16_UNORM_PACK16
-                            has(Format.R16_UNORM_PACK16) -> Format.R16_UNORM_PACK16
-                            else -> throw Error()
-                        }
+                    16 -> when {
+                        has(Format.RGBA4_UNORM_PACK16) -> Format.RGBA4_UNORM_PACK16
+                        has(Format.BGRA4_UNORM_PACK16) -> Format.BGRA4_UNORM_PACK16
+                        has(Format.R5G6B5_UNORM_PACK16) -> Format.R5G6B5_UNORM_PACK16
+                        has(Format.B5G6R5_UNORM_PACK16) -> Format.B5G6R5_UNORM_PACK16
+                        has(Format.RGB5A1_UNORM_PACK16) -> Format.RGB5A1_UNORM_PACK16
+                        has(Format.BGR5A1_UNORM_PACK16) -> Format.BGR5A1_UNORM_PACK16
+                        has(Format.LA8_UNORM_PACK8) -> Format.LA8_UNORM_PACK8
+                        has(Format.RG8_UNORM_PACK8) -> Format.RG8_UNORM_PACK8
+                        has(Format.L16_UNORM_PACK16) -> Format.L16_UNORM_PACK16
+                        has(Format.A16_UNORM_PACK16) -> Format.A16_UNORM_PACK16
+                        has(Format.R16_UNORM_PACK16) -> Format.R16_UNORM_PACK16
+                        else -> throw Error()
                     }
-                    24 -> {
-                        when {
-                            has(Format.RGB8_UNORM_PACK8) -> Format.RGB8_UNORM_PACK8
-                            has(Format.BGR8_UNORM_PACK8) -> Format.BGR8_UNORM_PACK8
-                            else -> throw Error()
-                        }
+                    24 -> when {
+                        has(Format.RGB8_UNORM_PACK8) -> Format.RGB8_UNORM_PACK8
+                        has(Format.BGR8_UNORM_PACK8) -> Format.BGR8_UNORM_PACK8
+                        else -> throw Error()
                     }
-                    32 -> {
-                        when {
-                            has(Format.BGR8_UNORM_PACK32) -> Format.BGR8_UNORM_PACK32
-                            has(Format.BGRA8_UNORM_PACK8) -> Format.BGRA8_UNORM_PACK8
-                            has(Format.RGBA8_UNORM_PACK8) -> Format.RGBA8_UNORM_PACK8
-                            has(Format.RGB10A2_UNORM_PACK32) -> Format.RGB10A2_UNORM_PACK32
-                            has(Format.LA16_UNORM_PACK16) -> Format.LA16_UNORM_PACK16
-                            has(Format.RG16_UNORM_PACK16) -> Format.RG16_UNORM_PACK16
-                            has(Format.R32_SFLOAT_PACK32) -> Format.R32_SFLOAT_PACK32
-                            else -> throw Error()
-                        }
+                    32 -> when {
+                        has(Format.BGR8_UNORM_PACK32) -> Format.BGR8_UNORM_PACK32
+                        has(Format.BGRA8_UNORM_PACK8) -> Format.BGRA8_UNORM_PACK8
+                        has(Format.RGBA8_UNORM_PACK8) -> Format.RGBA8_UNORM_PACK8
+                        has(Format.RGB10A2_UNORM_PACK32) -> Format.RGB10A2_UNORM_PACK32
+                        has(Format.LA16_UNORM_PACK16) -> Format.LA16_UNORM_PACK16
+                        has(Format.RG16_UNORM_PACK16) -> Format.RG16_UNORM_PACK16
+                        has(Format.R32_SFLOAT_PACK32) -> Format.R32_SFLOAT_PACK32
+                        else -> throw Error()
                     }
                     else -> throw Error()
                 }
@@ -133,7 +130,7 @@ interface loadDds {
 
         assert(data.capacity() == data.position() + texture.size())
 
-        repeat(texture.size()) { texture.data()[it] = data.get() }
+        memCopy(memAddress(data), memAddress(texture.data()), texture.size())
 
         return texture
     }

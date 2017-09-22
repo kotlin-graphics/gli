@@ -1,12 +1,12 @@
 package gli_
 
+import gli_.buffer.bufferBig
 import gli_.detail.has
 import gli_.detail.or
 import gli_.dx.has
 import glm_.b
-import glm_.set
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
+import org.lwjgl.system.MemoryUtil.memAddress
+import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -47,7 +47,7 @@ interface saveDds {
      *  @return returns false if the function fails to save the file.   */
     fun saveDds(texture: Texture, filename: String): Boolean {
 
-        if (texture.empty()) return false
+        if (texture.empty()) return false   // TODO check combinations
 
         return saveDds(texture, Paths.get(filename))
     }
@@ -67,12 +67,11 @@ interface saveDds {
         val requireDX10Header = dxFormat.d3DFormat == dx.D3dfmt.GLI1 || dxFormat.d3DFormat == dx.D3dfmt.DX10 ||
                 texture.target.isTargetArray || texture.target.isTarget1d
 
-        var capacity = texture.size() + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE
-        if (requireDX10Header) capacity += detail.DdsHeader10.SIZE
-        val buffer = ByteBuffer.allocate(capacity).order(ByteOrder.nativeOrder())
+        var length = texture.size() + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE
+        if (requireDX10Header) length += detail.DdsHeader10.SIZE
+        val data = bufferBig(length)
 
-        var offset = 0
-        for (c in detail.FOURCC_DDS) buffer[offset++] = c.b
+        detail.FOURCC_DDS.forEach { data.put(it.b) }
 
         val header = detail.DdsHeader()
 
@@ -114,28 +113,27 @@ interface saveDds {
             // Texture3D
             if (texture.extent().z > 1)
                 cubemapFlags = cubemapFlags or detail.DdsCubemapFlag.VOLUME
-        }
-        header.to(buffer, offset)
-        offset += detail.DdsHeader.SIZE
 
-        if (requireDX10Header) {
-            val header10 = detail.DdsHeader10().apply {
-                arraySize = texture.layers()
-                resourceDimension = getDimension(texture.target)
-                miscFlag = 0    //Storage.levels() > 0 ? detail::D3D10_RESOURCE_MISC_GENERATE_MIPS : 0;
-                format = dxFormat.dxgiFormat.i
-                alphaFlags = detail.DdsAlphaMode.UNKNOWN.i
-            }
-            header10.to(buffer, offset)
-            offset += detail.DdsHeader10.SIZE
+            to(data)
         }
 
-        val data = texture.data()
-        for (i in 0 until texture.size())
-            buffer[offset++] = data[i]
+        if (requireDX10Header) detail.DdsHeader10().apply {
+            arraySize = texture.layers()
+            resourceDimension = getDimension(texture.target)
+            miscFlag = 0    //Storage.levels() > 0 ? detail::D3D10_RESOURCE_MISC_GENERATE_MIPS : 0;
+            format = dxFormat.dxgiFormat.i
+            alphaFlags = detail.DdsAlphaMode.UNKNOWN.i
+
+            to(data)
+        }
+
+        val src = texture.data()
+        val dst = data
+        memCopy(memAddress(src), memAddress(dst), src.capacity())
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
-            while (buffer.hasRemaining()) it.write(buffer)
+            data.ptr = 0
+            while (data.hasRemaining()) it.write(data)
         }
 
         return true

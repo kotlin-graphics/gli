@@ -7,6 +7,7 @@ import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.ByteBuffer
 
 /**
@@ -130,7 +131,7 @@ class Storage {
                 val offsetDst = imageOffset(blockIndexDst + blockIndex, extent(levelDst)) * blockSize
                 val dataSrc = imageSrc + offsetSrc
                 val dataDst = imageDst + offsetDst
-                MemoryUtil.memCopy(dataDst, dataSrc, blockSize * blockCount.x)
+                memCopy(dataSrc, dataDst, blockSize * blockCount.x)
             }
     }
 

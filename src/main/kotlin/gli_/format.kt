@@ -297,31 +297,30 @@ enum class Format {
 
     val isDepth by lazy { formatInfo.flags has DEPTH_BIT }
     val isStencil by lazy { formatInfo.flags has STENCIL_BIT }
-    val isDepthStencil by lazy { isDepth && isStencil }
-
+    val isDepthStencil by lazy {
+        isDepth && isStencil
+    }
 
     operator fun rangeTo(that: Format): FormatRange = FormatRange(this, that)
 
     class FormatRange(override val start: Format, override val endInclusive: Format) : ClosedRange<Format>, Iterable<Format> {
-        override fun iterator() = FormatIterator(this)
-        override fun contains(value: Format) = value.i in start.i..endInclusive.i
-    }
+        constructor(start: Format, to: Int) : this(start, values().first { it.i == to })
 
-    class FormatIterator(val targetRange: FormatRange) : Iterator<Format> {
-        var current = targetRange.start
-        var done = false
-        override fun next(): Format {
-            val res = current
-            if (current == targetRange.endInclusive)
-                done = true
-            else
-                current = Format.values()[current.ordinal + 1]
-            return res
+        override fun iterator() = object : Iterator<Format> {
+            var next = start
+            override fun next(): Format {
+                val res = next
+                if (next != endInclusive) next = Format.values()[next.ordinal + 1]
+                return res
+            }
+
+            override fun hasNext() = next < endInclusive
         }
 
-        override fun hasNext() = if (done) false else current <= targetRange.endInclusive
+        override fun contains(value: Format) = value.i in start.i..endInclusive.i
     }
 }
+
 
 /** Represent the source of a channel   */
 enum class Swizzle {

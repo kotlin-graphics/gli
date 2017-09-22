@@ -10,8 +10,8 @@ class coreFormat : StringSpec() {
 
         "valid" {
 
-            for (formatIndex in FORMAT_FIRST.i until FORMAT_COUNT)
-                Format.values().first { it.i == formatIndex }.isValid shouldBe true
+            for (format in FORMAT_FIRST .. FORMAT_LAST)
+                format.isValid shouldBe true
             Format.INVALID.isValid shouldBe false
         }
 

@@ -20,12 +20,13 @@ import javax.imageio.ImageIO
 interface load {
 
     fun load(uri: URI) = load(Paths.get(uri))
+
     fun load(filename: String) = load(Paths.get(filename))
 
-    fun load(path: Path) = when (path.toString().substringAfterLast(".")) {  // extension
+    fun load(path: Path) = when (path.extension) {
         "dds" -> gli.loadDds(path)
-//            "kmg" -> gli.loadKmg(path)
-        "ktx" -> gli.loadKtm(path)
+        "kmg" -> gli.loadKmg(path)
+        "ktx" -> gli.loadKtx(path)
 //    "jpeg", "jpg", "png", "gif", "bmp", "wbmp" -> loadImage(path)
         else -> throw Error("unsupported extension: ${path.fileName}")
     }
