@@ -219,7 +219,8 @@ open class Texture {
         return memByteBuffer(cache.baseAddress(0, 0, 0), size())
     }
 
-    inline fun <reified T> data() = when (T::class) {
+    inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
+    fun <T> data(clazz: KClass<*>) = when (clazz) {
         Vec1b::class -> vec1bData.apply { data = data() }
         Vec2b::class -> vec2bData.apply { data = data() }
         Vec3b::class -> vec3bData.apply { data = data() }
@@ -241,7 +242,8 @@ open class Texture {
         return memByteBuffer(cache.baseAddress(layer, face, level), size)
     }
 
-    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = when (T::class) {
+    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = data<T>(T::class, layer, face, level)
+    fun <T> data(clazz: KClass<*>, layer: Int, face: Int, level: Int) = when (clazz) {
         Vec1b::class -> vec1bData.apply { data = data(layer, face, level) }
         Vec2b::class -> vec2bData.apply { data = data(layer, face, level) }
         Vec3b::class -> vec3bData.apply { data = data(layer, face, level) }
@@ -267,7 +269,9 @@ open class Texture {
         return texel
     }
 
-    fun extent(level: Int = 0): Vec3i {
+    fun extent(level: Int =
+               0)
+            : Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
         return cache.extent(level)
@@ -403,6 +407,8 @@ open class Texture {
     fun imageOffset(coord: Vec3i, extent: Vec3i) = storage!!.imageOffset(coord, extent)
 
     inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
+//            load(T::class, texelCoord, layer, face, level)
+//    fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
         assert(notEmpty() && !format.isCompressed)
         when (T::class) {
             java.lang.Byte::class -> assert(format.blockSize == Byte.BYTES)
@@ -427,7 +433,7 @@ open class Texture {
 
     //    fun store(texelCoord: Vec1i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, 1, 1), layer, face, level, texel) TODO check
 //    fun store(texelCoord: Vec2i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, texelCoord.y, 1), layer, face, level, texel)
-    inline fun <reified T>store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: T) {
+    inline fun <reified T> store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: T) {
 
         assert(notEmpty() && !format.isCompressed)
         val extent = extent(level)

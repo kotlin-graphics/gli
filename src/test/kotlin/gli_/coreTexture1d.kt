@@ -1,21 +1,17 @@
 package gli_
 
-import glm_.b
 import glm_.vec1.Vec1
 import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2
-import glm_.vec2.Vec2i
+import glm_.vec2.Vec2b
 import glm_.vec3.Vec3
+import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import io.kotlintest.matchers.shouldBe
-import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
-import org.lwjgl.system.MemoryUtil
-import java.nio.file.Files
-import kotlin.system.measureNanoTime
 
 /**
  * Created by GBarbieri on 04.04.2017.
@@ -169,7 +165,7 @@ class coreTexture1d : StringSpec() {
             }
         }
 
-        "load store"                {
+        "load store" {
 
             run(Format.R32_SFLOAT_PACK32, arrayOf(
                     Vec1(+0.0f),
@@ -211,751 +207,61 @@ class coreTexture1d : StringSpec() {
                     Vec4(+0.7f, +0.8f, +0.9f, 1.0f),
                     Vec4(-0.7f, -0.8f, -0.9f, 1.0f)))
 
-//            arrayOf(
-//                    Vec1b(-128),
-//                    Vec1b(-127),
-//                    Vec1b(+127),
-//                    Vec1b(+64),
-//                    Vec1b(-64),
-//                    Vec1b(+1),
-//                    Vec1b(-1),
-//                    Vec1b(+0)).let {
-//
-//                run(Format.R8_SINT_PACK8, it)
-//                run(Format.R8_SNORM_PACK8, it)
-//            }
-/*
-                       //                        {
-                       //                            std::array<glm::i8vec2, 8> TestSamples{
-                       //                            {
-                       //                                glm::i8vec2(-128, -96),
-                       //                                glm::i8vec2( -64,  96),
-                       //                                glm::i8vec2(-128,  64),
-                       //                                glm::i8vec2( 127,  32),
-                       //                                glm::i8vec2(   0, 126),
-                       //                                glm::i8vec2( -48,  48),
-                       //                                glm::i8vec2(-127, 127),
-                       //                                glm::i8vec2(  64,   0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RG8_UINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RG8_UNORM_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::i8vec3, 8> TestSamples{
-                       //                            {
-                       //                                glm::i8vec3(-128,   0,   0),
-                       //                                glm::i8vec3(-128, 127,   0),
-                       //                                glm::i8vec3(-128, -96,   0),
-                       //                                glm::i8vec3(127,-128,   0),
-                       //                                glm::i8vec3(0, 127,   0),
-                       //                                glm::i8vec3(0, 127,-127),
-                       //                                glm::i8vec3(0,  64, -64),
-                       //                                glm::i8vec3(-32,  32,  96)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGB8_SINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGB8_SNORM_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::i8vec4, 8> TestSamples{
-                       //                            {
-                       //                                glm::i8vec4(-127,   0,   0, 127),
-                       //                                glm::i8vec4(-128,  96,   0,-128),
-                       //                                glm::i8vec4(127,  64,   0,   1),
-                       //                                glm::i8vec4(0, -64,   0,   2),
-                       //                                glm::i8vec4(-95,  32,   0,   3),
-                       //                                glm::i8vec4(95, -32, 127,   4),
-                       //                                glm::i8vec4(-63,  16,-128,  -1),
-                       //                                glm::i8vec4(63, -16,-127,  -2)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGBA8_SINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGBA8_SNORM_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u8vec1, 8> TestSamples{
-                       //                            {
-                       //                                glm::u8vec1(255),
-                       //                                glm::u8vec1(224),
-                       //                                glm::u8vec1(192),
-                       //                                glm::u8vec1(128),
-                       //                                glm::u8vec1(64),
-                       //                                glm::u8vec1(32),
-                       //                                glm::u8vec1(16),
-                       //                                glm::u8vec1(0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_R8_UINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_R8_UNORM_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_R8_SRGB_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u8vec2, 8> TestSamples{
-                       //                            {
-                       //                                glm::u8vec2(255,   0),
-                       //                                glm::u8vec2(255, 128),
-                       //                                glm::u8vec2(255, 255),
-                       //                                glm::u8vec2(128, 255),
-                       //                                glm::u8vec2(0, 255),
-                       //                                glm::u8vec2(0, 255),
-                       //                                glm::u8vec2(0,   0),
-                       //                                glm::u8vec2(255,   0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RG8_UINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RG8_UNORM_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RG8_SRGB_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u8vec3, 8> TestSamples{
-                       //                            {
-                       //                                glm::u8vec3(255,   0,   0),
-                       //                                glm::u8vec3(255, 128,   0),
-                       //                                glm::u8vec3(255, 255,   0),
-                       //                                glm::u8vec3(128, 255,   0),
-                       //                                glm::u8vec3(0, 255,   0),
-                       //                                glm::u8vec3(0, 255, 255),
-                       //                                glm::u8vec3(0,   0, 255),
-                       //                                glm::u8vec3(255,   0, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGB8_UINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGB8_UNORM_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGB8_SRGB_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u8vec4, 8> TestSamples{
-                       //                            {
-                       //                                glm::u8vec4(255,   0,   0, 255),
-                       //                                glm::u8vec4(255, 128,   0, 255),
-                       //                                glm::u8vec4(255, 255,   0, 255),
-                       //                                glm::u8vec4(128, 255,   0, 255),
-                       //                                glm::u8vec4(0, 255,   0, 255),
-                       //                                glm::u8vec4(0, 255, 255, 255),
-                       //                                glm::u8vec4(0,   0, 255, 255),
-                       //                                glm::u8vec4(255,   0, 255, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGBA8_UINT_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGBA8_UNORM_PACK8, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGBA8_SRGB_PACK8, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u16vec1, 8> TestSamples{
-                       //                            {
-                       //                                glm::u16vec1(65535),
-                       //                                glm::u16vec1(32767),
-                       //                                glm::u16vec1(192),
-                       //                                glm::u16vec1(128),
-                       //                                glm::u16vec1(64),
-                       //                                glm::u16vec1(32),
-                       //                                glm::u16vec1(16),
-                       //                                glm::u16vec1(0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_R16_UINT_PACK16, TestSamples);
-                       //                            Error += run(gli::FORMAT_R16_UNORM_PACK16, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u16vec2, 8> TestSamples{
-                       //                            {
-                       //                                glm::u16vec2(255,   0),
-                       //                                glm::u16vec2(255, 128),
-                       //                                glm::u16vec2(255, 255),
-                       //                                glm::u16vec2(128, 255),
-                       //                                glm::u16vec2(0, 255),
-                       //                                glm::u16vec2(0, 255),
-                       //                                glm::u16vec2(0,   0),
-                       //                                glm::u16vec2(255,   0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RG16_UINT_PACK16, TestSamples);
-                       //                            Error += run(gli::FORMAT_RG16_UNORM_PACK16, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u16vec3, 8> TestSamples{
-                       //                            {
-                       //                                glm::u16vec3(255,   0,   0),
-                       //                                glm::u16vec3(255, 128,   0),
-                       //                                glm::u16vec3(255, 255,   0),
-                       //                                glm::u16vec3(128, 255,   0),
-                       //                                glm::u16vec3(0, 255,   0),
-                       //                                glm::u16vec3(0, 255, 255),
-                       //                                glm::u16vec3(0,   0, 255),
-                       //                                glm::u16vec3(255,   0, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGB16_UINT_PACK16, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGB16_UNORM_PACK16, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u16vec4, 8> TestSamples{
-                       //                            {
-                       //                                glm::u16vec4(255,   0,   0, 255),
-                       //                                glm::u16vec4(255, 128,   0, 255),
-                       //                                glm::u16vec4(255, 255,   0, 255),
-                       //                                glm::u16vec4(128, 255,   0, 255),
-                       //                                glm::u16vec4(0, 255,   0, 255),
-                       //                                glm::u16vec4(0, 255, 255, 255),
-                       //                                glm::u16vec4(0,   0, 255, 255),
-                       //                                glm::u16vec4(255,   0, 255, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGBA16_UINT_PACK16, TestSamples);
-                       //                            Error += run(gli::FORMAT_RGBA16_UNORM_PACK16, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec1, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec1(65535),
-                       //                                glm::u32vec1(32767),
-                       //                                glm::u32vec1(192),
-                       //                                glm::u32vec1(128),
-                       //                                glm::u32vec1(64),
-                       //                                glm::u32vec1(32),
-                       //                                glm::u32vec1(16),
-                       //                                glm::u32vec1(0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_R32_UINT_PACK32, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec2, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec2(255,   0),
-                       //                                glm::u32vec2(255, 128),
-                       //                                glm::u32vec2(255, 255),
-                       //                                glm::u32vec2(128, 255),
-                       //                                glm::u32vec2(0, 255),
-                       //                                glm::u32vec2(0, 255),
-                       //                                glm::u32vec2(0,   0),
-                       //                                glm::u32vec2(255,   0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RG32_UINT_PACK32, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec3, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec3(255,   0,   0),
-                       //                                glm::u32vec3(255, 128,   0),
-                       //                                glm::u32vec3(255, 255,   0),
-                       //                                glm::u32vec3(128, 255,   0),
-                       //                                glm::u32vec3(0, 255,   0),
-                       //                                glm::u32vec3(0, 255, 255),
-                       //                                glm::u32vec3(0,   0, 255),
-                       //                                glm::u32vec3(255,   0, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGB32_UINT_PACK32, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec4, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec4(255,   0,   0, 255),
-                       //                                glm::u32vec4(255, 128,   0, 255),
-                       //                                glm::u32vec4(255, 255,   0, 255),
-                       //                                glm::u32vec4(128, 255,   0, 255),
-                       //                                glm::u32vec4(0, 255,   0, 255),
-                       //                                glm::u32vec4(0, 255, 255, 255),
-                       //                                glm::u32vec4(0,   0, 255, 255),
-                       //                                glm::u32vec4(255,   0, 255, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGBA32_UINT_PACK32, TestSamples);
-                       //                        }
-                       */
-//                return Error
-        }
+            arrayOf(
+                    Vec1b(-128),
+                    Vec1b(-127),
+                    Vec1b(+127),
+                    Vec1b(+64),
+                    Vec1b(-64),
+                    Vec1b(+1),
+                    Vec1b(-1),
+                    Vec1b(+0)).let {
 
-        "specialize" {
-
-            val texture = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec1i(1), 1, 1, 1)
-            val texture1d = Texture1d(texture)
-            val texture1dArray = Texture1dArray(texture)
-            val texture2d = Texture2d(texture)
-            val texture2dArray = Texture2dArray(texture)
-            val texture3d = Texture3d(texture)
-            val textureCube = TextureCube(texture)
-            val textureCubeArray = TextureCubeArray(texture)
-
-            texture shouldBe texture1d
-            texture shouldNotBe texture1dArray
-            texture shouldNotBe texture2d
-            texture shouldNotBe texture2dArray
-            texture shouldNotBe texture3d
-            texture shouldNotBe textureCube
-            texture shouldNotBe textureCubeArray
-
-            val texture1D_B = Texture(texture1d)
-            val texture1DArray_B = Texture(texture1dArray)
-            val texture2D_B = Texture(texture2d)
-            val texture2DArray_B = Texture(texture2dArray)
-            val texture3D_B = Texture(texture3d)
-            val textureCube_B = Texture(textureCube)
-            val textureCubeArray_B = Texture(textureCubeArray)
-
-            texture shouldBe texture1D_B
-            texture shouldNotBe texture1DArray_B
-            texture shouldNotBe texture2D_B
-            texture shouldNotBe texture2DArray_B
-            texture shouldNotBe texture3D_B
-            texture shouldNotBe textureCube_B
-            texture shouldNotBe textureCubeArray_B
-
-            texture1d shouldBe texture1D_B
-            texture1dArray shouldBe texture1DArray_B
-            texture2d shouldBe texture2D_B
-            texture2dArray shouldBe texture2DArray_B
-            texture3d shouldBe texture3D_B
-            textureCube shouldBe textureCube_B
-            textureCubeArray shouldBe textureCubeArray_B
-        }
-
-        "load" {
-
-            // Texture 1D
-            run {
-                val texture = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
-
-                val ktx = "texture_1d.ktx"
-                val dds = "texture_1d.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
-
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
+                run(Format.R8_SINT_PACK8, it)
+                run(Format.R8_SNORM_PACK8, it)
             }
 
-            // Texture 1D array
-            run {
-                val texture = Texture(Target._1D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
-                val ktx = "texture_1d_array.ktx"
-                val dds = "texture_1d_array.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
+            arrayOf(
+                    Vec2b(-128, -96),
+                    Vec2b(-64, 96),
+                    Vec2b(-128, 64),
+                    Vec2b(127, 32),
+                    Vec2b(0, 126),
+                    Vec2b(-48, 48),
+                    Vec2b(-127, 127),
+                    Vec2b(64, 0)).let {
 
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
+                run(Format.RG8_UINT_PACK8, it)
+                run(Format.RG8_UNORM_PACK8, it)
             }
 
-            // Texture 2D
-            run {
-                val texture = Texture(Target._2D, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+            arrayOf(
+                    Vec3b(-128, 0, 0),
+                    Vec3b(-128, 127, 0),
+                    Vec3b(-128, -96, 0),
+                    Vec3b(127, -128, 0),
+                    Vec3b(0, 127, 0),
+                    Vec3b(0, 127, -127),
+                    Vec3b(0, 64, -64),
+                    Vec3b(-32, 32, 96)).let {
 
-                val ktx = "texture_2d.ktx"
-                val dds = "texture_2d.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
-
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
+                run(Format.RGB8_SINT_PACK8, it)
+                run(Format.RGB8_SNORM_PACK8, it)
             }
 
-            // Texture 2D array
-            run {
-                val texture = Texture(Target._2D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
-                val ktx = "texture_2d_array.ktx"
-                val dds = "texture_2d_array.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
+            arrayOf(
+                    Vec4b(-127, 0, 0, 127),
+                    Vec4b(-128, 96, 0, -128),
+                    Vec4b(127, 64, 0, 1),
+                    Vec4b(0, -64, 0, 2),
+                    Vec4b(-95, 32, 0, 3),
+                    Vec4b(95, -32, 127, 4),
+                    Vec4b(-63, 16, -128, -1),
+                    Vec4b(63, -16, -127, -2)).let {
 
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
+                run(Format.RGBA8_SINT_PACK8, it)
+                run(Format.RGBA8_SNORM_PACK8, it)
             }
-
-            // Texture 3D
-            run {
-                val texture = Texture(Target._3D, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 1, 1)
-                val ktx = "texture_3d.ktx"
-                val dds = "texture_3d.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
-
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
-            }
-
-            // Texture cube
-            run {
-                val texture = Texture(Target.CUBE, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 6, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
-                val ktx = "texture_cube.ktx"
-                val dds = "texture_cube.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
-
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
-            }
-
-            // Texture cube array
-            run {
-                val texture = Texture(Target.CUBE_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 6, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
-                val ktx = "texture_cube_array.ktx"
-                val dds = "texture_cube_array.dds"
-                gli.save(texture, ktx)
-                gli.save(texture, dds)
-                val textureKTX = gli.load(ktx)
-                val textureDDS = gli.load(dds)
-                Files.delete(pathOf(ktx))
-                Files.delete(pathOf(dds))
-
-                texture shouldBe textureKTX
-                texture shouldBe textureDDS
-            }
-        }
-
-        "data" {
-
-            val texture = Texture(Target._2D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 1, 1)
-
-            Texture2dArray(texture)[0].data()[0] shouldBe texture.data(0, 0, 0)[0]
-            Texture2dArray(texture)[1].data()[0] shouldBe texture.data(1, 0, 0)[0]
-        }
-
-        "perf" {
-
-            fun textureLoad(extent: Int) {
-
-                val texture = Texture2d(Format.R8_UNORM_PACK8, Vec2i(extent))
-                texture.clear(255.b)
-
-                var error = 0
-
-                val ns = measureNanoTime {
-                    for (levelIndex in 0 until texture.levels()) {
-                        val extent = texture.extent(levelIndex)
-                        for (y in 0 until extent.y)
-                            for (x in 0 until extent.x) {
-                                val texel = texture.load<Byte>(Vec2i(x, y), levelIndex)
-                                error += if (texel == 255.b) 0 else 1
-                            }
-                    }
-                }
-                error shouldBe 0
-                println("2D texture load performance test: $ns ns")
-            }
-
-            fun textureFetch(extent: Int) {
-
-                val texture = Texture2d(Format.R8_UNORM_PACK8, Vec2i(extent))
-                texture.clear(255.b)
-
-                //gli::sampler2d<float> Sampler (texture, gli::WRAP_CLAMP_TO_EDGE) TODO
-//
-//                std::clock_t TimeBegin = std ::clock()
-//
-//                for (gli:: texture2d::size_type LevelIndex = 0, LevelCount = Texture.levels(); LevelIndex < LevelCount; ++LevelIndex)
-//                {
-//                    gli::texture2d::extent_type const extent = texture.extent(LevelIndex)
-//                    for (gli:: size_t y = 0; y < extent.y; ++y)
-//                    for (gli:: size_t x = 0; x < extent.x; ++x)
-//                    {
-//                        gli::vec4 const & Texel = Sampler . texel_fetch (gli::texture2d::extent_type(x, y), LevelIndex)
-//                        Error += gli::all(gli::epsilonEqual(Texel, gli::vec4(1, 0, 0, 1), 0.001f)) ? 0 : 1
-//                        assert(!Error)
-//                    }
-//                }
-//
-//                std::clock_t TimeEnd = std ::clock()
-//                printf("2D texture fetch performance test: %d\n", TimeEnd - TimeBegin)
-            }
-
-            fun texture2dAccess(iterations: Int) {
-
-                var error = 0
-
-                val textures = ArrayList<Texture2d>(FORMAT_COUNT)
-                for (format in FORMAT_FIRST..FORMAT_LAST)
-                    with(Texture2d(format, Vec2i(4), 9)) {
-                        textures += this
-                        error += if (this.empty()) 1 else 0
-                    }
-
-                var ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val baseAddress = MemoryUtil.memAddress(it.data(layerIndex, 0, levelIndex))
-                                    error += if (baseAddress != MemoryUtil.NULL) 0 else 1
-                                }
-                        }
-                }
-                println("2d texture data access performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val size = it.size(levelIndex)
-                                    error += if (size != 0) 0 else 1
-                                }
-                        }
-                }
-                println("2d texture size performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val extent = it.extent(levelIndex)
-                                    error += if (extent.x != 0) 0 else 1
-                                    error += if (extent.y != 0) 0 else 1
-                                }
-                        }
-                }
-                println("2d texture extent access performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val extent = it.extent(levelIndex)
-                                    val size = it.size(levelIndex)
-
-                                    error += if (extent.x != 0) 0 else 1
-                                    error += if (extent.y != 0) 0 else 1
-                                    error += if (size != 0) 0 else 1
-                                }
-                        }
-                }
-                println("2d texture extent and size access performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val extent = it.extent(levelIndex)
-                                    val size = it.size(levelIndex)
-                                    val baseAddress = MemoryUtil.memAddress(it.data(layerIndex, 0, levelIndex))
-
-                                    error += if (extent.x != 0) 0 else 1
-                                    error += if (extent.y != 0) 0 else 1
-                                    error += if (size != 0) 0 else 1
-                                    error += if (baseAddress != MemoryUtil.NULL) 0 else 1
-                                }
-                        }
-                }
-                println("2d texture all access performance test: $ns ns")
-
-                error shouldBe 0
-            }
-
-            fun cubeArrayAccess(iterations: Int) {
-
-                var error = 0
-
-                val textures = ArrayList<TextureCubeArray>(FORMAT_COUNT)
-                for (format in FORMAT_FIRST..FORMAT_LAST)
-                    with(TextureCubeArray(format, Vec2i(4), 3, 3)) {
-                        textures += this
-                        error += if (this.empty()) 1 else 0
-                    }
-
-                var ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val baseAddress = MemoryUtil.memAddress(it.data(layerIndex, 0, levelIndex))
-                                    error += if (baseAddress != MemoryUtil.NULL) 0 else 1
-                                }
-                        }
-                }
-                println("Cube array texture data access performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val size = it.size(levelIndex)
-                                    error += if (size != 0) 0 else 1
-                                }
-                        }
-                }
-                println("Cube array texture size performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val extent = it.extent(levelIndex)
-                                    error += if (extent.x != 0) 0 else 1
-                                    error += if (extent.y != 0) 0 else 1
-                                }
-                        }
-                }
-                println("Cube array texture extent access performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val extent = it.extent(levelIndex)
-                                    val size = it.size(levelIndex)
-
-                                    error += if (extent.x != 0) 0 else 1
-                                    error += if (extent.y != 0) 0 else 1
-                                    error += if (size != 0) 0 else 1
-                                }
-                        }
-                }
-                println("Cube array texture extent and size access performance test: $ns ns")
-
-                ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        textures.forEach {
-                            for (layerIndex in 0 until it.layers())
-                                for (levelIndex in 0 until it.levels()) {
-                                    val extent = it.extent(levelIndex)
-                                    val size = it.size(levelIndex)
-                                    val baseAddress = MemoryUtil.memAddress(it.data(layerIndex, 0, levelIndex))
-
-                                    error += if (extent.x != 0) 0 else 1
-                                    error += if (extent.y != 0) 0 else 1
-                                    error += if (size != 0) 0 else 1
-                                    error += if (baseAddress != MemoryUtil.NULL) 0 else 1
-                                }
-                        }
-                }
-                println("Cube array texture all access performance test: $ns ns")
-
-                error shouldBe 0
-            }
-
-            fun genericCreation(iterations: Int) {
-
-                var error = 0
-
-                val ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
-                            val texture = Texture(Target._2D_ARRAY, format, Vec3i(4, 4, 1), 1, 1, 3)
-                            error += if (texture.empty()) 1 else 0
-                        }
-                }
-                println("Generic texture creation performance test: $ns ns")
-
-                error shouldBe 0
-            }
-
-            fun _2dArrayCreation(iterations: Int) {
-
-                var error = 0
-
-                val ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
-                            val texture = Texture2dArray(format, Vec2i(4), 1, 3)
-                            error += if (texture.empty()) 1 else 0
-                        }
-                }
-                println("2D array texture creation performance test: $ns ns")
-
-                error shouldBe 0
-            }
-
-            fun _2dCreation(iterations: Int) {
-
-                var error = 0
-
-                val ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
-                            val texture = Texture2d(format, Vec2i(4), 3)
-                            error += if (texture.empty()) 1 else 0
-                        }
-                }
-                println("2D texture creation performance test: $ns ns")
-
-                error shouldBe 0
-            }
-
-            fun cubeArrayCreation(iterations: Int) {
-
-                var error = 0
-
-                val ns = measureNanoTime {
-                    for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
-                            val texture = TextureCubeArray(format, Vec2i(4), 1, 3)
-                            error += if (texture.empty()) 1 else 0
-                        }
-                }
-                println("Cube array texture creation performance test: $ns ns")
-
-                error shouldBe 0
-            }
-
-            val DO_PERF_TEST = false
-            val PERF_TEST_ACCESS_ITERATION = if (DO_PERF_TEST) 100000 else 0
-            val PERF_TEST_CREATION_ITERATION = if (DO_PERF_TEST) 1000 else 0
-
-            textureLoad(if (DO_PERF_TEST) 8192 else 1024)
-            textureFetch(if (DO_PERF_TEST) 8192 else 1024)
-//            textureLod_nearest::main(DO_PERF_TEST ? 8192 : 1024);
-//            Error += perf_texture_lod_linear::main(DO_PERF_TEST ? 8192 : 1024);
-//            Error += perf_generate_mipmaps_nearest::main(DO_PERF_TEST ? 8192 : 1024);
-//            Error += perf_generate_mipmaps_linear::main(DO_PERF_TEST ? 8192 : 1024);
-            texture2dAccess(PERF_TEST_ACCESS_ITERATION)
-            cubeArrayAccess(PERF_TEST_ACCESS_ITERATION)
-            genericCreation(PERF_TEST_CREATION_ITERATION)
-            _2dArrayCreation(PERF_TEST_CREATION_ITERATION)
-            _2dCreation(PERF_TEST_CREATION_ITERATION)
-            cubeArrayCreation(PERF_TEST_CREATION_ITERATION)
         }
     }
 }
