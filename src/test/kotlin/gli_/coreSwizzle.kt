@@ -41,7 +41,7 @@ class coreSwizzle : StringSpec() {
 
         "texture 1d" {
 
-            val textureA = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec3i(4, 1, 1), 1, 1, 1)
+            val textureA = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec1i(4), 1, 1, 1)
             textureA.clear(Vec4b(255, 127, 0, 192))
 
             run {
@@ -57,7 +57,7 @@ class coreSwizzle : StringSpec() {
 
             run {
 
-                val textureB = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec3i(4, 1, 1), 1, 1, 1)
+                val textureB = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec1i(4), 1, 1, 1)
                 textureB.clear(Vec4b(0, 127, 255, 192))
                 textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
 

@@ -350,7 +350,8 @@ val SWIZZLE_COUNT = SWIZZLE_LAST.i - SWIZZLE_FIRST.i + 1
 
 data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
     constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
-    constructor(s: Swizzle) : this(s, s, s, s)
+    constructor(swizzle: Swizzle) : this(swizzle, swizzle, swizzle, swizzle)
+    constructor(swizzles: Swizzles) : this(swizzles.r, swizzles.g, swizzles.b, swizzles.a)
     constructor() : this(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA)
 
     operator fun get(i: Int) = when (i) {

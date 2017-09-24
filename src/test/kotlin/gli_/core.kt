@@ -21,8 +21,6 @@ class core : StringSpec() {
 
             assert(texture.notEmpty())
 
-            val pointer = texture[0].data()!!
-
             val texelA = texture[0].data<Vec4b>()[0]
             val texelB = texture[0].data<Vec4b>()[1]
             val texelC = texture[0].data<Vec4b>()[2]

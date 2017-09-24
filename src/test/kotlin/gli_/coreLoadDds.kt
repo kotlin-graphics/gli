@@ -16,15 +16,13 @@ class coreLoadDds : StringSpec() {
 
             class Params(val filename: String, val format: Format)
 
-            fun uri(filename: String) = ClassLoader.getSystemResource(filename).toURI()
-
             fun load(params: Params) {
 
-                val textureA = gli.loadDds(uri(params.filename))
+                val textureA = gli.loadDds(uriOf(params.filename))
                 textureA.format shouldBe params.format
 
                 gli.saveDds(textureA, params.filename)
-                val textureB = gli.loadDds(uri(params.filename))
+                val textureB = gli.loadDds(uriOf(params.filename))
                 textureB.format shouldBe params.format
                 Files.delete(pathOf(params.filename))
 

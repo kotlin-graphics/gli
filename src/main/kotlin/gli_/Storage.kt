@@ -3,9 +3,15 @@ package gli_
 import gli_.buffer.destroy
 import glm_.glm
 import glm_.size
+import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
+import glm_.vec2.Vec2b
 import glm_.vec2.Vec2i
+import glm_.vec3.Vec3
+import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
+import glm_.vec4.Vec4
+import glm_.vec4.Vec4b
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.ByteBuffer
@@ -13,6 +19,8 @@ import java.nio.ByteBuffer
 /**
  * Created by GBarbieri on 03.04.2017.
  */
+
+@Suppress("UNCHECKED_CAST")
 
 class Storage {
 
@@ -77,6 +85,19 @@ class Storage {
     fun size() = data!!.size
 
     fun data() = data!!
+
+    inline fun <reified T> data(): reinterpreter<T> = when (T::class.java) {
+        Vec1b::class.java -> vec1bData.apply { data = data() }
+        Vec2b::class.java -> vec2bData.apply { data = data() }
+        Vec3b::class.java -> vec3bData.apply { data = data() }
+        Vec4b::class.java -> vec4bData.apply { data = data() }
+        Vec3::class.java -> vec3Data.apply { data = data() }
+        Vec4::class.java -> vec4Data.apply { data = data() }
+        java.lang.Byte::class.java -> byteData.apply { data = data() }
+        java.lang.Integer::class.java -> intData.apply { data = data() }
+        java.lang.Long::class.java -> longData.apply { data = data() }
+        else -> throw Error()
+    } as reinterpreter<T>
 
     /** Compute the relative memory offset to access the data for a specific layer, face and level  */
     fun baseOffset(layer: Int, face: Int, level: Int): Int {
@@ -169,5 +190,17 @@ class Storage {
                 blockExtend == other.blockExtend &&
                 extent == other.extent &&
                 data == other.data
+    }
+
+    override fun hashCode(): Int {
+        var result = layers
+        result = 31 * result + faces
+        result = 31 * result + levels
+        result = 31 * result + blockSize
+        result = 31 * result + blockCount.hashCode()
+        result = 31 * result + blockExtend.hashCode()
+        result = 31 * result + extent.hashCode()
+        result = 31 * result + (data?.hashCode() ?: 0)
+        return result
     }
 }

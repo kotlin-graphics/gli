@@ -5,22 +5,28 @@ import glm_.glm
 import org.lwjgl.system.MemoryUtil.memAddress
 
 /** Pre compute at texture instance creation some information for faster access to texels   */
-class Cache(
-        storage: Storage,
-        format: gli_.Format,
-        baseLayer: Int, layers: Int,
-        baseFace: Int, maxFace: Int,
-        baseLevel: Int, maxLevel: Int
-) {
+class Cache {
 
-    val faces = maxFace - baseFace + 1
-    val levels = maxLevel - baseLevel + 1
+    val faces: Int
+    val levels: Int
 
-    private val baseAddresses = LongArray(layers * faces * levels)
+    private val baseAddresses : LongArray
     private val imageExtent = Array(16, { Vec3i() })
     private val imageMemorySize = IntArray(16)
 
-    init {
+    private val globalMemorySize: Int
+
+    constructor(
+            storage: Storage,
+            format: gli_.Format,
+            baseLayer: Int, layers: Int,
+            baseFace: Int, maxFace: Int,
+            baseLevel: Int, maxLevel: Int
+    ) {
+        faces = maxFace - baseFace + 1
+        levels = maxLevel - baseLevel + 1
+
+        baseAddresses = LongArray(layers * faces * levels)
 
         assert(gli.levels(storage.extent(0)) < imageMemorySize.size)
 
@@ -43,9 +49,21 @@ class Cache(
             imageExtent[level] = glm.max(dstExtent, 1)
             imageMemorySize[level] = storage.levelSize(baseLevel + level)
         }
+
+        globalMemorySize = storage.layerSize(baseFace, maxFace, baseLevel, maxLevel) * layers
     }
 
-    private val globalMemorySize = storage.layerSize(baseFace, maxFace, baseLevel, maxLevel) * layers
+    /** JVM constructor for C++ by value    */
+    constructor(cache: Cache) {
+        faces = cache.faces
+        levels = cache.levels
+        baseAddresses = cache.baseAddresses.clone()
+        repeat(imageExtent.size) {
+            imageExtent[it] = cache.imageExtent[it]
+            imageMemorySize[it] = cache.imageMemorySize[it]
+        }
+        globalMemorySize = cache.globalMemorySize
+    }
 
     private fun indexCache(layer: Int, face: Int, level: Int) = ((layer * faces) + face) * levels + level
 

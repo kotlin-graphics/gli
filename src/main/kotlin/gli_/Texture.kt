@@ -5,8 +5,12 @@ import glm_.BYTES
 import glm_.b
 import glm_.glm
 import glm_.set
+import glm_.vec1.Vec1
 import glm_.vec1.Vec1b
+import glm_.vec1.Vec1i
+import glm_.vec2.Vec2
 import glm_.vec2.Vec2b
+import glm_.vec2.Vec2i
 import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
@@ -20,6 +24,8 @@ import kotlin.reflect.KClass
 /**
  * Created by GBarbieri on 03.04.2017.
  */
+
+@Suppress("UNCHECKED_CAST")
 
 open class Texture {
 
@@ -93,6 +99,26 @@ open class Texture {
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && extent.x == extent.y))
     }
 
+    /** Vec1i   */
+    constructor(target: Target,
+                format: Format,
+                extent: Vec1i,
+                layers: Int,
+                faces: Int,
+                levels: Int,
+                swizzles: Swizzles = Swizzles()
+    ) : this(target, format, Vec3i(extent.x, 1, 1), layers, faces, levels, swizzles)
+
+    /** Vec2i   */
+    constructor(target: Target,
+                format: Format,
+                extent: Vec2i,
+                layers: Int,
+                faces: Int,
+                levels: Int,
+                swizzles: Swizzles = Swizzles()
+    ) : this(target, format, Vec3i(extent.x, extent.y, 1), layers, faces, levels, swizzles)
+
     /** Create a texture object by sharing an existing texture storage_type from another texture instance.
      * This texture object is effectively a texture view where the layer, the face and the level allows identifying
      * a specific subset of the texture storage_linear source.
@@ -154,8 +180,20 @@ open class Texture {
         assert(target != Target.CUBE_ARRAY || (target == Target.CUBE_ARRAY && layers() >= 1 && faces() >= 1 && extent().y >= 1 && extent().z == 1))
     }
 
+    /** JVM Constructor for the C++ constructor by value    */
     constructor(texture: Texture) {
 
+        storage = Storage(texture.storage!!)
+        target = texture.target
+        format = texture.format
+        baseLayer = texture.baseLayer
+        maxLayer = texture.maxLayer
+        baseFace = texture.baseFace
+        maxFace = texture.maxFace
+        baseLevel = texture.baseLevel
+        maxLevel = texture.maxLevel
+        swizzles = Swizzles(texture.swizzles)
+        cache = Cache(texture.cache)
     }
 
     fun empty() = storage?.empty() ?: true
@@ -182,9 +220,19 @@ open class Texture {
     }
 
     inline fun <reified T> data() = when (T::class) {
+        Vec1b::class -> vec1bData.apply { data = data() }
+        Vec2b::class -> vec2bData.apply { data = data() }
+        Vec3b::class -> vec3bData.apply { data = data() }
         Vec4b::class -> vec4bData.apply { data = data() }
+        Vec1::class -> vec1Data.apply { data = data() }
+        Vec2::class -> vec2Data.apply { data = data() }
+        Vec3::class -> vec3Data.apply { data = data() }
+        Vec4::class -> vec4Data.apply { data = data() }
+        java.lang.Byte::class -> byteData.apply { data = data() }
+        java.lang.Integer::class -> intData.apply { data = data() }
+        java.lang.Long::class -> longData.apply { data = data() }
         else -> throw Error()
-    }
+    } as reinterpreter<T>
 
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
@@ -193,18 +241,20 @@ open class Texture {
         return memByteBuffer(cache.baseAddress(layer, face, level), size)
     }
 
-    inline fun <reified T> data(layer: Int, face: Int, level: Int) = when (T::class.java) {
-        Vec1b::class.java -> vec1bData.apply { data = data(layer, face, level) }
-        Vec2b::class.java -> vec2bData.apply { data = data(layer, face, level) }
-        Vec3b::class.java -> vec3bData.apply { data = data(layer, face, level) }
-        Vec4b::class.java -> vec4bData.apply { data = data(layer, face, level) }
-        Vec3::class.java -> vec3Data.apply { data = data(layer, face, level) }
-        Vec4::class.java -> vec4Data.apply { data = data(layer, face, level) }
-        java.lang.Byte::class.java -> byteData.apply { data = data(layer, face, level) }
-        java.lang.Integer::class.java -> intData.apply { data = data(layer, face, level) }
-        java.lang.Long::class.java -> longData.apply { data = data(layer, face, level) }
+    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = when (T::class) {
+        Vec1b::class -> vec1bData.apply { data = data(layer, face, level) }
+        Vec2b::class -> vec2bData.apply { data = data(layer, face, level) }
+        Vec3b::class -> vec3bData.apply { data = data(layer, face, level) }
+        Vec4b::class -> vec4bData.apply { data = data(layer, face, level) }
+        Vec1::class -> vec1Data.apply { data = data(layer, face, level) }
+        Vec2::class -> vec2Data.apply { data = data(layer, face, level) }
+        Vec3::class -> vec3Data.apply { data = data(layer, face, level) }
+        Vec4::class -> vec4Data.apply { data = data(layer, face, level) }
+        java.lang.Byte::class -> byteData.apply { data = data(layer, face, level) }
+        java.lang.Integer::class -> intData.apply { data = data(layer, face, level) }
+        java.lang.Long::class -> longData.apply { data = data(layer, face, level) }
         else -> throw Error()
-    }
+    } as reinterpreter<T>
 
     fun setData(unitOffset: Int, texel: Vec4b) {
         val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
@@ -236,6 +286,17 @@ open class Texture {
             is Long -> {
                 assert(format.blockSize == Long.BYTES)
                 for (i in 0 until data.capacity() step Long.BYTES) data.putLong(i, texel)
+            }
+            is Vec1b -> {
+                assert(format.blockSize == Vec1b.size)
+                for (i in 0 until data.capacity()) data[i] = texel.x
+            }
+            is Vec2b -> {
+                assert(format.blockSize == Vec2b.size)
+                for (i in 0 until data.capacity() step Vec2b.size) {
+                    data[i] = texel.x
+                    data[i + Byte.BYTES] = texel.y
+                }
             }
             is Vec3b -> {
                 assert(format.blockSize == Vec3b.size)
@@ -274,7 +335,6 @@ open class Texture {
         when (blockData) {
             is Vec4b -> {
                 assert(format.blockSize == Vec4b.size)
-                val blockCount = storage!!.levelSize(level) / Vec4.size
                 val data = data(layer, face, level)
                 for (blockIndex in 0 until data.capacity() step Vec4.length) {
                     data[blockIndex] = blockData.x
@@ -340,7 +400,9 @@ open class Texture {
         else -> throw Error("unsupported texel type")
     }
 
-    inline fun <reified T>load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
+    fun imageOffset(coord: Vec3i, extent: Vec3i) = storage!!.imageOffset(coord, extent)
+
+    inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
         assert(notEmpty() && !format.isCompressed)
         when (T::class) {
             java.lang.Byte::class -> assert(format.blockSize == Byte.BYTES)
@@ -350,23 +412,28 @@ open class Texture {
             Vec2b::class -> assert(format.blockSize == Vec2b.size)
             Vec3b::class -> assert(format.blockSize == Vec3b.size)
             Vec4b::class -> assert(format.blockSize == Vec4b.size)
+            Vec1::class -> assert(format.blockSize == Vec1.size)
+            Vec2::class -> assert(format.blockSize == Vec2.size)
+            Vec3::class -> assert(format.blockSize == Vec3.size)
             Vec3::class -> assert(format.blockSize == Vec3.size)
             Vec4::class -> assert(format.blockSize == Vec4.size)
             else -> throw Error()
         }
-        val imageOffset = storage!!.imageOffset(texelCoord, extent(level))
+        val imageOffset = imageOffset(texelCoord, extent(level))
         assert(imageOffset < size(level))
 
-        return data<T>(layer, face, level)[imageOffset] as T
+        return data<T>(layer, face, level)[imageOffset]
     }
 
-    fun store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: Any) {
+    //    fun store(texelCoord: Vec1i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, 1, 1), layer, face, level, texel) TODO check
+//    fun store(texelCoord: Vec2i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, texelCoord.y, 1), layer, face, level, texel)
+    inline fun <reified T>store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: T) {
 
         assert(notEmpty() && !format.isCompressed)
         val extent = extent(level)
         assert(glm.all(glm.lessThan(texelCoord, extent)))
 
-        val imageOffset = storage!!.imageOffset(texelCoord, extent)
+        val imageOffset = imageOffset(texelCoord, extent)
 
         when (texel) {
             is Byte -> {
@@ -396,6 +463,14 @@ open class Texture {
             is Vec4b -> {
                 assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
                 data<Vec4b>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec1 -> {
+                assert(format.blockSize == Vec1.size && imageOffset < size(level) / Vec1.size)
+                data<Vec1>(layer, face, level)[imageOffset] = texel
+            }
+            is Vec2 -> {
+                assert(format.blockSize == Vec2.size && imageOffset < size(level) / Vec2.size)
+                data<Vec2>(layer, face, level)[imageOffset] = texel
             }
             is Vec3 -> {
                 assert(format.blockSize == Vec3.size && imageOffset < size(level) / Vec3.size)
@@ -441,5 +516,19 @@ open class Texture {
                             return false
                 }
         return true
+    }
+
+    override fun hashCode(): Int {
+        var result = storage?.hashCode() ?: 0
+        result = 31 * result + target.hashCode()
+        result = 31 * result + format.hashCode()
+        result = 31 * result + baseLayer
+        result = 31 * result + maxLayer
+        result = 31 * result + baseFace
+        result = 31 * result + maxFace
+        result = 31 * result + baseLevel
+        result = 31 * result + maxLevel
+        result = 31 * result + cache.hashCode()
+        return result
     }
 }

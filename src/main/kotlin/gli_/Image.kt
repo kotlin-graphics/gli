@@ -207,5 +207,14 @@ class Image {
         }
     }
 
+    override fun hashCode(): Int {
+        var result = storage?.hashCode() ?: 0
+        result = 31 * result + format.hashCode()
+        result = 31 * result + baseLevel
+        result = 31 * result + size
+        result = 31 * result + (data?.hashCode() ?: 0)
+        return result
+    }
+
     fun dispose() = data!!.destroy()
 }

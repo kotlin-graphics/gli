@@ -2,6 +2,7 @@ package gli_
 
 import java.net.URI
 import java.nio.ByteBuffer
+import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -50,9 +51,9 @@ inline fun wasInit(f: () -> Unit): Boolean {
     return true
 }
 
-fun pathOf(filename: String, vararg more: String) = Paths.get(filename, *more)
-fun pathOf(uri: URI) = Paths.get(uri)
-fun uriOf(str: String) = URI.create(str)
+fun pathOf(filename: String, vararg more: String): Path = Paths.get(filename, *more)
+fun pathOf(uri: URI): Path = Paths.get(uri)
+fun uriOf(str: String) = ClassLoader.getSystemResource(str).toURI()
 
 val Path.extension get() = toString().substringAfterLast(".").toLowerCase()
 
@@ -61,3 +62,5 @@ var ByteBuffer.ptr
     set(value) {
         position(value)
     }
+
+//fun Files.Companion.delete(str: String): Unit = delete(pathOf(str))

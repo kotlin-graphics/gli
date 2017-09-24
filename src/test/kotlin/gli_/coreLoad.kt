@@ -12,12 +12,10 @@ class coreLoad : StringSpec() {
 
             class Params(val filename: String, val format: Format)
 
-            fun uri(filename: String) = ClassLoader.getSystemResource(filename).toURI()
-
             fun loadFileKtx(params: Params) {
 
                 val ktx = params.filename + ".ktx"
-                val textureKTX = gli.load(uri(ktx))
+                val textureKTX = gli.load(uriOf(ktx))
                 textureKTX.format shouldBe params.format
 
                 val dds = params.filename + ".dds"
@@ -37,7 +35,7 @@ class coreLoad : StringSpec() {
             fun loadFileKmg(params: Params) {
 
                 val ktx = params.filename + ".ktx"
-                val textureKTX = gli.load(uri(ktx))
+                val textureKTX = gli.load(uriOf(ktx))
                 textureKTX.format shouldBe params.format
 
                 val kmg = params.filename + ".kmg"
@@ -57,7 +55,7 @@ class coreLoad : StringSpec() {
             fun loaFileDds(params: Params) {
 
                 val dds = params.filename + ".dds"
-                val textureDDS = gli.load(uri(dds))
+                val textureDDS = gli.load(uriOf(dds))
                 textureDDS.format == params.format
 
                 val kmg = params.filename + ".kmg"

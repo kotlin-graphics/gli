@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.vec3.Vec3i
+import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -16,9 +17,14 @@ class coreStorage : StringSpec() {
         "storage layer size" {
 
             val storage = Storage(
-                    Format.RGBA8_UNORM_PACK8,
-                    Vec3i(2, 2, 1),
-                    2, 1, 1)
+                    format = Format.RGBA8_UNORM_PACK8,
+                    extent = Vec3i(2, 2, 1),
+                    layers = 2, faces = 1, levels = 1)
+
+            for (i in 0..3)
+                storage.data<Vec4b>()[i] = Vec4b(255, 127, 0, 255)
+            for (i in 0..3)
+                storage.data<Vec4b>()[i + 4] = Vec4b(0, 127, 255, 255)
 
             with(storage) {
                 blockSize shouldBe Vec4b.size
@@ -32,9 +38,9 @@ class coreStorage : StringSpec() {
         "storage face size" {
 
             val storage = Storage(
-                    Format.RGBA8_UNORM_PACK8,
-                    Vec3i(2, 2, 1),
-                    1, 6, 1)
+                    format = Format.RGBA8_UNORM_PACK8,
+                    extent = Vec3i(2, 2, 1),
+                    layers = 1, faces = 6, levels = 1)
 
             with(storage) {
 

@@ -6,6 +6,7 @@ import glm_.size
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memCopy
+import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
@@ -18,6 +19,8 @@ interface loadKmg {
     /** Loads a texture storage_linear from KMG (Khronos Image) file. Returns an empty storage_linear in case of failure.
      *  @param filename String of the file to open including filaname and filename extension */
     fun loadKmg(filename: String) = loadKmg(Paths.get(filename))
+
+    fun loadKmg(uri: URI) = loadKmg(Paths.get(uri))
 
     /** Loads a texture storage_linear from KMG (Khronos Image) file. Returns an empty storage_linear in case of failure.
      *  @param path Path of the file to open including filaname and filename extension  */

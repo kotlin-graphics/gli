@@ -8,6 +8,7 @@ import glm_.size
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memCopy
+import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
@@ -20,6 +21,8 @@ interface loadKtx {
     /** Loads a texture storage_linear from KTX memory. Returns an empty storage_linear in case of failure.
      *  @param filename String of the file to open including filaname and filename extension */
     fun loadKtx(filename: String) = loadKtx(Paths.get(filename))
+
+    fun loadKtx(uri: URI) = loadKtx(Paths.get(uri))
 
     /** Loads a texture storage_linear from KTX file. Returns an empty storage_linear in case of failure.
      *  @param path Path of the file to open including filaname and filename extension  */
