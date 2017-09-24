@@ -2,11 +2,13 @@ package gli_
 
 import glm_.b
 import glm_.vec1.Vec1
+import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3
 import glm_.vec3.Vec3i
+import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.matchers.shouldNotBe
@@ -190,303 +192,294 @@ class coreTexture1d : StringSpec() {
                     Vec2(+0.0f, +0.0f)))
 
             run(Format.RGB32_SFLOAT_PACK32, arrayOf(
-                                            Vec3(-1.0f,+0.0f,+1.0f),
-                                            Vec3(-0.5f,+0.0f,+0.5f),
-                                            Vec3(-0.2f,+0.0f,+0.2f),
-                                            Vec3(-0.0f,+0.0f,+0.0f),
-                                            Vec3(+0.1f,+0.2f,+0.3f),
-                                            Vec3(-0.1f,-0.2f,-0.3f),
-                                            Vec3(+0.7f,+0.8f,+0.9f),
-                                            Vec3(-0.7f,-0.8f,-0.9f)))
+                    Vec3(-1.0f, +0.0f, +1.0f),
+                    Vec3(-0.5f, +0.0f, +0.5f),
+                    Vec3(-0.2f, +0.0f, +0.2f),
+                    Vec3(-0.0f, +0.0f, +0.0f),
+                    Vec3(+0.1f, +0.2f, +0.3f),
+                    Vec3(-0.1f, -0.2f, -0.3f),
+                    Vec3(+0.7f, +0.8f, +0.9f),
+                    Vec3(-0.7f, -0.8f, -0.9f)))
+
+            run(Format.RGBA32_SFLOAT_PACK32, arrayOf(
+                    Vec4(-1.0f, +0.0f, +1.0f, 1.0f),
+                    Vec4(-0.5f, +0.0f, +0.5f, 1.0f),
+                    Vec4(-0.2f, +0.0f, +0.2f, 1.0f),
+                    Vec4(-0.0f, +0.0f, +0.0f, 1.0f),
+                    Vec4(+0.1f, +0.2f, +0.3f, 1.0f),
+                    Vec4(-0.1f, -0.2f, -0.3f, 1.0f),
+                    Vec4(+0.7f, +0.8f, +0.9f, 1.0f),
+                    Vec4(-0.7f, -0.8f, -0.9f, 1.0f)))
+
+//            arrayOf(
+//                    Vec1b(-128),
+//                    Vec1b(-127),
+//                    Vec1b(+127),
+//                    Vec1b(+64),
+//                    Vec1b(-64),
+//                    Vec1b(+1),
+//                    Vec1b(-1),
+//                    Vec1b(+0)).let {
+//
+//                run(Format.R8_SINT_PACK8, it)
+//                run(Format.R8_SNORM_PACK8, it)
+//            }
 /*
-            //                        {
-            //                            std::array<glm::f32vec4, 8> TestSamples{
-            //                            {
-            //                                glm::f32vec4(-1.0f, 0.0f, 1.0f, 1.0f),
-            //                                glm::f32vec4(-0.5f, 0.0f, 0.5f, 1.0f),
-            //                                glm::f32vec4(-0.2f, 0.0f, 0.2f, 1.0f),
-            //                                glm::f32vec4(-0.0f, 0.0f, 0.0f, 1.0f),
-            //                                glm::f32vec4(0.1f, 0.2f, 0.3f, 1.0f),
-            //                                glm::f32vec4(-0.1f,-0.2f,-0.3f, 1.0f),
-            //                                glm::f32vec4(0.7f, 0.8f, 0.9f, 1.0f),
-            //                                glm::f32vec4(-0.7f,-0.8f,-0.9f, 1.0f)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGBA32_SFLOAT_PACK32, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::i8vec1, 8> TestSamples{
-            //                            {
-            //                                glm::i8vec1(-128),
-            //                                glm::i8vec1(-127),
-            //                                glm::i8vec1(127),
-            //                                glm::i8vec1(64),
-            //                                glm::i8vec1(-64),
-            //                                glm::i8vec1(1),
-            //                                glm::i8vec1(-1),
-            //                                glm::i8vec1(0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_R8_SINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_R8_SNORM_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::i8vec2, 8> TestSamples{
-            //                            {
-            //                                glm::i8vec2(-128, -96),
-            //                                glm::i8vec2( -64,  96),
-            //                                glm::i8vec2(-128,  64),
-            //                                glm::i8vec2( 127,  32),
-            //                                glm::i8vec2(   0, 126),
-            //                                glm::i8vec2( -48,  48),
-            //                                glm::i8vec2(-127, 127),
-            //                                glm::i8vec2(  64,   0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RG8_UINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RG8_UNORM_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::i8vec3, 8> TestSamples{
-            //                            {
-            //                                glm::i8vec3(-128,   0,   0),
-            //                                glm::i8vec3(-128, 127,   0),
-            //                                glm::i8vec3(-128, -96,   0),
-            //                                glm::i8vec3(127,-128,   0),
-            //                                glm::i8vec3(0, 127,   0),
-            //                                glm::i8vec3(0, 127,-127),
-            //                                glm::i8vec3(0,  64, -64),
-            //                                glm::i8vec3(-32,  32,  96)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGB8_SINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RGB8_SNORM_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::i8vec4, 8> TestSamples{
-            //                            {
-            //                                glm::i8vec4(-127,   0,   0, 127),
-            //                                glm::i8vec4(-128,  96,   0,-128),
-            //                                glm::i8vec4(127,  64,   0,   1),
-            //                                glm::i8vec4(0, -64,   0,   2),
-            //                                glm::i8vec4(-95,  32,   0,   3),
-            //                                glm::i8vec4(95, -32, 127,   4),
-            //                                glm::i8vec4(-63,  16,-128,  -1),
-            //                                glm::i8vec4(63, -16,-127,  -2)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGBA8_SINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RGBA8_SNORM_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u8vec1, 8> TestSamples{
-            //                            {
-            //                                glm::u8vec1(255),
-            //                                glm::u8vec1(224),
-            //                                glm::u8vec1(192),
-            //                                glm::u8vec1(128),
-            //                                glm::u8vec1(64),
-            //                                glm::u8vec1(32),
-            //                                glm::u8vec1(16),
-            //                                glm::u8vec1(0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_R8_UINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_R8_UNORM_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_R8_SRGB_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u8vec2, 8> TestSamples{
-            //                            {
-            //                                glm::u8vec2(255,   0),
-            //                                glm::u8vec2(255, 128),
-            //                                glm::u8vec2(255, 255),
-            //                                glm::u8vec2(128, 255),
-            //                                glm::u8vec2(0, 255),
-            //                                glm::u8vec2(0, 255),
-            //                                glm::u8vec2(0,   0),
-            //                                glm::u8vec2(255,   0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RG8_UINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RG8_UNORM_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RG8_SRGB_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u8vec3, 8> TestSamples{
-            //                            {
-            //                                glm::u8vec3(255,   0,   0),
-            //                                glm::u8vec3(255, 128,   0),
-            //                                glm::u8vec3(255, 255,   0),
-            //                                glm::u8vec3(128, 255,   0),
-            //                                glm::u8vec3(0, 255,   0),
-            //                                glm::u8vec3(0, 255, 255),
-            //                                glm::u8vec3(0,   0, 255),
-            //                                glm::u8vec3(255,   0, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGB8_UINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RGB8_UNORM_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RGB8_SRGB_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u8vec4, 8> TestSamples{
-            //                            {
-            //                                glm::u8vec4(255,   0,   0, 255),
-            //                                glm::u8vec4(255, 128,   0, 255),
-            //                                glm::u8vec4(255, 255,   0, 255),
-            //                                glm::u8vec4(128, 255,   0, 255),
-            //                                glm::u8vec4(0, 255,   0, 255),
-            //                                glm::u8vec4(0, 255, 255, 255),
-            //                                glm::u8vec4(0,   0, 255, 255),
-            //                                glm::u8vec4(255,   0, 255, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGBA8_UINT_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RGBA8_UNORM_PACK8, TestSamples);
-            //                            Error += run(gli::FORMAT_RGBA8_SRGB_PACK8, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u16vec1, 8> TestSamples{
-            //                            {
-            //                                glm::u16vec1(65535),
-            //                                glm::u16vec1(32767),
-            //                                glm::u16vec1(192),
-            //                                glm::u16vec1(128),
-            //                                glm::u16vec1(64),
-            //                                glm::u16vec1(32),
-            //                                glm::u16vec1(16),
-            //                                glm::u16vec1(0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_R16_UINT_PACK16, TestSamples);
-            //                            Error += run(gli::FORMAT_R16_UNORM_PACK16, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u16vec2, 8> TestSamples{
-            //                            {
-            //                                glm::u16vec2(255,   0),
-            //                                glm::u16vec2(255, 128),
-            //                                glm::u16vec2(255, 255),
-            //                                glm::u16vec2(128, 255),
-            //                                glm::u16vec2(0, 255),
-            //                                glm::u16vec2(0, 255),
-            //                                glm::u16vec2(0,   0),
-            //                                glm::u16vec2(255,   0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RG16_UINT_PACK16, TestSamples);
-            //                            Error += run(gli::FORMAT_RG16_UNORM_PACK16, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u16vec3, 8> TestSamples{
-            //                            {
-            //                                glm::u16vec3(255,   0,   0),
-            //                                glm::u16vec3(255, 128,   0),
-            //                                glm::u16vec3(255, 255,   0),
-            //                                glm::u16vec3(128, 255,   0),
-            //                                glm::u16vec3(0, 255,   0),
-            //                                glm::u16vec3(0, 255, 255),
-            //                                glm::u16vec3(0,   0, 255),
-            //                                glm::u16vec3(255,   0, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGB16_UINT_PACK16, TestSamples);
-            //                            Error += run(gli::FORMAT_RGB16_UNORM_PACK16, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u16vec4, 8> TestSamples{
-            //                            {
-            //                                glm::u16vec4(255,   0,   0, 255),
-            //                                glm::u16vec4(255, 128,   0, 255),
-            //                                glm::u16vec4(255, 255,   0, 255),
-            //                                glm::u16vec4(128, 255,   0, 255),
-            //                                glm::u16vec4(0, 255,   0, 255),
-            //                                glm::u16vec4(0, 255, 255, 255),
-            //                                glm::u16vec4(0,   0, 255, 255),
-            //                                glm::u16vec4(255,   0, 255, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGBA16_UINT_PACK16, TestSamples);
-            //                            Error += run(gli::FORMAT_RGBA16_UNORM_PACK16, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u32vec1, 8> TestSamples{
-            //                            {
-            //                                glm::u32vec1(65535),
-            //                                glm::u32vec1(32767),
-            //                                glm::u32vec1(192),
-            //                                glm::u32vec1(128),
-            //                                glm::u32vec1(64),
-            //                                glm::u32vec1(32),
-            //                                glm::u32vec1(16),
-            //                                glm::u32vec1(0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_R32_UINT_PACK32, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u32vec2, 8> TestSamples{
-            //                            {
-            //                                glm::u32vec2(255,   0),
-            //                                glm::u32vec2(255, 128),
-            //                                glm::u32vec2(255, 255),
-            //                                glm::u32vec2(128, 255),
-            //                                glm::u32vec2(0, 255),
-            //                                glm::u32vec2(0, 255),
-            //                                glm::u32vec2(0,   0),
-            //                                glm::u32vec2(255,   0)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RG32_UINT_PACK32, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u32vec3, 8> TestSamples{
-            //                            {
-            //                                glm::u32vec3(255,   0,   0),
-            //                                glm::u32vec3(255, 128,   0),
-            //                                glm::u32vec3(255, 255,   0),
-            //                                glm::u32vec3(128, 255,   0),
-            //                                glm::u32vec3(0, 255,   0),
-            //                                glm::u32vec3(0, 255, 255),
-            //                                glm::u32vec3(0,   0, 255),
-            //                                glm::u32vec3(255,   0, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGB32_UINT_PACK32, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u32vec4, 8> TestSamples{
-            //                            {
-            //                                glm::u32vec4(255,   0,   0, 255),
-            //                                glm::u32vec4(255, 128,   0, 255),
-            //                                glm::u32vec4(255, 255,   0, 255),
-            //                                glm::u32vec4(128, 255,   0, 255),
-            //                                glm::u32vec4(0, 255,   0, 255),
-            //                                glm::u32vec4(0, 255, 255, 255),
-            //                                glm::u32vec4(0,   0, 255, 255),
-            //                                glm::u32vec4(255,   0, 255, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGBA32_UINT_PACK32, TestSamples);
-            //                        }
-            */
+                       //                        {
+                       //                            std::array<glm::i8vec2, 8> TestSamples{
+                       //                            {
+                       //                                glm::i8vec2(-128, -96),
+                       //                                glm::i8vec2( -64,  96),
+                       //                                glm::i8vec2(-128,  64),
+                       //                                glm::i8vec2( 127,  32),
+                       //                                glm::i8vec2(   0, 126),
+                       //                                glm::i8vec2( -48,  48),
+                       //                                glm::i8vec2(-127, 127),
+                       //                                glm::i8vec2(  64,   0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RG8_UINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RG8_UNORM_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::i8vec3, 8> TestSamples{
+                       //                            {
+                       //                                glm::i8vec3(-128,   0,   0),
+                       //                                glm::i8vec3(-128, 127,   0),
+                       //                                glm::i8vec3(-128, -96,   0),
+                       //                                glm::i8vec3(127,-128,   0),
+                       //                                glm::i8vec3(0, 127,   0),
+                       //                                glm::i8vec3(0, 127,-127),
+                       //                                glm::i8vec3(0,  64, -64),
+                       //                                glm::i8vec3(-32,  32,  96)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGB8_SINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGB8_SNORM_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::i8vec4, 8> TestSamples{
+                       //                            {
+                       //                                glm::i8vec4(-127,   0,   0, 127),
+                       //                                glm::i8vec4(-128,  96,   0,-128),
+                       //                                glm::i8vec4(127,  64,   0,   1),
+                       //                                glm::i8vec4(0, -64,   0,   2),
+                       //                                glm::i8vec4(-95,  32,   0,   3),
+                       //                                glm::i8vec4(95, -32, 127,   4),
+                       //                                glm::i8vec4(-63,  16,-128,  -1),
+                       //                                glm::i8vec4(63, -16,-127,  -2)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGBA8_SINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGBA8_SNORM_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u8vec1, 8> TestSamples{
+                       //                            {
+                       //                                glm::u8vec1(255),
+                       //                                glm::u8vec1(224),
+                       //                                glm::u8vec1(192),
+                       //                                glm::u8vec1(128),
+                       //                                glm::u8vec1(64),
+                       //                                glm::u8vec1(32),
+                       //                                glm::u8vec1(16),
+                       //                                glm::u8vec1(0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_R8_UINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_R8_UNORM_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_R8_SRGB_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u8vec2, 8> TestSamples{
+                       //                            {
+                       //                                glm::u8vec2(255,   0),
+                       //                                glm::u8vec2(255, 128),
+                       //                                glm::u8vec2(255, 255),
+                       //                                glm::u8vec2(128, 255),
+                       //                                glm::u8vec2(0, 255),
+                       //                                glm::u8vec2(0, 255),
+                       //                                glm::u8vec2(0,   0),
+                       //                                glm::u8vec2(255,   0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RG8_UINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RG8_UNORM_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RG8_SRGB_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u8vec3, 8> TestSamples{
+                       //                            {
+                       //                                glm::u8vec3(255,   0,   0),
+                       //                                glm::u8vec3(255, 128,   0),
+                       //                                glm::u8vec3(255, 255,   0),
+                       //                                glm::u8vec3(128, 255,   0),
+                       //                                glm::u8vec3(0, 255,   0),
+                       //                                glm::u8vec3(0, 255, 255),
+                       //                                glm::u8vec3(0,   0, 255),
+                       //                                glm::u8vec3(255,   0, 255)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGB8_UINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGB8_UNORM_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGB8_SRGB_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u8vec4, 8> TestSamples{
+                       //                            {
+                       //                                glm::u8vec4(255,   0,   0, 255),
+                       //                                glm::u8vec4(255, 128,   0, 255),
+                       //                                glm::u8vec4(255, 255,   0, 255),
+                       //                                glm::u8vec4(128, 255,   0, 255),
+                       //                                glm::u8vec4(0, 255,   0, 255),
+                       //                                glm::u8vec4(0, 255, 255, 255),
+                       //                                glm::u8vec4(0,   0, 255, 255),
+                       //                                glm::u8vec4(255,   0, 255, 255)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGBA8_UINT_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGBA8_UNORM_PACK8, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGBA8_SRGB_PACK8, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u16vec1, 8> TestSamples{
+                       //                            {
+                       //                                glm::u16vec1(65535),
+                       //                                glm::u16vec1(32767),
+                       //                                glm::u16vec1(192),
+                       //                                glm::u16vec1(128),
+                       //                                glm::u16vec1(64),
+                       //                                glm::u16vec1(32),
+                       //                                glm::u16vec1(16),
+                       //                                glm::u16vec1(0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_R16_UINT_PACK16, TestSamples);
+                       //                            Error += run(gli::FORMAT_R16_UNORM_PACK16, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u16vec2, 8> TestSamples{
+                       //                            {
+                       //                                glm::u16vec2(255,   0),
+                       //                                glm::u16vec2(255, 128),
+                       //                                glm::u16vec2(255, 255),
+                       //                                glm::u16vec2(128, 255),
+                       //                                glm::u16vec2(0, 255),
+                       //                                glm::u16vec2(0, 255),
+                       //                                glm::u16vec2(0,   0),
+                       //                                glm::u16vec2(255,   0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RG16_UINT_PACK16, TestSamples);
+                       //                            Error += run(gli::FORMAT_RG16_UNORM_PACK16, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u16vec3, 8> TestSamples{
+                       //                            {
+                       //                                glm::u16vec3(255,   0,   0),
+                       //                                glm::u16vec3(255, 128,   0),
+                       //                                glm::u16vec3(255, 255,   0),
+                       //                                glm::u16vec3(128, 255,   0),
+                       //                                glm::u16vec3(0, 255,   0),
+                       //                                glm::u16vec3(0, 255, 255),
+                       //                                glm::u16vec3(0,   0, 255),
+                       //                                glm::u16vec3(255,   0, 255)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGB16_UINT_PACK16, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGB16_UNORM_PACK16, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u16vec4, 8> TestSamples{
+                       //                            {
+                       //                                glm::u16vec4(255,   0,   0, 255),
+                       //                                glm::u16vec4(255, 128,   0, 255),
+                       //                                glm::u16vec4(255, 255,   0, 255),
+                       //                                glm::u16vec4(128, 255,   0, 255),
+                       //                                glm::u16vec4(0, 255,   0, 255),
+                       //                                glm::u16vec4(0, 255, 255, 255),
+                       //                                glm::u16vec4(0,   0, 255, 255),
+                       //                                glm::u16vec4(255,   0, 255, 255)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGBA16_UINT_PACK16, TestSamples);
+                       //                            Error += run(gli::FORMAT_RGBA16_UNORM_PACK16, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u32vec1, 8> TestSamples{
+                       //                            {
+                       //                                glm::u32vec1(65535),
+                       //                                glm::u32vec1(32767),
+                       //                                glm::u32vec1(192),
+                       //                                glm::u32vec1(128),
+                       //                                glm::u32vec1(64),
+                       //                                glm::u32vec1(32),
+                       //                                glm::u32vec1(16),
+                       //                                glm::u32vec1(0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_R32_UINT_PACK32, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u32vec2, 8> TestSamples{
+                       //                            {
+                       //                                glm::u32vec2(255,   0),
+                       //                                glm::u32vec2(255, 128),
+                       //                                glm::u32vec2(255, 255),
+                       //                                glm::u32vec2(128, 255),
+                       //                                glm::u32vec2(0, 255),
+                       //                                glm::u32vec2(0, 255),
+                       //                                glm::u32vec2(0,   0),
+                       //                                glm::u32vec2(255,   0)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RG32_UINT_PACK32, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u32vec3, 8> TestSamples{
+                       //                            {
+                       //                                glm::u32vec3(255,   0,   0),
+                       //                                glm::u32vec3(255, 128,   0),
+                       //                                glm::u32vec3(255, 255,   0),
+                       //                                glm::u32vec3(128, 255,   0),
+                       //                                glm::u32vec3(0, 255,   0),
+                       //                                glm::u32vec3(0, 255, 255),
+                       //                                glm::u32vec3(0,   0, 255),
+                       //                                glm::u32vec3(255,   0, 255)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGB32_UINT_PACK32, TestSamples);
+                       //                        }
+                       //
+                       //                        {
+                       //                            std::array<glm::u32vec4, 8> TestSamples{
+                       //                            {
+                       //                                glm::u32vec4(255,   0,   0, 255),
+                       //                                glm::u32vec4(255, 128,   0, 255),
+                       //                                glm::u32vec4(255, 255,   0, 255),
+                       //                                glm::u32vec4(128, 255,   0, 255),
+                       //                                glm::u32vec4(0, 255,   0, 255),
+                       //                                glm::u32vec4(0, 255, 255, 255),
+                       //                                glm::u32vec4(0,   0, 255, 255),
+                       //                                glm::u32vec4(255,   0, 255, 255)
+                       //                            }};
+                       //
+                       //                            Error += run(gli::FORMAT_RGBA32_UINT_PACK32, TestSamples);
+                       //                        }
+                       */
 //                return Error
         }
 
