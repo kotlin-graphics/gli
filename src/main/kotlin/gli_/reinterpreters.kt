@@ -5,6 +5,7 @@ import glm_.vec1.Vec1
 import glm_.vec1.Vec1b
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2b
+import glm_.vec2.Vec2ub
 import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec4.Vec4
@@ -26,13 +27,13 @@ object vec1bData : reinterpreter<Vec1b> {
 object vec2bData : reinterpreter<Vec2b> {
     override lateinit var data: ByteBuffer
     override operator fun get(index: Int) = Vec2b(data, index * Vec2b.size)
-    override fun set(index: Int, value: Vec2b) = (value as Vec2b).to(data, index * Vec2b.size)
+    override fun set(index: Int, value: Vec2b) = value.to(data, index * Vec2b.size)
 }
 
 object vec3bData : reinterpreter<Vec3b> {
     override lateinit var data: ByteBuffer
     override operator fun get(index: Int) = Vec3b(data, index * Vec3b.size)
-    override fun set(index: Int, value: Vec3b) = (value as Vec3b).to(data, index * Vec3b.size)
+    override fun set(index: Int, value: Vec3b) = value.to(data, index * Vec3b.size)
 }
 
 object vec4bData : reinterpreter<Vec4b> {
@@ -68,17 +69,41 @@ object vec4Data : reinterpreter<Vec4> {
 object byteData : reinterpreter<Byte> {
     override lateinit var data: ByteBuffer
     override operator fun get(index: Int) = data[index]
-    override fun set(index: Int, value: Byte) = data.put(index, value as Byte)
+    override fun set(index: Int, value: Byte) = data.put(index, value)
 }
 
 object intData : reinterpreter<Int> {
     override lateinit var data: ByteBuffer
     override operator fun get(index: Int) = data.getInt(index * Int.BYTES)
-    override fun set(index: Int, value: Int) = data.putInt(index * Int.BYTES, value as Int)
+    override fun set(index: Int, value: Int) = data.putInt(index * Int.BYTES, value)
 }
 
 object longData : reinterpreter<Long> {
     override lateinit var data: ByteBuffer
     override operator fun get(index: Int) = data.getLong(index * Long.BYTES)
-    override fun set(index: Int, value: Long) = data.putLong(index * Long.BYTES, value as Long)
+    override fun set(index: Int, value: Long) = data.putLong(index * Long.BYTES, value)
 }
+
+//object vec1ubData : reinterpreter<Vec1b> {
+//    override lateinit var data: ByteBuffer
+//    override operator fun get(index: Int) = Vec1b(data, index * Vec1b.size)
+//    override fun set(index: Int, value: Vec1b) = value.to(data, index * Vec1b.size)
+//}
+
+object vec2ubData : reinterpreter<Vec2ub> {
+    override lateinit var data: ByteBuffer
+    override operator fun get(index: Int) = Vec2ub(data, index * Vec2ub.size)
+    override fun set(index: Int, value: Vec2ub) = value.to(data, index * Vec2ub.size)
+}
+
+//object vec3bData : reinterpreter<Vec3b> {
+//    override lateinit var data: ByteBuffer
+//    override operator fun get(index: Int) = Vec3b(data, index * Vec3b.size)
+//    override fun set(index: Int, value: Vec3b) = (value as Vec3b).to(data, index * Vec3b.size)
+//}
+//
+//object vec4bData : reinterpreter<Vec4b> {
+//    override lateinit var data: ByteBuffer
+//    override operator fun get(index: Int) = Vec4b(data, index * Vec4b.size)
+//    override fun set(index: Int, value: Vec4b) = value.to(data, index * Vec4b.size)
+//}

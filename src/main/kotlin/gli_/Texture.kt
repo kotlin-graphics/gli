@@ -11,6 +11,7 @@ import glm_.vec1.Vec1i
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2b
 import glm_.vec2.Vec2i
+import glm_.vec2.Vec2ub
 import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
@@ -255,6 +256,10 @@ open class Texture {
         java.lang.Byte::class -> byteData.apply { data = data(layer, face, level) }
         java.lang.Integer::class -> intData.apply { data = data(layer, face, level) }
         java.lang.Long::class -> longData.apply { data = data(layer, face, level) }
+//        Vec1b::class -> vec1bData.apply { data = data(layer, face, level) }
+        Vec2ub::class -> vec2ubData.apply { data = data(layer, face, level) }
+//        Vec3b::class -> vec3bData.apply { data = data(layer, face, level) }
+//        Vec4b::class -> vec4bData.apply { data = data(layer, face, level) }
         else -> throw Error()
     } as reinterpreter<T>
 
@@ -423,6 +428,10 @@ open class Texture {
             Vec3::class -> assert(format.blockSize == Vec3.size)
             Vec3::class -> assert(format.blockSize == Vec3.size)
             Vec4::class -> assert(format.blockSize == Vec4.size)
+//            Vec1b::class -> assert(format.blockSize == Vec1b.size)
+            Vec2ub::class -> assert(format.blockSize == Vec2ub.size)
+//            Vec3b::class -> assert(format.blockSize == Vec3b.size)
+//            Vec4b::class -> assert(format.blockSize == Vec4b.size)
             else -> throw Error()
         }
         val imageOffset = imageOffset(texelCoord, extent(level))
@@ -442,52 +451,24 @@ open class Texture {
         val imageOffset = imageOffset(texelCoord, extent)
 
         when (texel) {
-            is Byte -> {
-                assert(format.blockSize == Byte.BYTES && imageOffset < size(level) / Byte.BYTES)
-                data<Byte>(layer, face, level)[imageOffset] = texel
-            }
-            is Int -> {
-                assert(format.blockSize == Int.BYTES && imageOffset < size(level) / Int.BYTES)
-                data<Int>(layer, face, level)[imageOffset] = texel
-            }
-            is Long -> {
-                assert(format.blockSize == Long.BYTES && imageOffset < size(level) / Long.BYTES)
-                data<Long>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec1b -> {
-                assert(format.blockSize == Vec1b.size && imageOffset < size(level) / Vec1b.size)
-                data<Vec1b>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec2b -> {
-                assert(format.blockSize == Vec2b.size && imageOffset < size(level) / Vec2b.size)
-                data<Vec2b>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec3b -> {
-                assert(format.blockSize == Vec3b.size && imageOffset < size(level) / Vec3b.size)
-                data<Vec3b>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec4b -> {
-                assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
-                data<Vec4b>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec1 -> {
-                assert(format.blockSize == Vec1.size && imageOffset < size(level) / Vec1.size)
-                data<Vec1>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec2 -> {
-                assert(format.blockSize == Vec2.size && imageOffset < size(level) / Vec2.size)
-                data<Vec2>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec3 -> {
-                assert(format.blockSize == Vec3.size && imageOffset < size(level) / Vec3.size)
-                data<Vec3>(layer, face, level)[imageOffset] = texel
-            }
-            is Vec4 -> {
-                assert(format.blockSize == Vec4.size && imageOffset < size(level) / Vec4.size)
-                data<Vec4>(layer, face, level)[imageOffset] = texel
-            }
+            is Byte -> assert(format.blockSize == Byte.BYTES && imageOffset < size(level) / Byte.BYTES)
+            is Int -> assert(format.blockSize == Int.BYTES && imageOffset < size(level) / Int.BYTES)
+            is Long -> assert(format.blockSize == Long.BYTES && imageOffset < size(level) / Long.BYTES)
+            is Vec1b -> assert(format.blockSize == Vec1b.size && imageOffset < size(level) / Vec1b.size)
+            is Vec2b -> assert(format.blockSize == Vec2b.size && imageOffset < size(level) / Vec2b.size)
+            is Vec3b -> assert(format.blockSize == Vec3b.size && imageOffset < size(level) / Vec3b.size)
+            is Vec4b -> assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
+            is Vec1 -> assert(format.blockSize == Vec1.size && imageOffset < size(level) / Vec1.size)
+            is Vec2 -> assert(format.blockSize == Vec2.size && imageOffset < size(level) / Vec2.size)
+            is Vec3 -> assert(format.blockSize == Vec3.size && imageOffset < size(level) / Vec3.size)
+            is Vec4 -> assert(format.blockSize == Vec4.size && imageOffset < size(level) / Vec4.size)
+//            is Vec1b -> assert(format.blockSize == Vec1b.size && imageOffset < size(level) / Vec1b.size)
+            is Vec2ub -> assert(format.blockSize == Vec2ub.size && imageOffset < size(level) / Vec2ub.size)
+//            is Vec3b -> assert(format.blockSize == Vec3b.size && imageOffset < size(level) / Vec3b.size)
+//            is Vec4b -> assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
             else -> throw Error()
         }
+        data<T>(layer, face, level)[imageOffset] = texel
     }
 
     open fun dispose() = storage?.data()?.destroy()

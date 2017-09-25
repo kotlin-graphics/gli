@@ -5,6 +5,7 @@ import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2b
+import glm_.vec2.Vec2ub
 import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
@@ -262,6 +263,53 @@ class coreTexture1d : StringSpec() {
                 run(Format.RGBA8_SINT_PACK8, it)
                 run(Format.RGBA8_SNORM_PACK8, it)
             }
+
+//            arrayOf()
+//                    glm::u8vec1(255),
+//                    glm::u8vec1(224),
+//                    glm::u8vec1(192),
+//                    glm::u8vec1(128),
+//                    glm::u8vec1(64),
+//                    glm::u8vec1(32),
+//                    glm::u8vec1(16),
+//                    glm::u8vec1(0)
+//                }};
+//
+//                Error += run(gli::FORMAT_R8_UINT_PACK8, TestSamples);
+//                Error += run(gli::FORMAT_R8_UNORM_PACK8, TestSamples);
+//                Error += run(gli::FORMAT_R8_SRGB_PACK8, TestSamples);
+//            }
+
+            arrayOf(
+                    Vec2ub(255,   0),
+                    Vec2ub(255, 128),
+                    Vec2ub(255, 255),
+                    Vec2ub(128, 255),
+                    Vec2ub(0, 255),
+                    Vec2ub(0, 255),
+                    Vec2ub(0,   0),
+                    Vec2ub(255,   0)).let {
+
+                run(Format.RG8_UINT_PACK8, it)
+                run(Format.RG8_UNORM_PACK8, it)
+                run(Format.RG8_SRGB_PACK8, it)
+            }
+
+//            std::array<glm::u8vec3, 8> TestSamples{
+//            {
+//                glm::u8vec3(255,   0,   0),
+//                glm::u8vec3(255, 128,   0),
+//                glm::u8vec3(255, 255,   0),
+//                glm::u8vec3(128, 255,   0),
+//                glm::u8vec3(0, 255,   0),
+//                glm::u8vec3(0, 255, 255),
+//                glm::u8vec3(0,   0, 255),
+//                glm::u8vec3(255,   0, 255)
+//            }};
+//
+//            Error += run(gli::FORMAT_RGB8_UINT_PACK8, TestSamples);
+//            Error += run(gli::FORMAT_RGB8_UNORM_PACK8, TestSamples);
+//            Error += run(gli::FORMAT_RGB8_SRGB_PACK8, TestSamples);
         }
     }
 }
