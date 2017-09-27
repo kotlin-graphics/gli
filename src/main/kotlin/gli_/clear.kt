@@ -6,7 +6,7 @@ interface clear {
     fun clear(texture: Texture) = texture.clear()
 
     /** Clear a complete texture    */
-    fun clear(texture: Texture, blockData: Any) = texture.clear(blockData)
+    fun clear(texture: Texture, blockData: Any) = texture clear blockData
 
     /** Clear a specific image of a texture */
     fun clear(texture: Texture, layer: Int, face: Int, level: Int, blockData: Any) = texture.clear(layer, face, level, blockData)

@@ -182,7 +182,7 @@ class coreTexture : StringSpec() {
             // Texture 1D
             run {
                 val texture = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+                texture clear Vec4b(225, 127, 0, 255)
 
                 val ktx = "texture_1d.ktx"
                 val dds = "texture_1d.dds"
@@ -200,7 +200,7 @@ class coreTexture : StringSpec() {
             // Texture 1D array
             run {
                 val texture = Texture(Target._1D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+                texture clear Vec4b(225, 127, 0, 255)
                 val ktx = "texture_1d_array.ktx"
                 val dds = "texture_1d_array.dds"
                 gli.save(texture, ktx)
@@ -217,7 +217,7 @@ class coreTexture : StringSpec() {
             // Texture 2D
             run {
                 val texture = Texture(Target._2D, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+                texture clear Vec4b(225, 127, 0, 255)
 
                 val ktx = "texture_2d.ktx"
                 val dds = "texture_2d.dds"
@@ -235,7 +235,7 @@ class coreTexture : StringSpec() {
             // Texture 2D array
             run {
                 val texture = Texture(Target._2D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 1, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+                texture clear Vec4b(225, 127, 0, 255)
                 val ktx = "texture_2d_array.ktx"
                 val dds = "texture_2d_array.dds"
                 gli.save(texture, ktx)
@@ -268,7 +268,7 @@ class coreTexture : StringSpec() {
             // Texture cube
             run {
                 val texture = Texture(Target.CUBE, Format.RGBA8_UNORM_PACK8, Vec3i(1), 1, 6, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+                texture clear Vec4b(225, 127, 0, 255)
                 val ktx = "texture_cube.ktx"
                 val dds = "texture_cube.dds"
                 gli.save(texture, ktx)
@@ -285,7 +285,7 @@ class coreTexture : StringSpec() {
             // Texture cube array
             run {
                 val texture = Texture(Target.CUBE_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 6, 1)
-                texture.clear(Vec4b(225, 127, 0, 255))
+                texture clear Vec4b(225, 127, 0, 255)
                 val ktx = "texture_cube_array.ktx"
                 val dds = "texture_cube_array.dds"
                 gli.save(texture, ktx)
@@ -314,7 +314,7 @@ class coreTexture : StringSpec() {
             fun textureLoad(extent: Int) {
 
                 val texture = Texture2d(Format.R8_UNORM_PACK8, Vec2i(extent))
-                texture.clear(255.b)
+                texture clear 255.b
 
                 var error = 0
 
@@ -335,7 +335,7 @@ class coreTexture : StringSpec() {
             fun textureFetch(extent: Int) {
 
                 val texture = Texture2d(Format.R8_UNORM_PACK8, Vec2i(extent))
-                texture.clear(255.b)
+                texture clear 255.b
 
                 //gli::sampler2d<float> Sampler (texture, gli::WRAP_CLAMP_TO_EDGE) TODO
 //

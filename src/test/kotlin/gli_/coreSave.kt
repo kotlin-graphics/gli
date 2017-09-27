@@ -15,7 +15,7 @@ class coreSave : StringSpec() {
         "l8 unorm" {
 
             val texture = Texture2d(Format.L8_UNORM_PACK8, Vec2i(4))
-            texture.clear(Vec1b(127))
+            texture clear Vec1b(127)
 
             val dds = "orange_l8_unorm.dds"
             gli.save(texture, dds)
@@ -35,7 +35,7 @@ class coreSave : StringSpec() {
         "la8 unorm" {
 
             val texture = Texture2d(Format.LA8_UNORM_PACK8, Vec2i(4))
-            texture.clear(Vec2b(255, 127))
+            texture clear Vec2b(255, 127)
 
             val dds = "orange_la8_unorm.dds"
             gli.save(texture, dds)
@@ -55,7 +55,7 @@ class coreSave : StringSpec() {
         "rgba8 unorm" {
 
             val texture = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4))
-            texture.clear(Vec4b(255, 127, 0, 255))
+            texture clear Vec4b(255, 127, 0, 255)
 
             val dds = "orange_rgba8_unorm.dds"
             gli.save(texture, dds)

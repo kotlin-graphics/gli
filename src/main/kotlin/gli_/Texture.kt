@@ -5,12 +5,18 @@ import glm_.BYTES
 import glm_.b
 import glm_.glm
 import glm_.set
+import glm_.vec1.Vec1
 import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
+import glm_.vec1.Vec1ub
+import glm_.vec2.Vec2
 import glm_.vec2.Vec2b
 import glm_.vec2.Vec2i
+import glm_.vec2.Vec2ub
+import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
+import glm_.vec3.Vec3ub
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
@@ -242,76 +248,54 @@ open class Texture {
 
     fun clear() = data().run { for (i in 0 until capacity()) set(i, 0) }
 
-    fun clear(texel: Any) {
+    infix fun clear(texel: Any) {
         assert(notEmpty())
         val data = data()
         when (texel) {
-            is Byte -> {
-                assert(format.blockSize == Byte.BYTES)
-                for (i in 0 until data.capacity()) data[i] = texel
-            }
-            is Long -> {
-                assert(format.blockSize == Long.BYTES)
-                for (i in 0 until data.capacity() step Long.BYTES) data.putLong(i, texel)
-            }
-            is Vec1b -> {
-                assert(format.blockSize == Vec1b.size)
-                for (i in 0 until data.capacity()) data[i] = texel.x
-            }
-            is Vec2b -> {
-                assert(format.blockSize == Vec2b.size)
-                for (i in 0 until data.capacity() step Vec2b.size) {
-                    data[i] = texel.x
-                    data[i + Byte.BYTES] = texel.y
-                }
-            }
-            is Vec3b -> {
-                assert(format.blockSize == Vec3b.size)
-                for (i in 0 until data.capacity() step Vec3b.size) {
-                    data[i] = texel.x
-                    data[i + Byte.BYTES] = texel.y
-                    data[i + Byte.BYTES * 2] = texel.z
-                }
-            }
-            is Vec4b -> {
-                assert(format.blockSize == Vec4b.size)
-                for (i in 0 until data.capacity() step Vec4b.size) {
-                    data[i] = texel.x
-                    data[i + Byte.BYTES] = texel.y
-                    data[i + Byte.BYTES * 2] = texel.z
-                    data[i + Byte.BYTES * 3] = texel.w
-                }
-            }
-            is Vec4 -> {
-                assert(format.blockSize == Vec4.size)
-                for (i in 0 until data.capacity() step Vec4.size) {
-                    data.putFloat(i, texel.x)
-                    data.putFloat(i + Float.BYTES, texel.y)
-                    data.putFloat(i + Float.BYTES * 2, texel.z)
-                    data.putFloat(i + Float.BYTES * 3, texel.w)
-                }
-            }
+            is Byte -> assert(format.blockSize == Byte.BYTES)
+            is Short -> assert(format.blockSize == Short.BYTES)
+            is Int -> assert(format.blockSize == Int.BYTES)
+            is Long -> assert(format.blockSize == Long.BYTES)
+            is Vec1b -> assert(format.blockSize == Vec1b.size)
+            is Vec2b -> assert(format.blockSize == Vec2b.size)
+            is Vec3b -> assert(format.blockSize == Vec3b.size)
+            is Vec4b -> assert(format.blockSize == Vec4b.size)
+            is Vec1ub -> assert(format.blockSize == Vec1ub.size)
+            is Vec2ub -> assert(format.blockSize == Vec2ub.size)
+            is Vec3ub -> assert(format.blockSize == Vec3ub.size)
+            is Vec4ub -> assert(format.blockSize == Vec4ub.size)
+            is Vec1 -> assert(format.blockSize == Vec1.size)
+            is Vec2 -> assert(format.blockSize == Vec2.size)
+            is Vec3 -> assert(format.blockSize == Vec3.size)
+            is Vec4 -> assert(format.blockSize == Vec4.size)
             else -> throw Error()
         }
+        _clear(data, texel)
     }
 
-    fun clear(layer: Int, face: Int, level: Int, blockData: Any) {
-
+    fun clear(layer: Int, face: Int, level: Int, texel: Any) {
         assert(notEmpty() && layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
-
-        when (blockData) {
-            is Vec4b -> {
-                assert(format.blockSize == Vec4b.size)
-                val data = data(layer, face, level)
-                for (blockIndex in 0 until data.capacity() step Vec4.length) {
-                    data[blockIndex] = blockData.x
-                    data[blockIndex + 1] = blockData.y
-                    data[blockIndex + 2] = blockData.z
-                    data[blockIndex + 3] = blockData.w
-                }
-            }
+        when (texel) {
+            is Byte -> assert(format.blockSize == Byte.BYTES)
+            is Short -> assert(format.blockSize == Short.BYTES)
+            is Int -> assert(format.blockSize == Int.BYTES)
+            is Long -> assert(format.blockSize == Long.BYTES)
+            is Vec1b -> assert(format.blockSize == Vec1b.size)
+            is Vec2b -> assert(format.blockSize == Vec2b.size)
+            is Vec3b -> assert(format.blockSize == Vec3b.size)
+            is Vec4b -> assert(format.blockSize == Vec4b.size)
+            is Vec1ub -> assert(format.blockSize == Vec1ub.size)
+            is Vec2ub -> assert(format.blockSize == Vec2ub.size)
+            is Vec3ub -> assert(format.blockSize == Vec3ub.size)
+            is Vec4ub -> assert(format.blockSize == Vec4ub.size)
+            is Vec1 -> assert(format.blockSize == Vec1.size)
+            is Vec2 -> assert(format.blockSize == Vec2.size)
+            is Vec3 -> assert(format.blockSize == Vec3.size)
+            is Vec4 -> assert(format.blockSize == Vec4.size)
             else -> throw Error()
         }
+        val data = data(layer, face, level)
+        _clear(data, texel)
     }
 
     inline fun <reified T> clear(red: Int, green: Int, blue: Int, alpha: Int) {

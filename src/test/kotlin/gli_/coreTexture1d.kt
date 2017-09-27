@@ -13,8 +13,6 @@ import io.kotlintest.specs.StringSpec
 
 class coreTexture1d : StringSpec() {
 
-
-
     init {
 
         "alloc" {
@@ -400,7 +398,7 @@ class coreTexture1d : StringSpec() {
             val color = Vec4ub(255, 127, 0, 255)
 
             val texture = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(8), 5)
-            texture.clear(black)
+            texture clear black
 
             val texelA = texture.load<Vec4ub>(Vec1i(0), 0)
             val texelB = texture.load<Vec4ub>(Vec1i(0), 1)
@@ -412,19 +410,19 @@ class coreTexture1d : StringSpec() {
 
             texture.clear(0, 0, 1, Vec4ub(255, 127, 0, 255))
 
-//            val coords = Vec1i(0)
-//            for (; Coords.x < texture.extent(1).x; ++coords.x)
-//            {
-//                val TexelD = texture.load<Vec4ub>(coords, 1)
-//                TexelD shouldBe color
-//            }
-//
-//            gli::texture1d TextureView (texture, 1, 1)
-//
-//            gli::texture1d TextureImage (gli::FORMAT_RGBA8_UNORM_PACK8, gli::texture1d::extent_type(4), 1)
-//            TextureImage.clear(color)
-//
-//            TextureView shouldBe TextureImage
+            val coords = Vec1i(0)
+            while(coords.x < texture.extent(1).x)            {
+                val texelD = texture.load<Vec4ub>(coords, 1)
+                texelD shouldBe color
+                coords.x++
+            }
+
+            val textureView =Texture1d(texture, 1, 1)
+
+            val textureImage =Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(4), 1)
+            textureImage clear color
+
+            textureView shouldBe textureImage
         }
     }
 

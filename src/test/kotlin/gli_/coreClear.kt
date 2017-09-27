@@ -45,8 +45,8 @@ class coreClear : StringSpec() {
                 val textureH = Texture1d(textureD, 1, 2)
                 textureG shouldBe textureH
 
-                textureG.clear(colors.last())
-                textureH.clear(colors.last())
+                textureG clear colors.last()
+                textureH clear colors.last()
                 textureG shouldBe textureH
 
                 textureG.clear()
@@ -79,8 +79,8 @@ class coreClear : StringSpec() {
                 val textureH = Texture2d(textureD, 1, 2)
                 textureG shouldBe textureH
 
-                textureG.clear(colors.last())
-                textureH.clear(colors.last())
+                textureG clear colors.last()
+                textureH clear colors.last()
                 textureG shouldBe textureH
 
                 textureG.clear()
@@ -113,8 +113,8 @@ class coreClear : StringSpec() {
                 val textureH = Texture3d(textureD, 1, 2)
                 textureG shouldBe textureH
 
-                textureG.clear(colors.last())
-                textureH.clear(colors.last())
+                textureG clear colors.last()
+                textureH clear colors.last()
                 textureG shouldBe textureH
 
                 textureG.clear()
@@ -173,7 +173,7 @@ class coreClear : StringSpec() {
 
             run {
                 val textureMember = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4), 1)
-                textureMember.clear(Vec4b(255, 127, 0, 255))
+                textureMember clear Vec4b(255, 127, 0, 255)
 
                 val textureExternal = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4), 1)
                 gli.clear(textureExternal, Vec4b(255, 127, 0, 255))
@@ -182,7 +182,7 @@ class coreClear : StringSpec() {
             }
             run {
                 val textureMember = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4))
-                textureMember.clear(Vec4b(127, 95, 63, 255))
+                textureMember clear Vec4b(127, 95, 63, 255)
                 textureMember.clear(0, 0, 1, Vec4b(255, 127, 0, 255))
 
                 textureMember.data<Vec4b>(0, 0, 0)[0] shouldBe Vec4b(127, 95, 63, 255)
