@@ -3,14 +3,18 @@ package gli_
 import glm_.vec1.Vec1
 import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
+import glm_.vec1.Vec1ub
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2b
 import glm_.vec2.Vec2ub
+import glm_.vec2.Vec2us
 import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
+import glm_.vec3.Vec3ub
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
+import glm_.vec4.Vec4ub
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 
@@ -20,40 +24,7 @@ import io.kotlintest.specs.StringSpec
 
 class coreTexture1d : StringSpec() {
 
-    inline fun <reified T> run(format: Format, testSamples: Array<T>) {
 
-        val dimensions = Vec1i(16)
-        val texelCoord = Array(8, { Vec1i(it) })
-
-        val textureA = Texture1d(format, dimensions)
-        textureA.clear()
-        testSamples.forEachIndexed { i, test ->
-            textureA.data<T>(0, 0, 1)[i] = test
-        }
-
-        val textureB = Texture1d(format, dimensions)
-        textureB.clear()
-        testSamples.forEachIndexed { i, test ->
-            textureB.store(texelCoord[i], 1, test)
-        }
-
-        val loadedSamplesA = Array(8, { textureA.load<T>(texelCoord[it], 1) })
-
-        val loadedSamplesB = Array(8, { textureB.load<T>(texelCoord[it], 1) })
-
-        for (i in 0..7)
-            loadedSamplesA[i] shouldBe testSamples[i]
-
-        for (i in 0..7)
-            loadedSamplesB[i] shouldBe testSamples[i]
-
-        textureA shouldBe textureB
-
-        val textureC = Texture1d(textureA, 1, 1)
-        val textureD = Texture1d(textureB, 1, 1)
-
-        textureC shouldBe textureD
-    }
 
     init {
 
@@ -264,52 +235,163 @@ class coreTexture1d : StringSpec() {
                 run(Format.RGBA8_SNORM_PACK8, it)
             }
 
-//            arrayOf()
-//                    glm::u8vec1(255),
-//                    glm::u8vec1(224),
-//                    glm::u8vec1(192),
-//                    glm::u8vec1(128),
-//                    glm::u8vec1(64),
-//                    glm::u8vec1(32),
-//                    glm::u8vec1(16),
-//                    glm::u8vec1(0)
-//                }};
-//
-//                Error += run(gli::FORMAT_R8_UINT_PACK8, TestSamples);
-//                Error += run(gli::FORMAT_R8_UNORM_PACK8, TestSamples);
-//                Error += run(gli::FORMAT_R8_SRGB_PACK8, TestSamples);
-//            }
+            arrayOf(
+                    Vec1ub(255),
+                    Vec1ub(224),
+                    Vec1ub(192),
+                    Vec1ub(128),
+                    Vec1ub(64),
+                    Vec1ub(32),
+                    Vec1ub(16),
+                    Vec1ub(0)).let {
+
+                run(Format.R8_UINT_PACK8, it)
+                run(Format.R8_UNORM_PACK8, it)
+                run(Format.R8_SRGB_PACK8, it)
+            }
 
             arrayOf(
-                    Vec2ub(255,   0),
+                    Vec2ub(255, 0),
                     Vec2ub(255, 128),
                     Vec2ub(255, 255),
                     Vec2ub(128, 255),
                     Vec2ub(0, 255),
                     Vec2ub(0, 255),
-                    Vec2ub(0,   0),
-                    Vec2ub(255,   0)).let {
+                    Vec2ub(0, 0),
+                    Vec2ub(255, 0)).let {
 
                 run(Format.RG8_UINT_PACK8, it)
                 run(Format.RG8_UNORM_PACK8, it)
                 run(Format.RG8_SRGB_PACK8, it)
             }
 
-//            std::array<glm::u8vec3, 8> TestSamples{
-//            {
-//                glm::u8vec3(255,   0,   0),
-//                glm::u8vec3(255, 128,   0),
-//                glm::u8vec3(255, 255,   0),
-//                glm::u8vec3(128, 255,   0),
-//                glm::u8vec3(0, 255,   0),
-//                glm::u8vec3(0, 255, 255),
-//                glm::u8vec3(0,   0, 255),
-//                glm::u8vec3(255,   0, 255)
-//            }};
+            arrayOf(
+                    Vec3ub(255, 0, 0),
+                    Vec3ub(255, 128, 0),
+                    Vec3ub(255, 255, 0),
+                    Vec3ub(128, 255, 0),
+                    Vec3ub(0, 255, 0),
+                    Vec3ub(0, 255, 255),
+                    Vec3ub(0, 0, 255),
+                    Vec3ub(255, 0, 255)).let {
+
+                run(Format.RGB8_UINT_PACK8, it)
+                run(Format.RGB8_UNORM_PACK8, it)
+                run(Format.RGB8_SRGB_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec4ub(255, 0, 0, 255),
+                    Vec4ub(255, 128, 0, 255),
+                    Vec4ub(255, 255, 0, 255),
+                    Vec4ub(128, 255, 0, 255),
+                    Vec4ub(0, 255, 0, 255),
+                    Vec4ub(0, 255, 255, 255),
+                    Vec4ub(0, 0, 255, 255),
+                    Vec4ub(255, 0, 255, 255)).let {
+
+                run(Format.RGBA8_UINT_PACK8, it)
+                run(Format.RGBA8_UNORM_PACK8, it)
+                run(Format.RGBA8_SRGB_PACK8, it)
+            }
+
+
+//            arrayOf(
+//                    Vec1us(65535),
+//                    Vec1us(32767),
+//                    Vec1us(192),
+//                    Vec1us(128),
+//                    Vec1us(64),
+//                    Vec1us(32),
+//                    Vec1us(16),
+//                    Vec1us(0)).let {
 //
-//            Error += run(gli::FORMAT_RGB8_UINT_PACK8, TestSamples);
-//            Error += run(gli::FORMAT_RGB8_UNORM_PACK8, TestSamples);
-//            Error += run(gli::FORMAT_RGB8_SRGB_PACK8, TestSamples);
+//                run(Format.R16_UINT_PACK16, it)
+//                run(Format.R16_UNORM_PACK16, it)
+//            }
+
+            arrayOf(
+                    Vec2us(255, 0),
+                    Vec2us(255, 128),
+                    Vec2us(255, 255),
+                    Vec2us(128, 255),
+                    Vec2us(0, 255),
+                    Vec2us(0, 255),
+                    Vec2us(0, 0),
+                    Vec2us(255, 0)).let {
+
+                run(Format.RG16_UINT_PACK16, it)
+                run(Format.RG16_UNORM_PACK16, it)
+            }
+            //
+            //                        {
+            //                            std::array<glm::u16vec3, 8> TestSamples{
+            //                            {
+            //                                glm::u16vec3(255,   0,   0),
+            //                                glm::u16vec3(255, 128,   0),
+            //                                glm::u16vec3(255, 255,   0),
+            //                                glm::u16vec3(128, 255,   0),
+            //                                glm::u16vec3(0, 255,   0),
+            //                                glm::u16vec3(0, 255, 255),
+            //                                glm::u16vec3(0,   0, 255),
+            //                                glm::u16vec3(255,   0, 255)
+            //                            }};
+            //
+            //                            Error += run(gli::FORMAT_RGB16_UINT_PACK16, TestSamples);
+            //                            Error += run(gli::FORMAT_RGB16_UNORM_PACK16, TestSamples);
+            //                        }
+            //
+            //                        {
+            //                            std::array<glm::u16vec4, 8> TestSamples{
+            //                            {
+            //                                glm::u16vec4(255,   0,   0, 255),
+            //                                glm::u16vec4(255, 128,   0, 255),
+            //                                glm::u16vec4(255, 255,   0, 255),
+            //                                glm::u16vec4(128, 255,   0, 255),
+            //                                glm::u16vec4(0, 255,   0, 255),
+            //                                glm::u16vec4(0, 255, 255, 255),
+            //                                glm::u16vec4(0,   0, 255, 255),
+            //                                glm::u16vec4(255,   0, 255, 255)
+            //                            }};
+            //
+            //                            Error += run(gli::FORMAT_RGBA16_UINT_PACK16, TestSamples);
+            //                            Error += run(gli::FORMAT_RGBA16_UNORM_PACK16, TestSamples);
+            //                        }
         }
+    }
+
+    inline fun <reified T : Any> run(format: Format, testSamples: Array<T>) {
+
+        val dimensions = Vec1i(16)
+        val texelCoord = Array(8, { Vec1i(it) })
+
+        val textureA = Texture1d(format, dimensions)
+        textureA.clear()
+        testSamples.forEachIndexed { i, test ->
+            textureA.data<T>(0, 0, 1)[i] = test
+        }
+
+        val textureB = Texture1d(format, dimensions)
+        textureB.clear()
+        testSamples.forEachIndexed { i, test ->
+            textureB.store(texelCoord[i], 1, test)
+        }
+
+        val loadedSamplesA = Array(8, { textureA.load<T>(texelCoord[it], 1) })
+
+        val loadedSamplesB = Array(8, { textureB.load<T>(texelCoord[it], 1) })
+
+        for (i in 0..7)
+            loadedSamplesA[i] shouldBe testSamples[i]
+
+        for (i in 0..7)
+            loadedSamplesB[i] shouldBe testSamples[i]
+
+        textureA shouldBe textureB
+
+        val textureC = Texture1d(textureA, 1, 1)
+        val textureD = Texture1d(textureB, 1, 1)
+
+        textureC shouldBe textureD
     }
 }

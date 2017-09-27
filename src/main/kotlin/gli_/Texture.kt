@@ -5,19 +5,13 @@ import glm_.BYTES
 import glm_.b
 import glm_.glm
 import glm_.set
-import glm_.vec1.Vec1
-import glm_.vec1.Vec1b
-import glm_.vec1.Vec1i
-import glm_.vec2.Vec2
-import glm_.vec2.Vec2b
-import glm_.vec2.Vec2i
-import glm_.vec2.Vec2ub
-import glm_.vec3.Vec3
-import glm_.vec3.Vec3b
-import glm_.vec3.Vec3i
+import glm_.vec1.*
+import glm_.vec2.*
+import glm_.vec3.*
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
+import glm_.vec4.Vec4us
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
@@ -25,8 +19,6 @@ import kotlin.reflect.KClass
 /**
  * Created by GBarbieri on 03.04.2017.
  */
-
-@Suppress("UNCHECKED_CAST")
 
 open class Texture {
 
@@ -221,20 +213,7 @@ open class Texture {
     }
 
     inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
-    fun <T> data(clazz: KClass<*>) = when (clazz) {
-        Vec1b::class -> vec1bData.apply { data = data() }
-        Vec2b::class -> vec2bData.apply { data = data() }
-        Vec3b::class -> vec3bData.apply { data = data() }
-        Vec4b::class -> vec4bData.apply { data = data() }
-        Vec1::class -> vec1Data.apply { data = data() }
-        Vec2::class -> vec2Data.apply { data = data() }
-        Vec3::class -> vec3Data.apply { data = data() }
-        Vec4::class -> vec4Data.apply { data = data() }
-        java.lang.Byte::class -> byteData.apply { data = data() }
-        java.lang.Integer::class -> intData.apply { data = data() }
-        java.lang.Long::class -> longData.apply { data = data() }
-        else -> throw Error()
-    } as reinterpreter<T>
+    fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz)
 
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
@@ -244,34 +223,11 @@ open class Texture {
     }
 
     inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = data<T>(T::class, layer, face, level)
-    fun <T> data(clazz: KClass<*>, layer: Int, face: Int, level: Int) = when (clazz) {
-        Vec1b::class -> vec1bData.apply { data = data(layer, face, level) }
-        Vec2b::class -> vec2bData.apply { data = data(layer, face, level) }
-        Vec3b::class -> vec3bData.apply { data = data(layer, face, level) }
-        Vec4b::class -> vec4bData.apply { data = data(layer, face, level) }
-        Vec1::class -> vec1Data.apply { data = data(layer, face, level) }
-        Vec2::class -> vec2Data.apply { data = data(layer, face, level) }
-        Vec3::class -> vec3Data.apply { data = data(layer, face, level) }
-        Vec4::class -> vec4Data.apply { data = data(layer, face, level) }
-        java.lang.Byte::class -> byteData.apply { data = data(layer, face, level) }
-        java.lang.Integer::class -> intData.apply { data = data(layer, face, level) }
-        java.lang.Long::class -> longData.apply { data = data(layer, face, level) }
-//        Vec1b::class -> vec1bData.apply { data = data(layer, face, level) }
-        Vec2ub::class -> vec2ubData.apply { data = data(layer, face, level) }
-//        Vec3b::class -> vec3bData.apply { data = data(layer, face, level) }
-//        Vec4b::class -> vec4bData.apply { data = data(layer, face, level) }
-        else -> throw Error()
-    } as reinterpreter<T>
+    fun <T> data(clazz: KClass<*>, layer: Int, face: Int, level: Int) = getReinterpreter<T>(clazz).apply { data = data(layer, face, level) }
 
     fun setData(unitOffset: Int, texel: Vec4b) {
         val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
         texel.to(storage!!.data(), baseOffset + unitOffset * Vec4b.size)
-    }
-
-    fun getData(unitOffset: Int, texel: Vec4b = Vec4b()): Vec4b {
-        val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
-        texel.to(storage!!.data(), baseOffset + unitOffset * Vec4b.size)
-        return texel
     }
 
     fun extent(level: Int =
@@ -411,33 +367,16 @@ open class Texture {
 
     fun imageOffset(coord: Vec3i, extent: Vec3i) = storage!!.imageOffset(coord, extent)
 
-    inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
-//            load(T::class, texelCoord, layer, face, level)
-//    fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
+    inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T =
+            load<T>(T::class, texelCoord, layer, face, level)
+
+    fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
         assert(notEmpty() && !format.isCompressed)
-        when (T::class) {
-            java.lang.Byte::class -> assert(format.blockSize == Byte.BYTES)
-            java.lang.Integer::class -> assert(format.blockSize == Int.BYTES)
-            java.lang.Long::class -> assert(format.blockSize == Long.BYTES)
-            Vec1b::class -> assert(format.blockSize == Vec1b.size)
-            Vec2b::class -> assert(format.blockSize == Vec2b.size)
-            Vec3b::class -> assert(format.blockSize == Vec3b.size)
-            Vec4b::class -> assert(format.blockSize == Vec4b.size)
-            Vec1::class -> assert(format.blockSize == Vec1.size)
-            Vec2::class -> assert(format.blockSize == Vec2.size)
-            Vec3::class -> assert(format.blockSize == Vec3.size)
-            Vec3::class -> assert(format.blockSize == Vec3.size)
-            Vec4::class -> assert(format.blockSize == Vec4.size)
-//            Vec1b::class -> assert(format.blockSize == Vec1b.size)
-            Vec2ub::class -> assert(format.blockSize == Vec2ub.size)
-//            Vec3b::class -> assert(format.blockSize == Vec3b.size)
-//            Vec4b::class -> assert(format.blockSize == Vec4b.size)
-            else -> throw Error()
-        }
+        assert(format.blockSize == )
         val imageOffset = imageOffset(texelCoord, extent(level))
         assert(imageOffset < size(level))
 
-        return data<T>(layer, face, level)[imageOffset]
+        return data<T>(clazz, layer, face, level)[imageOffset]
     }
 
     //    fun store(texelCoord: Vec1i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, 1, 1), layer, face, level, texel) TODO check
@@ -450,24 +389,8 @@ open class Texture {
 
         val imageOffset = imageOffset(texelCoord, extent)
 
-        when (texel) {
-            is Byte -> assert(format.blockSize == Byte.BYTES && imageOffset < size(level) / Byte.BYTES)
-            is Int -> assert(format.blockSize == Int.BYTES && imageOffset < size(level) / Int.BYTES)
-            is Long -> assert(format.blockSize == Long.BYTES && imageOffset < size(level) / Long.BYTES)
-            is Vec1b -> assert(format.blockSize == Vec1b.size && imageOffset < size(level) / Vec1b.size)
-            is Vec2b -> assert(format.blockSize == Vec2b.size && imageOffset < size(level) / Vec2b.size)
-            is Vec3b -> assert(format.blockSize == Vec3b.size && imageOffset < size(level) / Vec3b.size)
-            is Vec4b -> assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
-            is Vec1 -> assert(format.blockSize == Vec1.size && imageOffset < size(level) / Vec1.size)
-            is Vec2 -> assert(format.blockSize == Vec2.size && imageOffset < size(level) / Vec2.size)
-            is Vec3 -> assert(format.blockSize == Vec3.size && imageOffset < size(level) / Vec3.size)
-            is Vec4 -> assert(format.blockSize == Vec4.size && imageOffset < size(level) / Vec4.size)
-//            is Vec1b -> assert(format.blockSize == Vec1b.size && imageOffset < size(level) / Vec1b.size)
-            is Vec2ub -> assert(format.blockSize == Vec2ub.size && imageOffset < size(level) / Vec2ub.size)
-//            is Vec3b -> assert(format.blockSize == Vec3b.size && imageOffset < size(level) / Vec3b.size)
-//            is Vec4b -> assert(format.blockSize == Vec4b.size && imageOffset < size(level) / Vec4b.size)
-            else -> throw Error()
-        }
+        val blockSize = getSize(texel::class)
+        assert(format.blockSize == blockSize && imageOffset < size(level) / blockSize)
         data<T>(layer, face, level)[imageOffset] = texel
     }
 

@@ -20,8 +20,6 @@ import java.nio.ByteBuffer
  * Created by GBarbieri on 03.04.2017.
  */
 
-@Suppress("UNCHECKED_CAST")
-
 class Storage {
 
     var layers = 0
@@ -86,18 +84,7 @@ class Storage {
 
     fun data() = data!!
 
-    inline fun <reified T> data(): reinterpreter<T> = when (T::class.java) {
-        Vec1b::class.java -> vec1bData.apply { data = data() }
-        Vec2b::class.java -> vec2bData.apply { data = data() }
-        Vec3b::class.java -> vec3bData.apply { data = data() }
-        Vec4b::class.java -> vec4bData.apply { data = data() }
-        Vec3::class.java -> vec3Data.apply { data = data() }
-        Vec4::class.java -> vec4Data.apply { data = data() }
-        java.lang.Byte::class.java -> byteData.apply { data = data() }
-        java.lang.Integer::class.java -> intData.apply { data = data() }
-        java.lang.Long::class.java -> longData.apply { data = data() }
-        else -> throw Error()
-    } as reinterpreter<T>
+    inline fun <reified T> data() = getReinterpreter<T>(T::class)
 
     /** Compute the relative memory offset to access the data for a specific layer, face and level  */
     fun baseOffset(layer: Int, face: Int, level: Int): Int {
