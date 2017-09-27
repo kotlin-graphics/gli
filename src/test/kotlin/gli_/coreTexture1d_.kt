@@ -19,7 +19,7 @@ import io.kotlintest.specs.StringSpec
 
 class coreTexture1d_ : StringSpec() {
 
-    inline fun <reified T : Any> run(format: Format, testSamples: Array<T>) {
+    inline fun <reified T> run(format: Format, testSamples: Array<T>) {
 
         val dimensions = Vec1i(16)
         val texelCoord = Array(8, { Vec1i(it) })
@@ -60,69 +60,7 @@ class coreTexture1d_ : StringSpec() {
                        //
                        //
                        //
-                       //                        {
-                       //                            std::array<glm::u32vec1, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec1(65535),
-                       //                                glm::u32vec1(32767),
-                       //                                glm::u32vec1(192),
-                       //                                glm::u32vec1(128),
-                       //                                glm::u32vec1(64),
-                       //                                glm::u32vec1(32),
-                       //                                glm::u32vec1(16),
-                       //                                glm::u32vec1(0)
-                       //                            }};
                        //
-                       //                            Error += run(gli::FORMAT_R32_UINT_PACK32, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec2, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec2(255,   0),
-                       //                                glm::u32vec2(255, 128),
-                       //                                glm::u32vec2(255, 255),
-                       //                                glm::u32vec2(128, 255),
-                       //                                glm::u32vec2(0, 255),
-                       //                                glm::u32vec2(0, 255),
-                       //                                glm::u32vec2(0,   0),
-                       //                                glm::u32vec2(255,   0)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RG32_UINT_PACK32, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec3, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec3(255,   0,   0),
-                       //                                glm::u32vec3(255, 128,   0),
-                       //                                glm::u32vec3(255, 255,   0),
-                       //                                glm::u32vec3(128, 255,   0),
-                       //                                glm::u32vec3(0, 255,   0),
-                       //                                glm::u32vec3(0, 255, 255),
-                       //                                glm::u32vec3(0,   0, 255),
-                       //                                glm::u32vec3(255,   0, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGB32_UINT_PACK32, TestSamples);
-                       //                        }
-                       //
-                       //                        {
-                       //                            std::array<glm::u32vec4, 8> TestSamples{
-                       //                            {
-                       //                                glm::u32vec4(255,   0,   0, 255),
-                       //                                glm::u32vec4(255, 128,   0, 255),
-                       //                                glm::u32vec4(255, 255,   0, 255),
-                       //                                glm::u32vec4(128, 255,   0, 255),
-                       //                                glm::u32vec4(0, 255,   0, 255),
-                       //                                glm::u32vec4(0, 255, 255, 255),
-                       //                                glm::u32vec4(0,   0, 255, 255),
-                       //                                glm::u32vec4(255,   0, 255, 255)
-                       //                            }};
-                       //
-                       //                            Error += run(gli::FORMAT_RGBA32_UINT_PACK32, TestSamples);
-                       //                        }
 //                return Error
         }
     }

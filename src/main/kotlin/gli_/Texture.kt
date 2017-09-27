@@ -5,13 +5,15 @@ import glm_.BYTES
 import glm_.b
 import glm_.glm
 import glm_.set
-import glm_.vec1.*
-import glm_.vec2.*
-import glm_.vec3.*
+import glm_.vec1.Vec1b
+import glm_.vec1.Vec1i
+import glm_.vec2.Vec2b
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3b
+import glm_.vec3.Vec3i
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
-import glm_.vec4.Vec4us
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
@@ -213,7 +215,7 @@ open class Texture {
     }
 
     inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
-    fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz)
+    fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz).apply { data = data() }
 
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
@@ -312,7 +314,7 @@ open class Texture {
         }
     }
 
-    inline fun <reified T : Any> clear(red: Int, green: Int, blue: Int, alpha: Int) {
+    inline fun <reified T> clear(red: Int, green: Int, blue: Int, alpha: Int) {
         assert(notEmpty())
         val data = data()
         when (T::class) {
@@ -372,7 +374,7 @@ open class Texture {
 
     fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
         assert(notEmpty() && !format.isCompressed)
-        assert(format.blockSize == )
+        assert(format.blockSize == getSize(clazz))
         val imageOffset = imageOffset(texelCoord, extent(level))
         assert(imageOffset < size(level))
 
@@ -389,7 +391,7 @@ open class Texture {
 
         val imageOffset = imageOffset(texelCoord, extent)
 
-        val blockSize = getSize(texel::class)
+        val blockSize = getSize(T::class)
         assert(format.blockSize == blockSize && imageOffset < size(level) / blockSize)
         data<T>(layer, face, level)[imageOffset] = texel
     }

@@ -1,20 +1,9 @@
 package gli_
 
-import glm_.vec1.Vec1
-import glm_.vec1.Vec1b
-import glm_.vec1.Vec1i
-import glm_.vec1.Vec1ub
-import glm_.vec2.Vec2
-import glm_.vec2.Vec2b
-import glm_.vec2.Vec2ub
-import glm_.vec2.Vec2us
-import glm_.vec3.Vec3
-import glm_.vec3.Vec3b
-import glm_.vec3.Vec3i
-import glm_.vec3.Vec3ub
-import glm_.vec4.Vec4
-import glm_.vec4.Vec4b
-import glm_.vec4.Vec4ub
+import glm_.vec1.*
+import glm_.vec2.*
+import glm_.vec3.*
+import glm_.vec4.*
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 
@@ -296,19 +285,19 @@ class coreTexture1d : StringSpec() {
             }
 
 
-//            arrayOf(
-//                    Vec1us(65535),
-//                    Vec1us(32767),
-//                    Vec1us(192),
-//                    Vec1us(128),
-//                    Vec1us(64),
-//                    Vec1us(32),
-//                    Vec1us(16),
-//                    Vec1us(0)).let {
-//
-//                run(Format.R16_UINT_PACK16, it)
-//                run(Format.R16_UNORM_PACK16, it)
-//            }
+            arrayOf(
+                    Vec1us(65535),
+                    Vec1us(32767),
+                    Vec1us(192),
+                    Vec1us(128),
+                    Vec1us(64),
+                    Vec1us(32),
+                    Vec1us(16),
+                    Vec1us(0)).let {
+
+                run(Format.R16_UINT_PACK16, it)
+                run(Format.R16_UNORM_PACK16, it)
+            }
 
             arrayOf(
                     Vec2us(255, 0),
@@ -323,44 +312,123 @@ class coreTexture1d : StringSpec() {
                 run(Format.RG16_UINT_PACK16, it)
                 run(Format.RG16_UNORM_PACK16, it)
             }
-            //
-            //                        {
-            //                            std::array<glm::u16vec3, 8> TestSamples{
-            //                            {
-            //                                glm::u16vec3(255,   0,   0),
-            //                                glm::u16vec3(255, 128,   0),
-            //                                glm::u16vec3(255, 255,   0),
-            //                                glm::u16vec3(128, 255,   0),
-            //                                glm::u16vec3(0, 255,   0),
-            //                                glm::u16vec3(0, 255, 255),
-            //                                glm::u16vec3(0,   0, 255),
-            //                                glm::u16vec3(255,   0, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGB16_UINT_PACK16, TestSamples);
-            //                            Error += run(gli::FORMAT_RGB16_UNORM_PACK16, TestSamples);
-            //                        }
-            //
-            //                        {
-            //                            std::array<glm::u16vec4, 8> TestSamples{
-            //                            {
-            //                                glm::u16vec4(255,   0,   0, 255),
-            //                                glm::u16vec4(255, 128,   0, 255),
-            //                                glm::u16vec4(255, 255,   0, 255),
-            //                                glm::u16vec4(128, 255,   0, 255),
-            //                                glm::u16vec4(0, 255,   0, 255),
-            //                                glm::u16vec4(0, 255, 255, 255),
-            //                                glm::u16vec4(0,   0, 255, 255),
-            //                                glm::u16vec4(255,   0, 255, 255)
-            //                            }};
-            //
-            //                            Error += run(gli::FORMAT_RGBA16_UINT_PACK16, TestSamples);
-            //                            Error += run(gli::FORMAT_RGBA16_UNORM_PACK16, TestSamples);
-            //                        }
+
+            arrayOf(
+                    Vec3us(255, 0, 0),
+                    Vec3us(255, 128, 0),
+                    Vec3us(255, 255, 0),
+                    Vec3us(128, 255, 0),
+                    Vec3us(0, 255, 0),
+                    Vec3us(0, 255, 255),
+                    Vec3us(0, 0, 255),
+                    Vec3us(255, 0, 255)).let {
+
+                run(Format.RGB16_UINT_PACK16, it)
+                run(Format.RGB16_UNORM_PACK16, it)
+            }
+
+            arrayOf(
+                    Vec4us(255, 0, 0, 255),
+                    Vec4us(255, 128, 0, 255),
+                    Vec4us(255, 255, 0, 255),
+                    Vec4us(128, 255, 0, 255),
+                    Vec4us(0, 255, 0, 255),
+                    Vec4us(0, 255, 255, 255),
+                    Vec4us(0, 0, 255, 255),
+                    Vec4us(255, 0, 255, 255)).let {
+
+                run(Format.RGBA16_UINT_PACK16, it)
+                run(Format.RGBA16_UNORM_PACK16, it)
+            }
+
+            arrayOf(
+                    Vec1ui(65535),
+                    Vec1ui(32767),
+                    Vec1ui(192),
+                    Vec1ui(128),
+                    Vec1ui(64),
+                    Vec1ui(32),
+                    Vec1ui(16),
+                    Vec1ui(0)).let {
+
+                run(Format.R32_UINT_PACK32, it)
+            }
+
+            arrayOf(
+                    Vec2ui(255, 0),
+                    Vec2ui(255, 128),
+                    Vec2ui(255, 255),
+                    Vec2ui(128, 255),
+                    Vec2ui(0, 255),
+                    Vec2ui(0, 255),
+                    Vec2ui(0, 0),
+                    Vec2ui(255, 0)).let {
+
+                run(Format.RG32_UINT_PACK32, it)
+            }
+
+            arrayOf(
+                    Vec3ui(255, 0, 0),
+                    Vec3ui(255, 128, 0),
+                    Vec3ui(255, 255, 0),
+                    Vec3ui(128, 255, 0),
+                    Vec3ui(0, 255, 0),
+                    Vec3ui(0, 255, 255),
+                    Vec3ui(0, 0, 255),
+                    Vec3ui(255, 0, 255)).let {
+
+                run(Format.RGB32_UINT_PACK32, it)
+            }
+
+            arrayOf(
+                    Vec4ui(255, 0, 0, 255),
+                    Vec4ui(255, 128, 0, 255),
+                    Vec4ui(255, 255, 0, 255),
+                    Vec4ui(128, 255, 0, 255),
+                    Vec4ui(0, 255, 0, 255),
+                    Vec4ui(0, 255, 255, 255),
+                    Vec4ui(0, 0, 255, 255),
+                    Vec4ui(255, 0, 255, 255)).let {
+
+                run(Format.RGBA32_UINT_PACK32, it)
+            }
+        }
+
+        "clear" {
+
+            val black = Vec4ub(0, 0, 0, 255)
+            val color = Vec4ub(255, 127, 0, 255)
+
+            val texture = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(8), 5)
+            texture.clear(black)
+
+            val texelA = texture.load<Vec4ub>(Vec1i(0), 0)
+            val texelB = texture.load<Vec4ub>(Vec1i(0), 1)
+            val texelC = texture.load<Vec4ub>(Vec1i(0), 2)
+
+            texelA shouldBe black
+            texelB shouldBe black
+            texelC shouldBe black
+
+            texture.clear(0, 0, 1, Vec4ub(255, 127, 0, 255))
+
+//            val coords = Vec1i(0)
+//            for (; Coords.x < texture.extent(1).x; ++coords.x)
+//            {
+//                val TexelD = texture.load<Vec4ub>(coords, 1)
+//                TexelD shouldBe color
+//            }
+//
+//            gli::texture1d TextureView (texture, 1, 1)
+//
+//            gli::texture1d TextureImage (gli::FORMAT_RGBA8_UNORM_PACK8, gli::texture1d::extent_type(4), 1)
+//            TextureImage.clear(color)
+//
+//            TextureView shouldBe TextureImage
         }
     }
 
-    inline fun <reified T : Any> run(format: Format, testSamples: Array<T>) {
+    inline fun <reified T> run(format: Format, testSamples: Array<T>) {
 
         val dimensions = Vec1i(16)
         val texelCoord = Array(8, { Vec1i(it) })

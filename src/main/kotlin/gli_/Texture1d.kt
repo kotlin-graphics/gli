@@ -55,7 +55,7 @@ class Texture1d : Texture {
 
     inline fun <reified T> load(texelCoord:Vec1i, level:Int) = super.load<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level)
 
-    inline fun <reified T : Any> store(texelCoord:Vec1i, level:Int, texel: T) = super.store<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
+    inline fun <reified T> store(texelCoord:Vec1i, level:Int, texel: T) = super.store<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
 
     override fun dispose() = super.dispose()
 }

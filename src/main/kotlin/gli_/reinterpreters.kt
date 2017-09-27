@@ -1,26 +1,14 @@
 package gli_
 
 import glm_.BYTES
-import glm_.vec1.Vec1
-import glm_.vec1.Vec1b
-import glm_.vec1.Vec1ub
-import glm_.vec1.Vec1us
-import glm_.vec2.Vec2
-import glm_.vec2.Vec2b
-import glm_.vec2.Vec2ub
-import glm_.vec2.Vec2us
-import glm_.vec3.Vec3
-import glm_.vec3.Vec3b
-import glm_.vec3.Vec3ub
-import glm_.vec3.Vec3us
-import glm_.vec4.Vec4
-import glm_.vec4.Vec4b
-import glm_.vec4.Vec4ub
-import glm_.vec4.Vec4us
+import glm_.vec1.*
+import glm_.vec2.*
+import glm_.vec3.*
+import glm_.vec4.*
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
-interface reinterpreter<T : Any> {
+interface reinterpreter<T> {
     var data: ByteBuffer
     operator fun get(index: Int): T
     operator fun set(index: Int, value: T): ByteBuffer
@@ -140,8 +128,32 @@ object vec4usData : reinterpreter<Vec4us> {
     override fun set(index: Int, value: Vec4us) = value.to(data, index * Vec4us.size)
 }
 
+object vec1uiData : reinterpreter<Vec1ui> {
+    override lateinit var data: ByteBuffer
+    override operator fun get(index: Int) = Vec1ui(data, index * Vec1ui.size)
+    override fun set(index: Int, value: Vec1ui) = value.to(data, index * Vec1ui.size)
+}
+
+object vec2uiData : reinterpreter<Vec2ui> {
+    override lateinit var data: ByteBuffer
+    override operator fun get(index: Int) = Vec2ui(data, index * Vec2ui.size)
+    override fun set(index: Int, value: Vec2ui) = value.to(data, index * Vec2ui.size)
+}
+
+object vec3uiData : reinterpreter<Vec3ui> {
+    override lateinit var data: ByteBuffer
+    override operator fun get(index: Int) = Vec3ui(data, index * Vec3ui.size)
+    override fun set(index: Int, value: Vec3ui) = value.to(data, index * Vec3ui.size)
+}
+
+object vec4uiData : reinterpreter<Vec4ui> {
+    override lateinit var data: ByteBuffer
+    override operator fun get(index: Int) = Vec4ui(data, index * Vec4ui.size)
+    override fun set(index: Int, value: Vec4ui) = value.to(data, index * Vec4ui.size)
+}
+
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> getReinterpreter(clazz: KClass<*>) = when (clazz) {
+fun <T> getReinterpreter(clazz: KClass<*>) = when (clazz) {
     Vec1b::class -> vec1bData
     Vec2b::class -> vec2bData
     Vec3b::class -> vec3bData
@@ -154,6 +166,10 @@ fun <T : Any> getReinterpreter(clazz: KClass<*>) = when (clazz) {
     Vec2us::class -> vec2usData
     Vec3us::class -> vec3usData
     Vec4us::class -> vec4usData
+    Vec1ui::class -> vec1uiData
+    Vec2ui::class -> vec2uiData
+    Vec3ui::class -> vec3uiData
+    Vec4ui::class -> vec4uiData
     Vec1::class -> vec1Data
     Vec2::class -> vec2Data
     Vec3::class -> vec3Data
@@ -178,9 +194,17 @@ fun getSize(clazz: KClass<*>) = when (clazz) {
     Vec3::class -> Vec3.size
     Vec3::class -> Vec3.size
     Vec4::class -> Vec4.size
-    Vec1ub::class -> Vec1b.size
+    Vec1ub::class -> Vec1ub.size
     Vec2ub::class -> Vec2ub.size
     Vec3ub::class -> Vec3ub.size
     Vec4ub::class -> Vec4ub.size
+    Vec1us::class -> Vec1us.size
+    Vec2us::class -> Vec2us.size
+    Vec3us::class -> Vec3us.size
+    Vec4us::class -> Vec4us.size
+    Vec1ui::class -> Vec1ui.size
+    Vec2ui::class -> Vec2ui.size
+    Vec3ui::class -> Vec3ui.size
+    Vec4ui::class -> Vec4ui.size
     else -> throw Error()
 }
