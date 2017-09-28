@@ -9,6 +9,7 @@ import java.nio.file.Paths
 
 object gli :
         clear,
+        copy,
         levels,
         load,
         loadDds,

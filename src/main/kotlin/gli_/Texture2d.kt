@@ -23,7 +23,10 @@ class Texture2d : Texture {
 
     /** Create a texture2d and allocate a new storage_linear with a complete mipmap chain.  */
     constructor(format: Format, extent: Vec2i, swizzles: Swizzles = Swizzles()) :
-            super(Target._2D, format, Vec3i(extent, 1), 1, 1, gli.levels(extent), swizzles)
+            this(format, Vec3i(extent, 1), swizzles)
+
+    constructor(format: Format, extent: Vec3i, swizzles: Swizzles = Swizzles()) :
+            super(Target._2D, format, extent, 1, 1, gli.levels(extent), swizzles)
 
     /** Create a texture2d view with an existing storage_linear.    */
     constructor(texture: Texture) : super(texture, Target._2D, texture.format)
