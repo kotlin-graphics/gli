@@ -69,7 +69,7 @@ interface saveDds {
         val requireDX10Header = dxFormat.d3DFormat == dx.D3dfmt.GLI1 || dxFormat.d3DFormat == dx.D3dfmt.DX10 ||
                 texture.target.isTargetArray || texture.target.isTarget1d
 
-        var length = texture.size() + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE
+        var length = texture.size + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE
         if (requireDX10Header) length += detail.DdsHeader10.SIZE
         val data = bufferBig(length)
 
@@ -92,7 +92,7 @@ interface saveDds {
             flags = caps
             width = texture.extent().x
             height = texture.extent().y
-            pitch = if (desc.flags has detail.Cap.COMPRESSED_BIT) texture.size() / texture.faces() else 32
+            pitch = if (desc.flags has detail.Cap.COMPRESSED_BIT) texture.size / texture.faces() else 32
             depth = if (texture.extent().z > 1) texture.extent().z else 0
             mipMapLevels = texture.levels()
             with(format) {

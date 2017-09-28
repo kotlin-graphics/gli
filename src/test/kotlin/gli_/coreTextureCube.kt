@@ -41,7 +41,7 @@ class coreTextureCube : StringSpec() {
 
             with(TextureCube(Format.RGBA8_UINT_PACK8, Vec2i(2), 2)) {
 
-                size() shouldBe Vec4ub.size * 5 * 6
+                size shouldBe Vec4ub.size * 5 * 6
                 format shouldBe Format.RGBA8_UINT_PACK8
                 levels() shouldBe 2
                 empty() shouldBe false
@@ -55,11 +55,11 @@ class coreTextureCube : StringSpec() {
             run {
 
                 val texture2dA = Texture2d(Format.RGBA8_UINT_PACK8, Vec2i(2), 1)
-                for (i in 0 until texture2dA.size())
+                for (i in 0 until texture2dA.size)
                     texture2dA.data()[i] = i.b
 
                 val texture2dB = Texture2d(Format.RGBA8_UINT_PACK8, Vec2i(2), 1)
-                for (i in 0 until texture2dB.size())
+                for (i in 0 until texture2dB.size)
                     texture2dB.data()[i] = (i + 100).b
 
                 val textureCube = TextureCube(Format.RGBA8_UINT_PACK8, Vec2i(2), 2)
@@ -90,7 +90,7 @@ class coreTextureCube : StringSpec() {
                         texture2D.setData(pixelIndex, it)
                 }
 
-                for (texelIndex in 0 until textureCube.size() / Vec4b.size)
+                for (texelIndex in 0 until textureCube.size / Vec4b.size)
                     Vec4b(textureCube.data(), texelIndex * Vec4b.size) shouldBe colors[texelIndex / 4]
             }
 
@@ -102,8 +102,8 @@ class coreTextureCube : StringSpec() {
                 val textureA = textureCube[0]
                 val textureB = textureCube[1]
 
-                val size0 = textureA.size()
-                val size1 = textureB.size()
+                val size0 = textureA.size
+                val size1 = textureB.size
 
                 size0 shouldBe Vec4b.size * 5
                 size1 shouldBe Vec4b.size * 5

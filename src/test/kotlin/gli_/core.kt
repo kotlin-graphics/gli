@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4b
 import io.kotlintest.matchers.gt
@@ -38,10 +39,10 @@ class core : StringSpec() {
 
         "floorMultiple" {
 
-            val a = glmTemp.floorMultiple(3, 4)
-            val b = glmTemp.floorMultiple(6, 4)
-            val c = glmTemp.floorMultiple(8, 4)
-            val d = glmTemp.floorMultiple(9, 4)
+            val a = glm.floorMultiple(3, 4)
+            val b = glm.floorMultiple(6, 4)
+            val c = glm.floorMultiple(8, 4)
+            val d = glm.floorMultiple(9, 4)
 
             a shouldBe 0
             b shouldBe 4

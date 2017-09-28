@@ -11,7 +11,7 @@ import io.kotlintest.specs.StringSpec
  * Created by GBarbieri on 04.04.2017.
  */
 
-class coreTexture1d : StringSpec() {
+class coreTexture3d : StringSpec() {
 
     init {
 
@@ -24,28 +24,47 @@ class coreTexture1d : StringSpec() {
 
                     val size = Vec3i(it)
 
-                    val textureA = Texture1d(format, size, gli.levels(size))
-                    val textureB = Texture1d(format, size, gli.levels(size))
+                    val textureA = Texture3d(format, size, gli.levels(size))
+                    val textureB = Texture3d(format, size)
 
                     textureA shouldBe textureB
                 }
         }
 
+        "clear" {
+
+            val orange = Vec4ub(255, 127, 0, 255)
+
+            val texture = Texture3d(Format.RGBA8_UINT_PACK8, Vec3i(16))
+
+            texture.clear(orange)
+        }
+
         "query" {
 
-            val texture = Texture1d(Format.RGBA8_UINT_PACK8, Vec1i(2), 2)
+            val texture = Texture3d(Format.RGBA8_UINT_PACK8, Vec3i(2))
 
-            texture.size shouldBe Vec4b.size * 3
+            texture.size shouldBe Vec4b.size * 9
             texture.format shouldBe Format.RGBA8_UINT_PACK8
             texture.levels() shouldBe 2
             texture.notEmpty() shouldBe true
-            texture.extent() shouldBe Vec3i(2, 1, 1)
+            texture.extent() shouldBe Vec3i(2)
         }
 
-        "tex access" {
+        "access" {
 
             run {
-                val texture = Texture1d(Format.RGBA8_UINT_PACK8, Vec1i(2), 2)
+                val orange = Vec4ub(255, 127, 0, 255)
+
+                val image = Image(Format.RGBA8_UINT_PACK8, Vec3i(2))
+
+                val texture = Texture3d(Format.RGBA8_UINT_PACK8, Vec3i(2), 1)
+
+                image.size shouldBe texture.size
+            }
+
+            run {
+                val texture = Texture3d(Format.RGBA8_UINT_PACK8, Vec3i(2), 2)
                 texture.notEmpty() shouldBe true
 
                 val image0 = texture[0]
@@ -54,7 +73,7 @@ class coreTexture1d : StringSpec() {
                 val size0 = image0.size()
                 val size1 = image1.size()
 
-                size0 shouldBe Vec4b.size * 2
+                size0 shouldBe Vec4b.size * 8
                 size1 shouldBe Vec4b.size * 1
 
                 image0.data<Vec4b>()[0] = Vec4b(255, 127, 0, 255)
@@ -64,7 +83,7 @@ class coreTexture1d : StringSpec() {
                 val pointerB = image1.data<Vec4b>()[0]
 
                 val pointer0 = texture.data<Vec4b>()[0]
-                val pointer1 = texture.data<Vec4b>()[2]
+                val pointer1 = texture.data<Vec4b>()[8]
 
                 pointerA shouldBe pointer0
                 pointerB shouldBe pointer1
@@ -81,42 +100,22 @@ class coreTexture1d : StringSpec() {
                 color0 shouldBe Vec4b(255, 127, 0, 255)
                 color1 shouldBe Vec4b(0, 127, 255, 255)
             }
-
-            run {
-                val texture = Texture1d(Format.RGBA8_UINT_PACK8, Vec1i(2), 1)
-
-                val sizeA = texture.size
-                sizeA shouldBe Vec4b.size * 2
-
-                val image0 = texture[0]
-
-                val size0 = image0.size()
-                size0 shouldBe Vec4b.size * 2
-
-                image0.data<Vec4b>()[0] = Vec4b(255, 127, 0, 255)
-
-                val pointerA = image0.data<Vec4b>()[0]
-                val pointer0 = texture.data<Vec4b>()[0]
-                pointerA shouldBe pointer0
-
-                val colorA = pointerA
-                val color0 = pointer0
-
-                color0 shouldBe colorA
-                color0 shouldBe Vec4b(255, 127, 0, 255)
-            }
         }
 
         "size" {
 
-            class Test(val format: Format, val dimensions: Vec1i, val size: Int)
+            class Test(val format: Format, val dimensions: Vec3i, val size: Int)
 
             val tests = arrayOf(
-                    Test(Format.RGBA8_UINT_PACK8, Vec1i(4), 16),
-                    Test(Format.R8_UINT_PACK8, Vec1i(4), 4))
+                    Test(Format.RGBA8_UINT_PACK8, Vec3i(4), 256),
+                    Test(Format.R8_UINT_PACK8, Vec3i(4), 64),
+                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec3i(4), 32),
+                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec3i(2), 32),
+                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec3i(1), 32),
+                    Test(Format.RGBA_DXT5_UNORM_BLOCK16, Vec3i(4), 64))
 
             tests.forEach {
-                val texture = Texture1d(it.format, Vec1i(4), 1)
+                val texture = Texture3d(it.format, Vec3i(4), 1)
                 val image = texture[0]
 
                 image.size() shouldBe it.size
@@ -397,12 +396,12 @@ class coreTexture1d : StringSpec() {
             val black = Vec4ub(0, 0, 0, 255)
             val color = Vec4ub(255, 127, 0, 255)
 
-            val texture = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(8), 5)
+            val texture = Texture3d(Format.RGBA8_UNORM_PACK8, Vec3i(8), 5)
             texture clear black
 
-            val texelA = texture.load<Vec4ub>(Vec1i(0), 0)
-            val texelB = texture.load<Vec4ub>(Vec1i(0), 1)
-            val texelC = texture.load<Vec4ub>(Vec1i(0), 2)
+            val texelA = texture.load<Vec4ub>(Vec3i(0), 0)
+            val texelB = texture.load<Vec4ub>(Vec3i(0), 1)
+            val texelC = texture.load<Vec4ub>(Vec3i(0), 2)
 
             texelA shouldBe black
             texelB shouldBe black
@@ -410,42 +409,58 @@ class coreTexture1d : StringSpec() {
 
             texture.clear(0, 0, 1, Vec4ub(255, 127, 0, 255))
 
-            val coords = Vec1i(0)
-            while(coords.x < texture.extent(1).x)            {
-                val texelD = texture.load<Vec4ub>(coords, 1)
-                texelD shouldBe color
-                coords.x++
+            val coords = Vec3i(0)
+            while (coords.z < texture.extent(1).z) {
+                while (coords.y < texture.extent(1).y) {
+                    while (coords.x < texture.extent(1).x) {
+                        val texelD = texture.load<Vec4ub>(coords, 1)
+                        texelD shouldBe color
+                        coords.x++
+                    }
+                    coords.y++
+                }
+                coords.z++
             }
 
-            val textureView =Texture1d(texture, 1, 1)
+            val textureView = Texture3d(texture, 1, 1)
 
-            val textureImage =Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(4), 1)
+            val textureImage = Texture3d(Format.RGBA8_UNORM_PACK8, Vec3i(4), 1)
             textureImage clear color
 
             textureView shouldBe textureImage
         }
     }
 
+    fun index3D(texture: Texture3d, level: Int, x: Int, y: Int, z: Int) = texture.extent(level).let { x + y * it.x + z * it.x * it.y }
+
     inline fun <reified T> run(format: Format, testSamples: Array<T>) {
 
-        val dimensions = Vec1i(16)
-        val texelCoord = Array(8, { Vec1i(it) })
+        val extent = Vec3i(4)
 
-        val textureA = Texture1d(format, dimensions)
+        val textureA = Texture3d(format, extent)
         textureA.clear()
         testSamples.forEachIndexed { i, test ->
             textureA.data<T>(0, 0, 1)[i] = test
         }
 
-        val textureB = Texture1d(format, dimensions)
+        val textureB = Texture3d(format, extent)
         textureB.clear()
-        testSamples.forEachIndexed { i, test ->
-            textureB.store(texelCoord[i], 1, test)
-        }
+        for (z in 0..1)
+            for (y in 0..1)
+                for (x in 0..1)
+                    textureB.store(Vec3i(x, y, z), 1, testSamples[index3D(textureB, 1, x, y, z)])
 
-        val loadedSamplesA = Array(8, { textureA.load<T>(texelCoord[it], 1) })
+        val loadedSamplesA = Array<T?>(8, { null })
+        for (z in 0..1)
+            for (y in 0..1)
+                for (x in 0..1)
+                    loadedSamplesA[index3D(textureB, 1, x, y, z)] = textureA.load(Vec3i(x, y, z), 1)
 
-        val loadedSamplesB = Array(8, { textureB.load<T>(texelCoord[it], 1) })
+        val loadedSamplesB = Array<T?>(8, { null })
+        for (z in 0..1)
+            for (y in 0..1)
+                for (x in 0..1)
+                    loadedSamplesB[index3D(textureB, 1, x, y, z)] = textureB.load(Vec3i(x, y, z), 1)
 
         for (i in 0..7)
             loadedSamplesA[i] shouldBe testSamples[i]
@@ -455,8 +470,8 @@ class coreTexture1d : StringSpec() {
 
         textureA shouldBe textureB
 
-        val textureC = Texture1d(textureA, 1, 1)
-        val textureD = Texture1d(textureB, 1, 1)
+        val textureC = Texture3d(textureA, 1, 1)
+        val textureD = Texture3d(textureB, 1, 1)
 
         textureC shouldBe textureD
     }

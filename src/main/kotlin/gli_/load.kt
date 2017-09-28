@@ -81,7 +81,7 @@ interface load {
 
         val texture = Texture(Target._2D, format, Vec3i(image.width, image.height, 1), 1, 1, 1)
 
-        repeat(texture.size()) { texture.data()[it] = data[it] }
+        repeat(texture.size) { texture.data()[it] = data[it] }
 
         return texture
     }

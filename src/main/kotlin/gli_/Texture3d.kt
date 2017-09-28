@@ -48,5 +48,7 @@ class Texture3d : Texture {
         return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
-    override fun dispose() = super.dispose()
+    inline fun <reified T> load(texelCoord: Vec3i, level: Int) = super.load<T>(texelCoord, 0, 0, level)
+
+    inline fun <reified T> store(texelCoord: Vec3i, level: Int, texel: T) = super.store(texelCoord, 0, 0, level, texel)
 }

@@ -6,7 +6,7 @@ import io.kotlintest.matchers.shouldBe
 import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
 
-class copy : StringSpec() {
+class copy_ : StringSpec() {
 
     init {
 
@@ -20,11 +20,11 @@ class copy : StringSpec() {
 
             // Scenario: Using gli::copy on a specialized texture 2d to copy all images at once
             run {
-                val textureScenario = Texture2d(textureExpected.format, textureExpected.extent())
-                textureExpected shouldNotBe textureScenario
-
-                gli.copyLevel(textureExpected, 0, textureScenario, 0, textureScenario.levels())
-                textureExpected shouldBe  textureScenario
+//                val textureScenario = Texture2d(textureExpected.format, textureExpected.extent())
+//                textureExpected shouldNotBe textureScenario
+//
+//                gli.copyLevel(textureExpected, 0, textureScenario, 0, textureScenario.levels())
+//                textureExpected shouldBe  textureScenario
             }
 
             // Scenario: Using gli::copy on a specialized texture 2d to copy all images one by one

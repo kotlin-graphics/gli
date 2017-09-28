@@ -65,7 +65,7 @@ fun duplicate(texture: Texture1d, baseLevel: Int, maxLevel: Int): Texture1d {
             texture.extent(baseLevel),
             maxLevel - baseLevel + 1)
 
-    nmemcpy(memAddress(duplicate.data()), memAddress(texture.data(0, 0, baseLevel)), duplicate.size().L)
+    nmemcpy(memAddress(duplicate.data()), memAddress(texture.data(0, 0, baseLevel)), duplicate.size.L)
 
     return duplicate
 }
@@ -119,7 +119,7 @@ fun duplicate(texture: Texture2d, baseLevel: Int, maxLevel: Int): Texture2d {
             texture.extent(baseLevel),
             maxLevel - baseLevel + 1)
 
-    nmemcpy(memAddress(duplicate.data()), memAddress(texture.data(0, 0, baseLevel)), duplicate.size().L)
+    nmemcpy(memAddress(duplicate.data()), memAddress(texture.data(0, 0, baseLevel)), duplicate.size.L)
 
     return duplicate
 }
@@ -173,7 +173,7 @@ fun duplicate(texture: Texture3d, baseLevel: Int, maxLevel: Int): Texture3d {
             texture.extent(baseLevel),
             maxLevel - baseLevel + 1)
 
-    nmemcpy(memAddress(duplicate.data()), memAddress(texture.data(0, 0, baseLevel)), duplicate.size().L)
+    nmemcpy(memAddress(duplicate.data()), memAddress(texture.data(0, 0, baseLevel)), duplicate.size.L)
 
     return duplicate
 }

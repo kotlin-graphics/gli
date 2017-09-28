@@ -14,30 +14,53 @@ class Texture1d : Texture {
     constructor() : super()
 
     /** Create a texture1d and allocate a new storage_linear    */
-    constructor(format: Format, extent: Vec1i, levels: Int, swizzles: Swizzles = Swizzles()) :
+    constructor(
+            format: Format,
+            extent: Vec1i,
+            levels: Int,
+            swizzles: Swizzles = Swizzles()
+    ) :
             super(Target._1D, format, Vec3i(extent.x, 1, 1), 1, 1, levels, swizzles)
 
     /** vec3i extend    */
-    constructor(format: Format, extent: Vec3i, levels: Int, swizzles: Swizzles = Swizzles()) :
+    constructor(
+            format: Format,
+            extent: Vec3i,
+            levels: Int,
+            swizzles: Swizzles = Swizzles()
+    ) :
             super(Target._1D, format, extent, 1, 1, levels, swizzles)
 
     /** Create a texture1d and allocate a new storage_linear    */
-    constructor(format: Format, extent: Vec1i, swizzles: Swizzles = Swizzles()) :
+    constructor(
+            format: Format,
+            extent: Vec1i,
+            swizzles: Swizzles = Swizzles()
+    ) :
             super(Target._1D, format, Vec3i(extent.x, 1, 1), 1, 1, gli.levels(extent), swizzles)
 
     /** Create a texture1d view with an existing storage_linear */
-    constructor(texture: Texture) : super(texture, Target._1D, texture.format)
+    constructor(
+            texture: Texture
+    ) :
+            super(texture, Target._1D, texture.format)
 
     /** Create a texture1d view with an existing storage_linear */
-    constructor(texture: Texture, format: Format,
-                baseLayer: Int, maxLayer: Int,
-                baseFace: Int, maxFace: Int,
-                baseLevel: Int, maxLevel: Int,
-                swizzles: Swizzles = Swizzles()) :
+    constructor(
+            texture: Texture,
+            format: Format,
+            baseLayer: Int, maxLayer: Int,
+            baseFace: Int, maxFace: Int,
+            baseLevel: Int, maxLevel: Int,
+            swizzles: Swizzles = Swizzles()
+    ) :
             super(texture, Target._1D, format, baseLayer, maxLayer, baseFace, maxFace, baseLevel, maxLevel, swizzles)
 
     /** Create a texture1d view, reference a subset of an existing texture1d instance   */
-    constructor(texture: Texture, baseLevel: Int, maxLevel: Int) :
+    constructor(
+            texture: Texture,
+            baseLevel: Int, maxLevel: Int
+    ) :
             super(texture, Target._1D, texture.format,
                     texture.baseLayer, texture.maxLayer,
                     texture.baseFace, texture.maxFace,
@@ -53,9 +76,9 @@ class Texture1d : Texture {
         return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
-    inline fun <reified T> load(texelCoord:Vec1i, level:Int) = super.load<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level)
+    fun extent_(level: Int) = Vec1i(super.extent(level))
 
-    inline fun <reified T> store(texelCoord:Vec1i, level:Int, texel: T) = super.store<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
+    inline fun <reified T> load(texelCoord: Vec1i, level: Int) = super.load<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level)
 
-    override fun dispose() = super.dispose()
+    inline fun <reified T> store(texelCoord: Vec1i, level: Int, texel: T) = super.store(Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
 }

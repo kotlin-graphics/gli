@@ -22,7 +22,7 @@ interface saveKmg {
 
         if (texture.empty()) return false
 
-        val data = bufferBig(kmg.FOURCC_KMG100.size + kmg.Header10.size + texture.size())
+        val data = bufferBig(kmg.FOURCC_KMG100.size + kmg.Header10.size + texture.size)
 
         kmg.FOURCC_KMG100.forEach { data.put(it) }
 

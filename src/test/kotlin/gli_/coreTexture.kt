@@ -59,7 +59,7 @@ class coreTexture : StringSpec() {
 
             val texture = Texture(Target._2D, Format.RGBA8_UINT_PACK8, Vec3i(1), 1, 1, 1)
 
-            texture.size() shouldBe Vec4b.size
+            texture.size shouldBe Vec4b.size
             texture.format shouldBe Format.RGBA8_UINT_PACK8
             texture.levels() shouldBe 1
             texture.notEmpty() shouldBe true
@@ -110,7 +110,7 @@ class coreTexture : StringSpec() {
             run {
                 val texture = Texture(Target._2D, Format.RGBA8_UINT_PACK8, Vec3i(1), 1, 1, 1)
 
-                val sizeA = texture.size()
+                val sizeA = texture.size
                 sizeA shouldBe Vec4b.size * 1
 
                 texture.data<Vec4b>()[0] = Vec4b(255, 127, 0, 255)
@@ -130,7 +130,7 @@ class coreTexture : StringSpec() {
                     Test(Format.RGBA8_UINT_PACK8, Vec3i(1), 4),
                     Test(Format.R8_UINT_PACK8, Vec3i(1), 1))
 
-            tests.forEach { Texture(Target._2D, it.format, Vec3i(1), 1, 1, 1).size() shouldBe it.size }
+            tests.forEach { Texture(Target._2D, it.format, Vec3i(1), 1, 1, 1).size shouldBe it.size }
         }
 
         "specialize" {

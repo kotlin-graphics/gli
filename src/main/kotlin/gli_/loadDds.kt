@@ -129,9 +129,9 @@ interface loadDds {
         val texture = Texture(getTarget(header, header10), format, Vec3i(header.width, header.height, depthCount),
                 glm.max(header10.arraySize, 1), faceCount, mipMapCount)
 
-        assert(data.size == data.ptr + texture.size())
+        assert(data.size == data.ptr + texture.size)
 
-        memCopy(memAddress(data), memAddress(texture.data()), texture.size())
+        memCopy(memAddress(data), memAddress(texture.data()), texture.size)
 
         return texture
     }

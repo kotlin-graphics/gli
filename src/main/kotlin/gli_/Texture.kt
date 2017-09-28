@@ -1,23 +1,12 @@
 package gli_
 
 import gli_.buffer.destroy
-import glm_.BYTES
 import glm_.b
 import glm_.glm
 import glm_.set
-import glm_.vec1.Vec1
-import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
-import glm_.vec1.Vec1ub
-import glm_.vec2.Vec2
-import glm_.vec2.Vec2b
 import glm_.vec2.Vec2i
-import glm_.vec2.Vec2ub
-import glm_.vec3.Vec3
-import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
-import glm_.vec3.Vec3ub
-import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
 import org.lwjgl.system.MemoryUtil.memByteBuffer
@@ -108,7 +97,8 @@ open class Texture {
                 faces: Int,
                 levels: Int,
                 swizzles: Swizzles = Swizzles()
-    ) : this(target, format, Vec3i(extent.x, 1, 1), layers, faces, levels, swizzles)
+    ) :
+            this(target, format, Vec3i(extent.x, 1, 1), layers, faces, levels, swizzles)
 
     /** Vec2i   */
     constructor(target: Target,
@@ -118,7 +108,8 @@ open class Texture {
                 faces: Int,
                 levels: Int,
                 swizzles: Swizzles = Swizzles()
-    ) : this(target, format, Vec3i(extent.x, extent.y, 1), layers, faces, levels, swizzles)
+    ) :
+            this(target, format, Vec3i(extent.x, extent.y, 1), layers, faces, levels, swizzles)
 
     /** Create a texture object by sharing an existing texture storage_type from another texture instance.
      * This texture object is effectively a texture view where the layer, the face and the level allows identifying
@@ -204,20 +195,27 @@ open class Texture {
     fun faces() = if (empty()) 0 else maxFace - baseFace + 1
     fun levels() = if (empty()) 0 else maxLevel - baseLevel + 1
 
-    fun size(): Int {
-        assert(notEmpty())
-        return cache.memorySize
+    val size
+        get(): Int {
+            assert(notEmpty())
+            return cache.memorySize
+        }
+
+    inline fun <reified T> size(): Int {
+        val blockSize = getSize(T::class)
+        assert(notEmpty() && format.blockSize == blockSize)
+
+        return size / blockSize
     }
 
     fun size(level: Int): Int {
-        assert(notEmpty())
-        assert(level in 0..levels())
+        assert(notEmpty() && level in 0..levels())
         return cache.memorySize(level)
     }
 
     fun data(): ByteBuffer {
         assert(notEmpty())
-        return memByteBuffer(cache.baseAddress(0, 0, 0), size())
+        return memByteBuffer(cache.baseAddress(0, 0, 0), size)
     }
 
     inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
@@ -251,49 +249,13 @@ open class Texture {
     infix fun clear(texel: Any) {
         assert(notEmpty())
         val data = data()
-        when (texel) {
-            is Byte -> assert(format.blockSize == Byte.BYTES)
-            is Short -> assert(format.blockSize == Short.BYTES)
-            is Int -> assert(format.blockSize == Int.BYTES)
-            is Long -> assert(format.blockSize == Long.BYTES)
-            is Vec1b -> assert(format.blockSize == Vec1b.size)
-            is Vec2b -> assert(format.blockSize == Vec2b.size)
-            is Vec3b -> assert(format.blockSize == Vec3b.size)
-            is Vec4b -> assert(format.blockSize == Vec4b.size)
-            is Vec1ub -> assert(format.blockSize == Vec1ub.size)
-            is Vec2ub -> assert(format.blockSize == Vec2ub.size)
-            is Vec3ub -> assert(format.blockSize == Vec3ub.size)
-            is Vec4ub -> assert(format.blockSize == Vec4ub.size)
-            is Vec1 -> assert(format.blockSize == Vec1.size)
-            is Vec2 -> assert(format.blockSize == Vec2.size)
-            is Vec3 -> assert(format.blockSize == Vec3.size)
-            is Vec4 -> assert(format.blockSize == Vec4.size)
-            else -> throw Error()
-        }
+        assert(format.blockSize == getSize(texel::class))
         _clear(data, texel)
     }
 
     fun clear(layer: Int, face: Int, level: Int, texel: Any) {
         assert(notEmpty() && layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
-        when (texel) {
-            is Byte -> assert(format.blockSize == Byte.BYTES)
-            is Short -> assert(format.blockSize == Short.BYTES)
-            is Int -> assert(format.blockSize == Int.BYTES)
-            is Long -> assert(format.blockSize == Long.BYTES)
-            is Vec1b -> assert(format.blockSize == Vec1b.size)
-            is Vec2b -> assert(format.blockSize == Vec2b.size)
-            is Vec3b -> assert(format.blockSize == Vec3b.size)
-            is Vec4b -> assert(format.blockSize == Vec4b.size)
-            is Vec1ub -> assert(format.blockSize == Vec1ub.size)
-            is Vec2ub -> assert(format.blockSize == Vec2ub.size)
-            is Vec3ub -> assert(format.blockSize == Vec3ub.size)
-            is Vec4ub -> assert(format.blockSize == Vec4ub.size)
-            is Vec1 -> assert(format.blockSize == Vec1.size)
-            is Vec2 -> assert(format.blockSize == Vec2.size)
-            is Vec3 -> assert(format.blockSize == Vec3.size)
-            is Vec4 -> assert(format.blockSize == Vec4.size)
-            else -> throw Error()
-        }
+        assert(format.blockSize == getSize(texel::class))
         val data = data(layer, face, level)
         _clear(data, texel)
     }
@@ -353,8 +315,7 @@ open class Texture {
 
     fun imageOffset(coord: Vec3i, extent: Vec3i) = storage!!.imageOffset(coord, extent)
 
-    inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T =
-            load<T>(T::class, texelCoord, layer, face, level)
+    inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T = load(T::class, texelCoord, layer, face, level)
 
     fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
         assert(notEmpty() && !format.isCompressed)
@@ -391,13 +352,13 @@ open class Texture {
         faces() != other.faces() -> false
         levels() != other.levels() -> false
         format != other.format -> false
-        size() != other.size() -> false
+        size != other.size -> false
         else -> equalData(other)
     }
 
     private fun equalData(b: Texture): Boolean {
 
-        assert(size() == b.size())
+        assert(size == b.size)
 
         if (data() == b.data()) return true
 

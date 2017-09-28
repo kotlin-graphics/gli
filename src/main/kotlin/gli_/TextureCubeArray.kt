@@ -53,4 +53,12 @@ class TextureCubeArray : Texture {
                 baseFace, maxFace,
                 baseLevel, maxLevel)
     }
+
+    fun extent_(level: Int) = Vec2i(super.extent(level))
+
+    inline fun <reified T> load(texelCoord: Vec2i, layer: Int, level: Int) =
+            super.load<T>(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level)
+
+    inline fun <reified T> store(texelCoord: Vec2i, layer: Int, level: Int, texel: T) =
+            super.store(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level, texel)
 }

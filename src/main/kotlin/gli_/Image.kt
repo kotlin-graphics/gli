@@ -12,6 +12,7 @@ import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
+import kotlin.reflect.KClass
 
 /**
  * Created by elect on 08/04/17.
@@ -114,11 +115,8 @@ class Image {
         return data
     }
 
-    inline fun <reified T> data() = when (T::class) {
-        Vec4b::class -> vec4bData.apply { data = data()!! }
-        else -> throw Error()
-    }
-
+    inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
+    fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz).apply { data = data()!! }
 
     /** Clear the entire image storage_linear with zeros    */
     fun clear() {
