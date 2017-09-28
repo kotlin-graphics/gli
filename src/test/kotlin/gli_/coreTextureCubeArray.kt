@@ -14,7 +14,7 @@ import java.nio.file.Files
  * Created by GBarbieri on 19.05.2017.
  */
 
-class coreTextureCube : StringSpec() {
+class coreTextureCubeArray : StringSpec() {
 
     init {
 
@@ -27,8 +27,8 @@ class coreTextureCube : StringSpec() {
 
                     val size = Vec2i(it)
 
-                    val textureA = TextureCube(format, size, gli.levels(size))
-                    val textureB = TextureCube(format, size)
+                    val textureA = TextureCubeArray(format, size, 2, gli.levels(size))
+                    val textureB = TextureCubeArray(format, size, 2)
 
                     textureA shouldBe textureB
                 }
@@ -36,7 +36,7 @@ class coreTextureCube : StringSpec() {
 
         "query" {
 
-            with(TextureCube(Format.RGBA8_UINT_PACK8, Vec2i(2), 2)) {
+            with(TextureCubeArray(Format.RGBA8_UINT_PACK8, Vec2i(2), 1)) {
 
                 size shouldBe Vec4ub.size * 5 * 6
                 format shouldBe Format.RGBA8_UINT_PACK8
@@ -45,28 +45,31 @@ class coreTextureCube : StringSpec() {
                 extent().x shouldBe 2
                 extent().y shouldBe 2
             }
+
+            with(TextureCubeArray(Format.RGBA8_UINT_PACK8, Vec2i(2), 4)) {
+
+                size shouldBe Vec4ub.size * 5 * 6 * 4
+                format shouldBe Format.RGBA8_UINT_PACK8
+                levels() shouldBe 2
+                empty() shouldBe false
+                extent().x shouldBe 2
+                extent().y shouldBe 2
+            }
         }
 
-        "texture2D access" {
+        "textureCube access" {
 
             run {
 
-                val texture2dA = Texture2d(Format.RGBA8_UINT_PACK8, Vec2i(2), 1)
-                for (i in 0 until texture2dA.size)
-                    texture2dA.data()[i] = i.b
+                val textureCubeArray = TextureCubeArray(Format.RGBA8_UINT_PACK8, Vec2i(2), 2, 1)
+                textureCubeArray.notEmpty() shouldBe true
 
-                val texture2dB = Texture2d(Format.RGBA8_UINT_PACK8, Vec2i(2), 1)
-                for (i in 0 until texture2dB.size)
-                    texture2dB.data()[i] = (i + 100).b
+                val colors = arrayOf(Vec4ub(255, 0, 0, 255), Vec4ub(0, 0, 255, 255))
 
-                val textureCube = TextureCube(Format.RGBA8_UINT_PACK8, Vec2i(2), 2)
-
-                // Todo
-                // gli::copy(TextureCube, 0, Texture2DA);
-                // gli::copy(TextureCube, 1, Texture2DB);
-
-                // TextureCube[0] shouldBe  Texture2DA;
-                // TextureCube[1] shouldBe  Texture2DB;
+                val textureCube = textureCubeArray[1]
+                val pointerA = textureCube.data<Vec4ub>()[0]
+                val pointerB = textureCubeArray.data<Vec4ub>()[textureCube.size<Vec4ub>()]
+                pointerA shouldBe pointerB
             }
 
             run {
@@ -157,59 +160,69 @@ class coreTextureCube : StringSpec() {
             }
         }
 
-        "texture2D size" {
+        "textureCube size" {
 
             class Test(val format: Format, val dimensions: Vec2i, val size: Int)
 
             val tests = arrayOf(
-                    Test(Format.RGBA8_UINT_PACK8, Vec2i(4), 384),
-                    Test(Format.R8_UINT_PACK8, Vec2i(4), 96),
-                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec2i(4), 48),
-                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec2i(2), 48),
-                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec2i(1), 48),
-                    Test(Format.RGBA_DXT5_UNORM_BLOCK16, Vec2i(4), 96))
+                    Test(Format.RGBA8_UINT_PACK8, Vec2i(4), 384 * 4),
+                    Test(Format.R8_UINT_PACK8, Vec2i(4), 96 * 4),
+                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec2i(4), 48 * 4),
+                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec2i(2), 48 * 4),
+                    Test(Format.RGBA_DXT1_UNORM_BLOCK8, Vec2i(1), 48 * 4),
+                    Test(Format.RGBA_DXT5_UNORM_BLOCK16, Vec2i(4), 96 * 4))
 
             tests.forEach {
-                val texture = TextureCube(it.format, Vec2i(4), 1)
+                val texture = TextureCubeArray(it.format, Vec2i(4), 4, 1)
                 val size = texture.size
                 size shouldBe it.size
             }
         }
 
-        "loader" {
+        "clear" {
 
-            val textureA = TextureCube(Format.RGBA8_UNORM_PACK8, Vec2i(8), 1)
+            val orange = Vec4ub(255, 127, 0, 255)
 
-            val ddsA = "textureCubeA_rgba8_unorm.dds"
-            val ddsB = "textureCubeB_rgba8_unorm.dds"
+            val texture = TextureCubeArray(Format.RGBA8_UINT_PACK8, Vec2i(4), 4, 1)
 
-            run {
-                val color = arrayOf(
-                        Vec4ub(255, 0, 0, 255),
-                        Vec4ub(255, 128, 0, 255),
-                        Vec4ub(255, 255, 0, 255),
-                        Vec4ub(0, 255, 0, 255),
-                        Vec4ub(0, 128, 255, 255),
-                        Vec4ub(0, 0, 255, 255))
+            texture.clear(orange)
+        }
 
-                for (faceIndex in 0 until textureA.faces())
-                    for (texelIndex in 0 until textureA[faceIndex].size<Vec4ub>())
-                        textureA[faceIndex].data<Vec4ub>()[texelIndex] = color[faceIndex]
+        "load" {
 
-                gli.saveDds(textureA, ddsA)
-            }
+            val color = arrayOf(arrayOf(
+                    Vec4ub(255, 0, 0, 255),
+                    Vec4ub(255, 127, 0, 255),
+                    Vec4ub(255, 255, 0, 255),
+                    Vec4ub(0, 255, 0, 255),
+                    Vec4ub(0, 255, 255, 255),
+                    Vec4ub(0, 0, 255, 255)
+            ), arrayOf(
+                    Vec4ub(255, 127, 127, 255),
+                    Vec4ub(255, 191, 127, 255),
+                    Vec4ub(255, 255, 127, 255),
+                    Vec4ub(127, 255, 127, 255),
+                    Vec4ub(127, 255, 255, 255),
+                    Vec4ub(127, 127, 255, 255)))
 
-            run {
-                val textureB = TextureCube(gli.loadDds(ddsA))
-                gli.saveDds(textureB, ddsB)
-                val textureC = TextureCube(gli.loadDds(ddsB))
+            val texture = TextureCubeArray(Format.RGBA8_UNORM_PACK8, Vec2i(1), 2)
 
-                textureA shouldBe textureB
-                textureA shouldBe textureC
-                textureB shouldBe textureC
-            }
-            Files.delete(pathOf(ddsA))
-            Files.delete(pathOf(ddsB))
+            for (layer in 0 until texture.layers())
+                for (face in 0 until texture.faces())
+                    texture[layer][face].clear(color[layer][face])
+
+            val ktx = "cube_rgba8_unorm.ktx"
+            val dds = "cube_rgba8_unorm.dds"
+            gli.save(texture, ktx)
+            gli.save(texture, dds)
+
+            val textureKTX = gli.load(ktx)
+            val textureDDS = gli.load(dds)
+
+            textureKTX shouldBe texture
+            textureDDS shouldBe texture
+            Files.delete(pathOf(ktx))
+            Files.delete(pathOf(dds))
         }
 
         "load store" {
@@ -445,14 +458,16 @@ class coreTextureCube : StringSpec() {
             val black = Vec4ub(0, 0, 0, 255)
             val color = Vec4ub(255, 127, 0, 255)
 
-            val texture = TextureCube(Format.RGBA8_UNORM_PACK8, Vec2i(2))
+            val texture = TextureCubeArray(Format.RGBA8_UNORM_PACK8, Vec2i(4), 1)
             texture clear black
 
-            val texelA = texture.load<Vec4ub>(Vec2i(0), 0, 0)
-            val texelB = texture.load<Vec4ub>(Vec2i(0), 0, 1)
+            val texelA = texture.load<Vec4ub>(Vec2i(0), 0, 0, 0)
+            val texelB = texture.load<Vec4ub>(Vec2i(0), 0, 0, 1)
+            val texelC = texture.load<Vec4ub>(Vec2i(0), 0, 0, 2)
 
             texelA shouldBe black
             texelB shouldBe black
+            texelC shouldBe black
 
             for (faceIndex in 0..5)
                 texture.clear(0, faceIndex, 1, color)
@@ -460,43 +475,44 @@ class coreTextureCube : StringSpec() {
             val coords = Vec2i(0)
             while (coords.y < texture.extent(1).y) {
                 while (coords.x < texture.extent(1).x) {
-                    val texelD = texture.load<Vec4ub>(coords, 0, 1)
+                    val texelD = texture.load<Vec4ub>(coords, 0, 0, 1)
                     texelD shouldBe color
                     coords.x++
                 }
                 coords.y++
             }
 
-            val textureView = TextureCube(texture, 0, 5, 1, 1)
+            val textureView = TextureCubeArray(texture, 0, 0, 0, 5, 1, 1)
 
-            val textureImage = TextureCube(Format.RGBA8_UNORM_PACK8, Vec2i(1), 1)
+            val textureImage = TextureCubeArray(Format.RGBA8_UNORM_PACK8, Vec2i(1), 1, 1)
             textureImage clear color
 
             textureView shouldBe textureImage
+
+            val textureCopy = TextureCubeArray(gli.duplicate(textureView))
+            textureView shouldBe textureCopy
         }
     }
 
     inline fun <reified T> run(format: Format, testSamples: Array<T>) {
 
         val dimensions = Vec2i(2)
+        val layer = 1
+        val level = 1
 
-        val textureA = TextureCube(format, dimensions)
+        val textureA = TextureCubeArray(format, dimensions, 3)
         textureA.clear()
         for (faceIndex in 0..5)
-            textureA.data<T>(0, faceIndex, 1)[0] = testSamples[faceIndex]
+            textureA.data<T>(layer, faceIndex, level)[0] = testSamples[faceIndex]
 
-        val textureB = TextureCube(format, dimensions)
+        val textureB = TextureCubeArray(format, dimensions, 3)
         textureB.clear()
         for (faceIndex in 0..5)
-            textureB.store(Vec2i(0), faceIndex, 1, testSamples[faceIndex])
+            textureB.store(Vec2i(0), layer, faceIndex, level, testSamples[faceIndex])
 
-        val loadedSamplesA = Array<T?>(8, { null })
-        for (faceIndex in 0..5)
-            loadedSamplesA[faceIndex] = textureA.load<T>(Vec2i(0), faceIndex, 1)
+        val loadedSamplesA = Array(6, { textureA.load<T>(Vec2i(0), layer, it, level) })
 
-        val loadedSamplesB = Array<T?>(8, { null })
-        for (faceIndex in 0..5)
-            loadedSamplesB[faceIndex] = textureB.load<T>(Vec2i(0), faceIndex, 1)
+        val loadedSamplesB = Array(6, { textureB.load<T>(Vec2i(0), layer, it, level) })
 
         for (faceIndex in 0..5)
             loadedSamplesA[faceIndex] shouldBe testSamples[faceIndex]
@@ -506,8 +522,8 @@ class coreTextureCube : StringSpec() {
 
         textureA shouldBe textureB
 
-        val textureC = TextureCube(textureA, 0, 5, 1, 1)
-        val textureD = TextureCube(textureB, 0, 5, 1, 1)
+        val textureC = TextureCubeArray(textureA, layer, layer, 0, 5, level, level)
+        val textureD = TextureCubeArray(textureB, layer, layer, 0, 5, level, level)
 
         textureC shouldBe textureD
     }
