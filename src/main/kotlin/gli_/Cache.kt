@@ -44,7 +44,7 @@ class Cache {
         for (level in 0 until levels) {
 
             val srcExtent = storage.extent(baseLevel + level)
-            val dstExtent = srcExtent * format.blockExtend / storage.blockExtend
+            val dstExtent = srcExtent * format.blockExtend / storage.blockExtent
 
             imageExtent[level] = glm.max(dstExtent, 1)
             imageMemorySize[level] = storage.levelSize(baseLevel + level)

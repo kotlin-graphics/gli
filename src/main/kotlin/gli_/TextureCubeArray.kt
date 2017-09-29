@@ -54,7 +54,7 @@ class TextureCubeArray : Texture {
                 baseLevel, maxLevel)
     }
 
-    fun extent_(level: Int) = Vec2i(super.extent(level))
+    fun extent_(level: Int = 0) = Vec2i(super.extent(level))
 
     inline fun <reified T> load(texelCoord: Vec2i, layer: Int, face: Int, level: Int) =
             super.load<T>(Vec3i(texelCoord, 0), layer, face, level)

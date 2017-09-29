@@ -18,8 +18,10 @@ class Texture2dArray : Texture {
             super(Target._2D_ARRAY, format, Vec3i(extent, 1), layers, 1, levels, swizzles)
 
     /** Create a texture2d_array and allocate a new storage_linear with a complete mipmap chain */
-    constructor(format: Format, extent: Vec2i, layers: Int, swizzles: Swizzles = Swizzles()) :
-            super(Target._2D_ARRAY, format, Vec3i(extent, 1), layers, 1, gli.levels(extent), swizzles)
+    constructor(format: Format, extent: Vec2i, layers: Int, swizzles: Swizzles = Swizzles()) : this(format, Vec3i(extent, 1), layers, swizzles)
+
+    constructor(format: Format, extent: Vec3i, layers: Int, swizzles: Swizzles = Swizzles()) :
+            super(Target._2D_ARRAY, format, extent, layers, 1, gli.levels(extent), swizzles)
 
     /** Create a texture2d_array view with an existing storage_linear   */
     constructor(texture: Texture) : super(texture, Target._2D_ARRAY, texture.format)
@@ -52,7 +54,7 @@ class Texture2dArray : Texture {
                 baseLevel, maxLevel)
     }
 
-    fun extent_(level: Int) = Vec2i(super.extent(level))
+    fun extent_(level: Int = 0) = Vec2i(super.extent(level))
 
     inline fun <reified T> load(texelCoord: Vec2i, layer: Int, level: Int) =
             super.load<T>(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level)

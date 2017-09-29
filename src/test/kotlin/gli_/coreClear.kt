@@ -31,17 +31,17 @@ class coreClear : StringSpec() {
 
                 textureB shouldBe textureA
 
-                val textureC = gli_.duplicate(textureA)
+                val textureC = Texture1d(gli.duplicate(textureA))
                 textureC shouldBe textureA
 
-                val textureD = gli_.duplicate(textureB)
+                val textureD = Texture1d(gli.duplicate(textureB))
                 textureD shouldBe textureB
 
-                val textureE = gli_.duplicate(textureC, 1, 2)
+                val textureE = gli.duplicate(textureC, 1, 2)
                 val textureF = Texture1d(textureC, 1, 2)
                 textureE shouldBe textureF
 
-                val textureG = gli_.duplicate(textureD, 1, 2)
+                val textureG = gli.duplicate(textureD, 1, 2)
                 val textureH = Texture1d(textureD, 1, 2)
                 textureG shouldBe textureH
 
@@ -65,17 +65,17 @@ class coreClear : StringSpec() {
 
                 textureB shouldBe textureA
 
-                val textureC = gli_.duplicate(textureA)
+                val textureC = Texture2d(gli.duplicate(textureA))
                 textureC shouldBe textureA
 
-                val textureD = gli_.duplicate(textureB)
+                val textureD = Texture2d(gli.duplicate(textureB))
                 textureD shouldBe textureB
 
-                val textureE = gli_.duplicate(textureC, 1, 2)
+                val textureE = gli.duplicate(textureC, 1, 2)
                 val textureF = Texture2d(textureC, 1, 2)
                 textureE shouldBe textureF
 
-                val textureG = gli_.duplicate(textureD, 1, 2)
+                val textureG = gli.duplicate(textureD, 1, 2)
                 val textureH = Texture2d(textureD, 1, 2)
                 textureG shouldBe textureH
 
@@ -99,17 +99,17 @@ class coreClear : StringSpec() {
 
                 textureB shouldBe textureA
 
-                val textureC = gli_.duplicate(textureA)
+                val textureC = Texture3d(gli.duplicate(textureA))
                 textureC shouldBe textureA
 
-                val textureD = gli_.duplicate(textureB)
+                val textureD = Texture3d(gli.duplicate(textureB))
                 textureD shouldBe textureB
 
-                val textureE = gli_.duplicate(textureC, 1, 2)
+                val textureE = gli.duplicate(textureC, 1, 2)
                 val textureF = Texture3d(textureC, 1, 2)
                 textureE shouldBe textureF
 
-                val textureG = gli_.duplicate(textureD, 1, 2)
+                val textureG = gli.duplicate(textureD, 1, 2)
                 val textureH = Texture3d(textureD, 1, 2)
                 textureG shouldBe textureH
 

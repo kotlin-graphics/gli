@@ -1,7 +1,6 @@
 package gli_
 
 import gli_.buffer.destroy
-import glm_.b
 import glm_.glm
 import glm_.set
 import glm_.vec1.Vec1i
@@ -9,7 +8,8 @@ import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
-import org.lwjgl.system.MemoryUtil.memByteBuffer
+import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.MemoryUtil.*
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
@@ -253,38 +253,45 @@ open class Texture {
         _clear(data, texel)
     }
 
-    fun clear(layer: Int, face: Int, level: Int, texel: Any) {
+    fun clear(layer: Int, face: Int, level: Int, blockData: Any) {
         assert(notEmpty() && layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
-        assert(format.blockSize == getSize(texel::class))
+        assert(format.blockSize == getSize(blockData::class))
         val data = data(layer, face, level)
-        _clear(data, texel)
+        _clear(data, blockData)
     }
 
-    inline fun <reified T> clear(red: Int, green: Int, blue: Int, alpha: Int) {
-        assert(notEmpty())
-        val data = data()
-        when (T::class) {
-            Vec4b::class -> {
-                assert(format.blockSize == Vec4b.size)
-                val r = red.b
-                val g = green.b
-                val b = blue.b
-                val a = alpha.b
-                for (i in 0 until data.capacity() step 4) {
-                    data[i] = r
-                    data[i + 1] = g
-                    data[i + 2] = b
-                    data[i + 3] = a
+    fun <T>clear(
+            layer: Int, face: Int, level: Int,
+            texelOffset: Vec3i, texelExtent: Vec3i,
+            blockData: Any
+    ) {
+        val baseOffset = storage!!.baseOffset(layer, face, level)
+        val baseAddress = memAddress(storage!!.data()) + baseOffset
+
+        val blockOffset = texelOffset / storage!!.blockExtent
+        val blockExtent = texelExtent / storage!!.blockExtent + blockOffset
+        while (blockOffset.z < blockExtent.z) {
+            while (blockOffset.y < blockExtent.y) {
+                while (blockOffset.x < blockExtent.x) {
+                    val offset = storage!!.imageOffset(blockOffset, extent(level)) * storage!!.blockSize
+                    val blockAddress = baseAddress + offset
+                    val reinterpreter = getReinterpreter<T>(blockData::class)
+                    memPutByte(blockAddress, blo)
+                    *blockAddress = BlockData
+
+                    blockOffset.x++
                 }
+                blockOffset.y++
             }
-            else -> throw Error()
+            blockOffset.z++
         }
     }
 
+    /** Copy a specific image of a texture  */
     fun copy(textureSrc: Texture,
              layerSrc: Int, faceSrc: Int, levelSrc: Int,
-             layerDst: Int, faceDst: Int, levelDst: Int) {
-
+             layerDst: Int, faceDst: Int, levelDst: Int
+    ) {
         assert(size(levelDst) == textureSrc.size(levelSrc))
         assert(layerSrc < textureSrc.layers())
         assert(layerDst < layers())
@@ -293,11 +300,25 @@ open class Texture {
         assert(levelSrc < textureSrc.levels())
         assert(levelDst < levels())
 
-        val dst = data()
-        val offset = storage!!.baseOffset(layerDst, faceDst, levelDst)
-        val src = textureSrc.data(layerSrc, faceSrc, levelSrc)
-//        for (i in 0 until size(levelDst)) TODO
-//            dst[offset + i] = src[i]
+        memCopy(
+                memAddress(textureSrc.data(layerSrc, faceSrc, levelSrc)),
+                memAddress(data(layerDst, faceDst, levelDst)),
+                size(levelDst))
+    }
+
+    /** Copy a subset of a specific image of a texture  */
+    fun copy(
+            textureSrc: Texture,
+            layerSrc: Int, faceSrc: Int, levelSrc: Int, offsetSrc: Vec3i,
+            layerDst: Int, faceDst: Int, levelDst: Int, offsetDst: Vec3i,
+            extent: Vec3i
+    ) {
+        val blockExtent = storage!!.blockExtent
+        storage!!.copy(
+                textureSrc.storage!!,
+                layerSrc, faceSrc, levelSrc, offsetSrc / blockExtent,
+                layerDst, faceDst, levelDst, offsetDst / blockExtent,
+                extent / blockExtent)
     }
 
     fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {

@@ -76,7 +76,7 @@ class Texture1d : Texture {
         return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
-    fun extent_(level: Int) = Vec1i(super.extent(level))
+    fun extent_(level: Int = 0) = Vec1i(super.extent(level))
 
     inline fun <reified T> load(texelCoord: Vec1i, level: Int) = super.load<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level)
 

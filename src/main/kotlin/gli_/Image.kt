@@ -93,7 +93,7 @@ class Image {
         assert(notEmpty())
 
         val srcExtent = storage!!.extent(baseLevel)
-        val dstExtent = srcExtent * format.blockExtend / storage!!.blockExtend
+        val dstExtent = srcExtent * format.blockExtend / storage!!.blockExtent
 
         return glm.max(dstExtent, 1)
     }
@@ -115,7 +115,7 @@ class Image {
         return data
     }
 
-    inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
+    inline fun <reified T> data(): reinterpreter<T> = data(T::class)
     fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz).apply { data = data()!! }
 
     /** Clear the entire image storage_linear with zeros    */

@@ -3,15 +3,9 @@ package gli_
 import gli_.buffer.destroy
 import glm_.glm
 import glm_.size
-import glm_.vec1.Vec1b
 import glm_.vec1.Vec1i
-import glm_.vec2.Vec2b
 import glm_.vec2.Vec2i
-import glm_.vec3.Vec3
-import glm_.vec3.Vec3b
 import glm_.vec3.Vec3i
-import glm_.vec4.Vec4
-import glm_.vec4.Vec4b
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.ByteBuffer
@@ -33,7 +27,7 @@ class Storage {
 
     private var blockCount = Vec3i(0)
 
-    var blockExtend = Vec3i(0)
+    var blockExtent = Vec3i(0)
         private set
 
     private var extent = Vec3i(0)
@@ -47,7 +41,7 @@ class Storage {
         levels = storage.levels
         blockSize = storage.blockSize
         blockCount = Vec3i(storage.blockCount)
-        blockExtend = Vec3i(storage.blockExtend)
+        blockExtent = Vec3i(storage.blockExtent)
         extent = Vec3i(storage.extent)
         data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(storage.data), storage.data!!.remaining())
     }
@@ -58,7 +52,7 @@ class Storage {
         this.levels = levels
         this.blockSize = format.blockSize
         this.blockCount = glm.max(extent / format.blockExtend, 1)
-        this.blockExtend = format.blockExtend
+        this.blockExtent = format.blockExtend
         this.extent = extent
 
         assert(layers >= 0 && faces >= 0 && levels >= 0)
@@ -72,7 +66,7 @@ class Storage {
 
     fun blockCount(level: Int): Vec3i {
         assert(level in 0 until levels)
-        return glm.ceilMultiple(extent(level), blockExtend) / blockExtend
+        return glm.ceilMultiple(extent(level), blockExtent) / blockExtent
     }
 
     fun extent(level: Int): Vec3i {
@@ -174,7 +168,7 @@ class Storage {
                 levels == other.levels &&
                 blockSize == other.blockSize &&
                 blockCount == other.blockCount &&
-                blockExtend == other.blockExtend &&
+                blockExtent == other.blockExtent &&
                 extent == other.extent &&
                 data == other.data
     }
@@ -185,7 +179,7 @@ class Storage {
         result = 31 * result + levels
         result = 31 * result + blockSize
         result = 31 * result + blockCount.hashCode()
-        result = 31 * result + blockExtend.hashCode()
+        result = 31 * result + blockExtent.hashCode()
         result = 31 * result + extent.hashCode()
         result = 31 * result + (data?.hashCode() ?: 0)
         return result

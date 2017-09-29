@@ -469,7 +469,7 @@ class coreTextureCubeArray : StringSpec() {
             texelB shouldBe black
             texelC shouldBe black
 
-            for (faceIndex in 0..5)
+            for (faceIndex in 0 until texture.faces())
                 texture.clear(0, faceIndex, 1, color)
 
             val coords = Vec2i(0)
@@ -484,7 +484,7 @@ class coreTextureCubeArray : StringSpec() {
 
             val textureView = TextureCubeArray(texture, 0, 0, 0, 5, 1, 1)
 
-            val textureImage = TextureCubeArray(Format.RGBA8_UNORM_PACK8, Vec2i(1), 1, 1)
+            val textureImage = TextureCubeArray(Format.RGBA8_UNORM_PACK8, Vec2i(2), 1, 1)
             textureImage clear color
 
             textureView shouldBe textureImage

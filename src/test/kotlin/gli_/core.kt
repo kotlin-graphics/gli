@@ -15,7 +15,7 @@ class core : StringSpec() {
         "create texture storage" {
 
             val texture = Texture2d(Format.RGBA8_UINT_PACK8, Vec2i(256))
-            texture.clear<Vec4b>(255, 127, 0, 255)
+            texture.clear(Vec4b(255, 127, 0, 255))
             val levels = texture.levels()
 
             levels should gt(1)

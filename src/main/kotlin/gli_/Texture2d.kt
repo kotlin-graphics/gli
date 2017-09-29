@@ -56,7 +56,7 @@ class Texture2d : Texture {
         return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
-    fun extent_(level: Int) = Vec2i(super.extent(level))
+    fun extent_(level: Int = 0) = Vec2i(super.extent(level))
 
     inline fun <reified T> store(texelCoord: Vec2i, level: Int, texel: T) = super.store(Vec3i(texelCoord, 0), 0, 0, level, texel)
     inline fun <reified T> load(texelCoord: Vec2i, level: Int) = super.load<T>(Vec3i(texelCoord, 0), 0, 0, level)
