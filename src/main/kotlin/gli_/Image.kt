@@ -1,11 +1,8 @@
 package gli_
 
 import gli_.buffer.destroy
-import glm_.L
 import glm_.glm
-import glm_.i
 import glm_.vec3.Vec3i
-import glm_.vec4.Vec4t
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memByteBuffer
@@ -105,6 +102,7 @@ class Image {
     /** Return the number of blocks contained in an image instance storage_linear.
      * genType size must match the block size corresponding to the image format.    */
     inline fun <reified T> size() = size(T::class)
+
     fun size(clazz: KClass<*>): Int {
         val blockSize = getSize(clazz)
         assert(blockSize <= storage!!.blockSize)
@@ -142,9 +140,7 @@ class Image {
         assert(notEmpty() && !format.isCompressed)
         assert(blockSize() == getSize(T::class))
 //        GLI_ASSERT(glm::all(glm::lessThan(TexelCoord, this->extent()))); TODO
-        val re = getReinterpreter<T>(T::class)
-//                .apply { data = data()!! }
-        TODO()
+        return getReinterpreter<T>(T::class).apply { data = data()!! }[textelLinearAddressing(extent(), texelCoord)]
     }
 
     fun blockSize() = storage!!.blockSize
@@ -170,7 +166,7 @@ class Image {
     }
 
     companion object {
-        fun textel_linear_addressing(extent: Vec3i, texelCoord: Vec3i): Int {
+        fun textelLinearAddressing(extent: Vec3i, texelCoord: Vec3i): Int {
             assert(glm.all(glm.lessThan(texelCoord, extent)))
             return texelCoord.x + extent.x * (texelCoord.y + extent.y * texelCoord.z)
         }

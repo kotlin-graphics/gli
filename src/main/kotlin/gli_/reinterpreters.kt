@@ -101,7 +101,7 @@ object vec3ubData : reinterpreter<Vec3ub> {
 
 object vec4ubData : reinterpreter<Vec4ub> {
     override lateinit var data: ByteBuffer
-    override operator fun get(index: Int) = println(::data.isInitialized).run {Vec4ub(data, index * Vec4ub.size) }
+    override operator fun get(index: Int) = Vec4ub(data, index * Vec4ub.size)
     override fun set(index: Int, value: Vec4ub) = value.to(data, index * Vec4ub.size)
 }
 
