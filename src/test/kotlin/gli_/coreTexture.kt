@@ -75,8 +75,8 @@ class coreTexture : StringSpec() {
                 val image0 = texture[0]
                 val image1 = texture[1]
 
-                val size0 = image0.size()
-                val size1 = image1.size()
+                val size0 = image0.size
+                val size1 = image1.size
 
                 size0 shouldBe Vec4b.size * 2
                 size1 shouldBe Vec4b.size * 1
@@ -304,8 +304,8 @@ class coreTexture : StringSpec() {
 
             val texture = Texture(Target._2D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(1), 2, 1, 1)
 
-            Texture2dArray(texture)[0].data()[0] shouldBe texture.data(0, 0, 0)[0]
-            Texture2dArray(texture)[1].data()[0] shouldBe texture.data(1, 0, 0)[0]
+            Texture2dArray(texture)[0].data() shouldBe texture.data(0, 0, 0)
+            Texture2dArray(texture)[1].data() shouldBe texture.data(1, 0, 0)
         }
 
 

@@ -70,8 +70,8 @@ class coreTexture3d : StringSpec() {
                 val image0 = texture[0]
                 val image1 = texture[1]
 
-                val size0 = image0.size()
-                val size1 = image1.size()
+                val size0 = image0.size
+                val size1 = image1.size
 
                 size0 shouldBe Vec4b.size * 8
                 size1 shouldBe Vec4b.size * 1
@@ -118,7 +118,7 @@ class coreTexture3d : StringSpec() {
                 val texture = Texture3d(it.format, Vec3i(4), 1)
                 val image = texture[0]
 
-                image.size() shouldBe it.size
+                image.size shouldBe it.size
                 texture.size shouldBe it.size
             }
         }

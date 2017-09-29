@@ -8,7 +8,6 @@ import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
-import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
@@ -204,7 +203,6 @@ open class Texture {
     inline fun <reified T> size(): Int {
         val blockSize = getSize(T::class)
         assert(notEmpty() && format.blockSize == blockSize)
-
         return size / blockSize
     }
 
@@ -213,14 +211,14 @@ open class Texture {
         return cache.memorySize(level)
     }
 
+    inline fun <reified T> data() = getReinterpreter<T>(T::class).apply { data = data() }
     fun data(): ByteBuffer {
         assert(notEmpty())
         return memByteBuffer(cache.baseAddress(0, 0, 0), size)
     }
 
-    inline fun <reified T> data(): reinterpreter<T> = data<T>(T::class)
-    fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz).apply { data = data() }
-
+    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = data(T::class, layer, face, level)
+    fun <T> data(clazz: KClass<*>, layer: Int, face: Int, level: Int) = getReinterpreter<T>(clazz).apply { data = data(layer, face, level) }
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
         assert(layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
@@ -228,17 +226,7 @@ open class Texture {
         return memByteBuffer(cache.baseAddress(layer, face, level), size)
     }
 
-    inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = data<T>(T::class, layer, face, level)
-    fun <T> data(clazz: KClass<*>, layer: Int, face: Int, level: Int) = getReinterpreter<T>(clazz).apply { data = data(layer, face, level) }
-
-    fun setData(unitOffset: Int, texel: Vec4b) {
-        val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
-        texel.to(storage!!.data(), baseOffset + unitOffset * Vec4b.size)
-    }
-
-    fun extent(level: Int =
-               0)
-            : Vec3i {
+    fun extent(level: Int = 0): Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
         return cache.extent(level)
@@ -247,23 +235,20 @@ open class Texture {
     fun clear() = data().run { for (i in 0 until capacity()) set(i, 0) }
 
     infix fun clear(texel: Any) {
-        assert(notEmpty())
-        val data = data()
-        assert(format.blockSize == getSize(texel::class))
-        _clear(data, texel)
+        assert(notEmpty() && format.blockSize == getSize(texel::class))
+        _clear(data(), texel)
     }
 
     fun clear(layer: Int, face: Int, level: Int, blockData: Any) {
         assert(notEmpty() && layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
         assert(format.blockSize == getSize(blockData::class))
-        val data = data(layer, face, level)
-        _clear(data, blockData)
+        _clear(data(layer, face, level), blockData)
     }
 
-    fun <T>clear(
+    fun <T : Any> clear(
             layer: Int, face: Int, level: Int,
             texelOffset: Vec3i, texelExtent: Vec3i,
-            blockData: Any
+            blockData: T
     ) {
         val baseOffset = storage!!.baseOffset(layer, face, level)
         val baseAddress = memAddress(storage!!.data()) + baseOffset
@@ -276,8 +261,8 @@ open class Texture {
                     val offset = storage!!.imageOffset(blockOffset, extent(level)) * storage!!.blockSize
                     val blockAddress = baseAddress + offset
                     val reinterpreter = getReinterpreter<T>(blockData::class)
-                    memPutByte(blockAddress, blo)
-                    *blockAddress = BlockData
+                    reinterpreter.data = memByteBuffer(blockAddress, getSize(blockData::class))
+                    reinterpreter[0] = blockData
 
                     blockOffset.x++
                 }
@@ -321,29 +306,29 @@ open class Texture {
                 extent / blockExtent)
     }
 
-    fun swizzles(kClass: KClass<*>, swizzles: Swizzles) = when (kClass) {
-        Vec4b::class, Vec4ub::class -> {
-            val texel = Vec4b()
-            val data = data()
-            for (i in 0 until data.capacity() step Vec4b.length) {
-                texel.put(data, i)
-                for (j in 0 until Vec4b.length)
-                    data[i + j] = texel[swizzles[j].i]
+    inline fun <reified T> swizzles(swizzles: Swizzles) = swizzles(T::class, swizzles)
+    fun swizzles(clazz: KClass<*>, swizzles: Swizzles) {
+        when (clazz) {
+            Vec4b::class, Vec4ub::class -> {
+                val texel = Vec4b()
+                val data = data()
+                for (i in 0 until data.capacity() step Vec4b.length) {
+                    texel.put(data, i)
+                    for (j in 0 until Vec4b.length)
+                        data[i + j] = texel[swizzles[j].i]
+                }
             }
+            else -> throw Error("unsupported texel type")
         }
-        else -> throw Error("unsupported texel type")
     }
 
     fun imageOffset(coord: Vec3i, extent: Vec3i) = storage!!.imageOffset(coord, extent)
 
     inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T = load(T::class, texelCoord, layer, face, level)
-
     fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
-        assert(notEmpty() && !format.isCompressed)
-        assert(format.blockSize == getSize(clazz))
+        assert(notEmpty() && !format.isCompressed && format.blockSize == getSize(clazz))
         val imageOffset = imageOffset(texelCoord, extent(level))
         assert(imageOffset < size(level))
-
         return data<T>(clazz, layer, face, level)[imageOffset]
     }
 

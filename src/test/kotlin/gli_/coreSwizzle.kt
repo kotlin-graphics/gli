@@ -59,7 +59,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureB = Texture(Target._1D, Format.RGBA8_UNORM_PACK8, Vec1i(4), 1, 1, 1)
                 textureB clear Vec4b(0, 127, 255, 192)
-                textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureB
 
@@ -70,7 +70,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureD = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(4), 1)
                 textureD clear Vec4b(0, 127, 255, 192)
-                textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureD
             }
@@ -94,7 +94,7 @@ class coreSwizzle : StringSpec() {
 
             val textureB = Texture(Target._1D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(4, 1, 1), 2, 1, 4)
             textureB clear Vec4b(0, 127, 255, 192)
-            textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+            textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
             textureA shouldBe textureB
 
@@ -105,7 +105,7 @@ class coreSwizzle : StringSpec() {
 
             val textureD = Texture1dArray(Format.RGBA8_UNORM_PACK8, Vec1i(4), 2, 4)
             textureD clear Vec4b(0, 127, 255, 192)
-            textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+            textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
             textureA shouldBe textureD
             textureC shouldBe textureD
@@ -131,7 +131,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureB = Texture(Target._2D, Format.RGBA8_UNORM_PACK8, Vec3i(4, 4, 1), 1, 1, 2)
                 textureB clear Vec4b(0, 127, 255, 192)
-                textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureB
 
@@ -142,7 +142,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureD = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4), 2)
                 textureD clear Vec4b(0, 127, 255, 192)
-                textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureD
                 textureC shouldBe textureD
@@ -167,7 +167,7 @@ class coreSwizzle : StringSpec() {
 
             val textureB = Texture(Target._2D_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(4, 4, 1), 2, 1, 4)
             textureB clear Vec4b(0, 127, 255, 192)
-            textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+            textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
             textureA shouldBe textureB
 
@@ -178,7 +178,7 @@ class coreSwizzle : StringSpec() {
 
             val textureD = Texture2dArray(Format.RGBA8_UNORM_PACK8, Vec2i(4), 2, 4)
             textureD clear Vec4b(0, 127, 255, 192)
-            textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+            textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
             textureA shouldBe textureD
             textureC shouldBe textureD
@@ -204,7 +204,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureB = Texture(Target._3D, Format.RGBA8_UNORM_PACK8, Vec3i(4), 1, 1, 2)
                 textureB clear Vec4b(0, 127, 255, 192)
-                textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureB
 
@@ -215,7 +215,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureD = Texture3d(Format.RGBA8_UNORM_PACK8, Vec3i(4), 2)
                 textureD clear Vec4b(0, 127, 255, 192)
-                textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureD
                 textureC shouldBe textureD
@@ -242,7 +242,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureB = Texture(Target.CUBE, Format.RGBA8_UNORM_PACK8, Vec3i(4, 4, 1), 1, 6, 2)
                 textureB clear Vec4b(0, 127, 255, 192)
-                textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureB
 
@@ -253,7 +253,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureD = TextureCube(Format.RGBA8_UNORM_PACK8, Vec2i(4), 2)
                 textureD clear Vec4b(0, 127, 255, 192)
-                textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureD
                 textureC shouldBe textureD
@@ -280,7 +280,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureB = Texture(Target.CUBE_ARRAY, Format.RGBA8_UNORM_PACK8, Vec3i(4, 4, 1), 3, 6, 2)
                 textureB clear Vec4b(0, 127, 255, 192)
-                textureB.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureB.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureB
 
@@ -291,7 +291,7 @@ class coreSwizzle : StringSpec() {
 
                 val textureD = TextureCubeArray(Format.RGBA8_UNORM_PACK8, Vec2i(4), 3, 2)
                 textureD clear Vec4b(0, 127, 255, 192)
-                textureD.swizzles(Vec4b::class, Swizzles(BLUE, GREEN, RED, ALPHA))
+                textureD.swizzles<Vec4b>(Swizzles(BLUE, GREEN, RED, ALPHA))
 
                 textureA shouldBe textureD
                 textureC shouldBe textureD

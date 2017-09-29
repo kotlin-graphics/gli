@@ -119,11 +119,11 @@ class coreTexture2d : StringSpec() {
                 val orange = Vec4ub(255, 127, 0, 255)
 
                 val image0 = Image(Format.RGBA8_UINT_PACK8, Vec3i(2, 2, 1))
-                for (i in 0 until image0.size())
+                for (i in 0 until image0.size)
                     image0.data<Byte>()[i] = i.b
 
                 val image1 = Image(Format.RGBA8_UINT_PACK8, Vec3i(1, 1, 1))
-                for (i in 0 until image1.size())
+                for (i in 0 until image1.size)
                     image1.data<Byte>()[i] = (i + 100).b
 
                 val texture = Texture2d(Format.RGBA8_UINT_PACK8, Vec2i(2), 2)
@@ -143,8 +143,8 @@ class coreTexture2d : StringSpec() {
                 val image0 = texture[0]
                 val image1 = texture[1]
 
-                val size0 = image0.size()
-                val size1 = image1.size()
+                val size0 = image0.size
+                val size1 = image1.size
 
                 size0 shouldBe Vec4b.size * 4
                 size1 shouldBe Vec4b.size * 1
@@ -182,7 +182,7 @@ class coreTexture2d : StringSpec() {
 
                 val image0 = texture[0]
 
-                val size0 = image0.size()
+                val size0 = image0.size
                 size0 shouldBe Vec4b.size * 4
 
                 image0.data<Vec4b>()[0] = Vec4b(255, 127, 0, 255)
@@ -215,7 +215,7 @@ class coreTexture2d : StringSpec() {
                 val texture = Texture2d(it.format, Vec2i(4), 1)
                 val image = texture[0]
 
-                image.size() shouldBe it.size
+                image.size shouldBe it.size
                 texture.size shouldBe it.size
             }
         }

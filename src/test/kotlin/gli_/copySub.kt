@@ -6,9 +6,10 @@ import glm_.vec3.Vec3
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4ub
 import io.kotlintest.matchers.shouldBe
+import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
 
-class subCopy : StringSpec() {
+class copySub : StringSpec() {
 
     init {
 
@@ -78,42 +79,41 @@ class subCopy : StringSpec() {
 
             val source = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4, 2), 1)
             for (texelIndex in 0 until source.size<Vec4ub>())
-            source.data < Vec4ub> () [texelIndex] = Vec4ub(texelIndex + 1)
+                source.data<Vec4ub>()[texelIndex] = Vec4ub(texelIndex + 1)
 
-            val destination =Texture2d(source.format, source.extent_(), source.levels())
+            val destination = Texture2d(source.format, source.extent_(), source.levels())
             destination clear Vec4ub(255)
 
             destination.copy(source, 0, 0, 0, Vec3i(1, 1, 0), 0, 0, 0,
                     Vec3i(1, 1, 0), Vec3i(2, 1, 1))
             for (indexY in 0 until source.extent().y)
-            for (indexX in 0 until source.extent().x)            {
-                val texelCoord =Vec2i(indexX, indexY)
-                val texelSrc = source . load < Vec4ub> (texelCoord, 0)
-                val texelDst = destination . load < Vec4ub> (texelCoord, 0)
-                (texelSrc == texelDst || (/*texelSrc == gli::u8vec4(0) &&*/ texelDst == Vec4ub(255))) shouldBe true
-            }
+                for (indexX in 0 until source.extent().x) {
+                    val texelCoord = Vec2i(indexX, indexY)
+                    val texelSrc = source.load<Vec4ub>(texelCoord, 0)
+                    val texelDst = destination.load<Vec4ub>(texelCoord, 0)
+                    (texelSrc == texelDst || (/*texelSrc == gli::u8vec4(0) &&*/ texelDst == Vec4ub(255))) shouldBe true
+                }
         }
 
         "sub clear rgba8" {
 
-            val clear =Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4, 2), 1)
+            val clear = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4, 2), 1)
             clear clear Vec4ub(0)
 
-            val source =Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4, 2), 1)
+            val source = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4, 2), 1)
             source clear Vec4ub(0)
             source.clear(0, 0, 0, Vec3i(1, 1, 0), Vec3i(2, 1, 1), Vec4ub(255))
 
-            Error += source != clear ? 0 : 1
+            source shouldNotBe clear
 
-            gli::texture2d Destination (source.format(), Source.extent(), Source.levels())
-            Destination.clear(gli::u8vec4(0))
-            Destination.copy(source, 0, 0, 0, Vec3i(1, 1, 0), 0, 0, 0, Vec3i(1, 1, 0), Vec3i(2, 1, 1))
+            val destination = Texture2d(source.format, source.extent_(), source.levels())
+            destination clear Vec4ub(0)
+            destination.copy(source, 0, 0, 0, Vec3i(1, 1, 0), 0, 0, 0,
+                    Vec3i(1, 1, 0), Vec3i(2, 1, 1))
 
-            Error += Destination != clear ? 0 : 1
+            destination shouldNotBe clear
 
-            Error += source == Destination ? 0 : 1
-
-            return Error
+            source shouldBe destination
         }
     }
 }

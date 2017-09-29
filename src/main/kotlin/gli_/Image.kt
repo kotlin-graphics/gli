@@ -1,12 +1,10 @@
 package gli_
 
 import gli_.buffer.destroy
-import glm_.BYTES
+import glm_.L
 import glm_.glm
-import glm_.vec3.Vec3b
+import glm_.i
 import glm_.vec3.Vec3i
-import glm_.vec4.Vec4
-import glm_.vec4.Vec4b
 import glm_.vec4.Vec4t
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memAddress
@@ -99,15 +97,19 @@ class Image {
     }
 
     /** Return the memory size of an image instance storage_linear in bytes.    */
-    fun size(): Int {
-        assert(notEmpty())
-        return size
-    }
+//    fun size(): Int {
+//        assert(notEmpty())
+//        return size
+//    }
 
     /** Return the number of blocks contained in an image instance storage_linear.
-     * genType size must match the block size conresponding to the image format.    */
-    //    template <typename genType> TODO
-//    size_type size() const;
+     * genType size must match the block size corresponding to the image format.    */
+    inline fun <reified T> size() = size(T::class)
+    fun size(clazz: KClass<*>): Int {
+        val blockSize = getSize(clazz)
+        assert(blockSize <= storage!!.blockSize)
+        return size / blockSize
+    }
 
     /** Return a pointer to the beginning of the image instance data.   */
     fun data(): ByteBuffer? {
@@ -127,56 +129,25 @@ class Image {
     /** Clear the entire image storage_linear with Texel which type must match the image storage_linear format block size
      *  If the type of genType doesn't match the type of the image format, no conversion is performed and the data will
      *  be reinterpreted as if is was of the image format.  */
-    fun clear(texel: Any) {
-        assert(notEmpty())
-        when (texel) {
-            is Byte -> {
-                assert(format.blockSize == Byte.BYTES)
-                for (i in 0 until size) data!!.put(i, texel)
-            }
-            is Long -> {
-                assert(format.blockSize == Long.BYTES)
-                for (i in 0 until size step Long.BYTES) data!!.putLong(i, texel)
-            }
-            is Vec3b -> {
-                assert(format.blockSize == Vec3b.size)
-                for (i in 0 until size step Vec3b.size) {
-                    data!!.put(i, texel.x)
-                    data!!.put(i + Byte.BYTES, texel.y)
-                    data!!.put(i + Byte.BYTES * 2, texel.z)
-                }
-            }
-            is Vec4b -> {
-                assert(format.blockSize == Vec4b.size)
-                for (i in 0 until size step Vec4b.size) {
-                    data!!.put(i, texel.x)
-                    data!!.put(i + Byte.BYTES, texel.y)
-                    data!!.put(i + Byte.BYTES * 2, texel.z)
-                    data!!.put(i + Byte.BYTES * 3, texel.w)
-                }
-            }
-            is Vec4 -> {
-                assert(format.blockSize == Vec4.size)
-                for (i in 0 until size step Vec4.size) {
-                    data!!.putFloat(i, texel.x)
-                    data!!.putFloat(i + Float.BYTES, texel.y)
-                    data!!.putFloat(i + Float.BYTES * 2, texel.z)
-                    data!!.putFloat(i + Float.BYTES * 3, texel.w)
-                }
-            }
-            else -> throw Error()
-        }
+    infix fun <T : Any> clear(texel: T) {
+        assert(notEmpty() && format.blockSize == getSize(texel::class))
+        for (i in 0 until size(texel::class))
+            data<T>(texel::class)[i] = texel
     }
 
     /** Load the texel located at TexelCoord coordinates.
      *  It's an error to call this function if the format is compressed.
      *  It's an error if TexelCoord values aren't between [0, dimensions].  */
-    fun <T : Number> load(texelCoord: Vec3i, res: Vec4t<T>): Vec4t<T> {
-        assert(notEmpty())
-        assert(!format.isCompressed)
-//        assert(Vec4t.SIZE) TODO
-        return res.put(data!!, textel_linear_addressing(extent(), texelCoord) * res.instanceSize())
+    inline fun <reified T> load(texelCoord: Vec3i): T {
+        assert(notEmpty() && !format.isCompressed)
+        assert(blockSize() == getSize(T::class))
+//        GLI_ASSERT(glm::all(glm::lessThan(TexelCoord, this->extent()))); TODO
+        val re = getReinterpreter<T>(T::class)
+//                .apply { data = data()!! }
+        TODO()
     }
+
+    fun blockSize() = storage!!.blockSize
 //
 //    /// Store the texel located at TexelCoord coordinates.
 //    /// It's an error to call this function if the format is compressed.
@@ -192,8 +163,8 @@ class Image {
     }
 
     private fun memCmp(b: ByteBuffer): Boolean {
-        for(i in 0 until size)
-            if(data()!!.get(i) != b[i])
+        for (i in 0 until size)
+            if (data()!!.get(i) != b[i])
                 return false
         return true
     }

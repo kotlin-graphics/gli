@@ -25,7 +25,7 @@ class coreClear : StringSpec() {
                 val textureA = Texture1d(format, size)
 
                 for (level in 0 until textureA.levels())
-                    textureA[level].clear(colors[level])
+                    textureA[level] clear colors[level]
 
                 val textureB = Texture1d(textureA)
 
@@ -59,7 +59,7 @@ class coreClear : StringSpec() {
                 val textureA = Texture2d(format, size)
 
                 for (level in 0 until textureA.levels())
-                    textureA[level].clear(colors[level])
+                    textureA[level] clear colors[level]
 
                 val textureB = Texture2d(textureA)
 
@@ -93,7 +93,7 @@ class coreClear : StringSpec() {
                 val textureA = Texture3d(format, size)
 
                 for (level in 0 until textureA.levels())
-                    textureA[level].clear(colors[level])
+                    textureA[level] clear colors[level]
 
                 val textureB = Texture3d(textureA)
 

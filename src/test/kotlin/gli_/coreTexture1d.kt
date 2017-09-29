@@ -51,8 +51,8 @@ class coreTexture1d : StringSpec() {
                 val image0 = texture[0]
                 val image1 = texture[1]
 
-                val size0 = image0.size()
-                val size1 = image1.size()
+                val size0 = image0.size
+                val size1 = image1.size
 
                 size0 shouldBe Vec4b.size * 2
                 size1 shouldBe Vec4b.size * 1
@@ -90,7 +90,7 @@ class coreTexture1d : StringSpec() {
 
                 val image0 = texture[0]
 
-                val size0 = image0.size()
+                val size0 = image0.size
                 size0 shouldBe Vec4b.size * 2
 
                 image0.data<Vec4b>()[0] = Vec4b(255, 127, 0, 255)
@@ -119,7 +119,7 @@ class coreTexture1d : StringSpec() {
                 val texture = Texture1d(it.format, Vec1i(4), 1)
                 val image = texture[0]
 
-                image.size() shouldBe it.size
+                image.size shouldBe it.size
                 texture.size shouldBe it.size
             }
         }
