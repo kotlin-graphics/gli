@@ -194,8 +194,8 @@ open class Texture {
     fun faces() = if (empty()) 0 else maxFace - baseFace + 1
     fun levels() = if (empty()) 0 else maxLevel - baseLevel + 1
 
-    val size
-        get(): Int {
+    val size: Int
+        get() {
             assert(notEmpty())
             return cache.memorySize
         }
@@ -204,6 +204,14 @@ open class Texture {
         val blockSize = getSize(T::class)
         assert(notEmpty() && format.blockSize == blockSize)
         return size / blockSize
+    }
+
+    @JvmName("size_")
+    inline fun <reified T> size(level: Int): Int {
+        val blockData = getSize(T::class)
+        assert(notEmpty() && format.blockSize == blockData)
+
+        return size(level) / blockData
     }
 
     fun size(level: Int): Int {

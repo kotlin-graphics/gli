@@ -8,7 +8,7 @@ import io.kotlintest.matchers.shouldBe
 import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
 
-class copy_ : StringSpec() {
+class testCopy : StringSpec() {
 
     init {
 

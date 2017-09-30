@@ -15,6 +15,7 @@ object gli :
         loadDds,
         loadKmg,
         loadKtx,
+        makeTexture,
         save,
         saveDds,
         saveKmg,

@@ -9,7 +9,7 @@ import io.kotlintest.matchers.shouldBe
 import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
 
-class copySub : StringSpec() {
+class testCopySub : StringSpec() {
 
     init {
 

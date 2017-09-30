@@ -78,7 +78,7 @@ class Storage {
 
     fun data() = data!!
 
-    inline fun <reified T> data() = getReinterpreter<T>(T::class)
+    inline fun <reified T> data() = getReinterpreter<T>(T::class).apply { data = data() }
 
     /** Compute the relative memory offset to access the data for a specific layer, face and level  */
     fun baseOffset(layer: Int, face: Int, level: Int): Int {

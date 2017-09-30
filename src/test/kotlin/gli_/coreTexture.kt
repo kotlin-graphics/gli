@@ -87,7 +87,6 @@ class coreTexture : StringSpec() {
                 val pointerA = image0.data<Vec4b>()[0]
                 val pointerB = image1.data<Vec4b>()[0]
 
-                val d = texture.data()
                 val pointer0 = texture.data<Vec4b>()[0]
                 val pointer1 = texture.data<Vec4b>()[2]
 
