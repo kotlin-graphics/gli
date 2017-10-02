@@ -61,11 +61,11 @@ interface loadKtx {
         // Skip key value data
         data.ptr += header.bytesOfKeyValueData
 
-        Gl.profile = Gl.Profile.KTX
-        val format = Gl.find(
-                Gl.InternalFormat.of(header.glInternalFormat),
-                Gl.ExternalFormat.of(header.glFormat),
-                Gl.TypeFormat.of(header.glType))
+        gl.profile = gl.Profile.KTX
+        val format = gl.find(
+                gl.InternalFormat.of(header.glInternalFormat),
+                gl.ExternalFormat.of(header.glFormat),
+                gl.TypeFormat.of(header.glType))
         assert(format != Format.INVALID)
 
         val blockSize = format.blockSize
