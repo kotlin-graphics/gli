@@ -5,6 +5,8 @@ import gli_.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
 import gli_.gl.ExternalFormat.*
 import gli_.gl.InternalFormat.*
 import gli_.gl.TypeFormat.*
+import java.nio.ByteBuffer
+import java.nio.IntBuffer
 import gli_.gl.ExternalFormat.NONE as NONE_
 
 /**
@@ -401,6 +403,10 @@ object gl {
         val i = ordinal
 
         val hasSwizzle get() = this == ES30 || this == GL33
+
+        companion object {
+
+        }
     }
 
     data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
@@ -415,6 +421,9 @@ object gl {
             3 -> a
             else -> throw Error()
         }
+
+        infix fun to(buffer: ByteBuffer):ByteBuffer  = buffer.putInt(0, r.i).putInt(1, g.i).putInt(2, b.i).putInt(3, a.i)
+        infix fun to(intBuffer: IntBuffer): IntBuffer = intBuffer.put(0, r.i).put(1, g.i).put(2, b.i).put(3, a.i)
     }
 
     class Format(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val swizzles: Swizzles)

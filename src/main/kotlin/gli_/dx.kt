@@ -13,7 +13,7 @@ import gli_.detail.hasnt
  * Created by elect on 02/04/17.
  */
 
-/// Translation class to convert GLI enums into DirectX enums
+/** Translation class to convert GLI enums into DirectX enums   */
 object dx {
 
     fun translate(format: gli_.Format): dx.Format {

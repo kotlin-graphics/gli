@@ -6,7 +6,6 @@ import glm_.glm
 import glm_.size
 import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memCopy
-import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -23,8 +22,8 @@ interface saveKtx {
 
         if (texture.empty()) return false
 
-        gl.profile = gl.Profile.KTX
-        val format = gl.translate(texture.format, texture.swizzles)
+        Gl.profile = Gl.Profile.KTX
+        val format = Gl.translate(texture.format, texture.swizzles)
         val target = texture.target
 
         val desc = texture.format.formatInfo
@@ -37,7 +36,7 @@ interface saveKtx {
 
             endianness = 0x04030201
             glType = format.type.i
-            glTypeSize = if (format.type == gl.TypeFormat.NONE) 1 else desc.blockSize
+            glTypeSize = if (format.type == Gl.TypeFormat.NONE) 1 else desc.blockSize
             glFormat = format.external.i
             glInternalFormat = format.internal.i
             glBaseInternalFormat = format.external.i

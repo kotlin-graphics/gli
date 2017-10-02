@@ -1,7 +1,5 @@
 package gli_
 
-import glm_.b
-import glm_.set
 import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*

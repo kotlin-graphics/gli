@@ -13,7 +13,7 @@ interface save {
      *  @return Returns false if the function fails to save the file.   */
     fun save(texture: Texture, path: Path) = when(path.extension) {
         "dds" -> gli.saveDds(texture, path)
-        "kmg" ->gli.saveKmg(texture, path)
+        "kmg" -> gli.saveKmg(texture, path)
         "ktx" -> gli.saveKtx(texture, path)
         else -> throw Error()
     }

@@ -1,10 +1,5 @@
 package gli_
 
-import java.net.URI
-import java.nio.ByteBuffer
-import java.nio.file.Path
-import java.nio.file.Paths
-
 
 object gli :
         clear,
@@ -22,7 +17,7 @@ object gli :
         saveKtx,
         view {
 
-    val gl = gli_.gl
+    @JvmField val gl = gli_.gl
     val dx = gli_.dx
 
     /** Texture filtring modes  */
@@ -40,30 +35,11 @@ object gli :
     val FILTER_COUNT = FILTER_LAST.i - FILTER_FIRST.i + 1
 }
 
-infix fun Int.has(b: Int) = (this and b) != 0
-infix fun Int.hasnt(b: Int) = (this and b) == 0
 
+class Java {
 
-// util function
-inline fun wasInit(f: () -> Unit): Boolean {
-    try {
-        f()
-    } catch (e: UninitializedPropertyAccessException) {
-        return false
+    companion object {
+        @JvmField
+        val gli = gli_.gli
     }
-    return true
 }
-
-fun pathOf(filename: String, vararg more: String): Path = Paths.get(filename, *more)
-fun pathOf(uri: URI): Path = Paths.get(uri)
-fun uriOf(str: String) = ClassLoader.getSystemResource(str).toURI()
-
-val Path.extension get() = toString().substringAfterLast(".").toLowerCase()
-
-var ByteBuffer.ptr
-    get() = position()
-    set(value) {
-        position(value)
-    }
-
-//fun Files.Companion.delete(str: String): Unit = delete(pathOf(str))
