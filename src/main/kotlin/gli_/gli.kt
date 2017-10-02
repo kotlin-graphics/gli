@@ -23,6 +23,7 @@ object gli :
         view {
 
     val gl = gli_.gl
+    val dx = gli_.dx
 
     /** Texture filtring modes  */
     enum class Filter {

@@ -232,16 +232,16 @@ fun _clear(data: ByteBuffer, texel: Any) = when (texel) {
         data[i + Byte.BYTES * 3] = texel.w
     }
     is Vec1ub -> for (i in 0 until data.capacity()) data[i] = texel.x.v
-    is Vec2ub -> for (i in 0 until data.capacity() step Vec2b.size) {
+    is Vec2ub -> for (i in 0 until data.capacity() step Vec2ub.size) {
         data[i] = texel.x.v
         data[i + Byte.BYTES] = texel.y.v
     }
-    is Vec3ub -> for (i in 0 until data.capacity() step Vec3b.size) {
+    is Vec3ub -> for (i in 0 until data.capacity() step Vec3ub.size) {
         data[i] = texel.x.v
         data[i + Byte.BYTES] = texel.y.v
         data[i + Byte.BYTES * 2] = texel.z.v
     }
-    is Vec4ub -> for (i in 0 until data.capacity() step Vec4b.size) {
+    is Vec4ub -> for (i in 0 until data.capacity() step Vec4ub.size) {
         data[i] = texel.x.v
         data[i + Byte.BYTES] = texel.y.v
         data[i + Byte.BYTES * 2] = texel.z.v
