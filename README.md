@@ -7,41 +7,94 @@ This is the Kotlin port of the original [OpenGL Image](http://gli.g-truc.net/) (
 This library works perfectly with *[OpenGL](https://www.opengl.org)* or *[Vulkan](https://www.khronos.org/vulkan)* but it also ensures interoperability with other third party libraries and SDK.
 It is a good candidate for software rendering (raytracing / rasterization), image processing, image based software testing or any development context that requires a simple and convenient image library.
 
-[comment]: <> (For more information about *GLI*, please have a look at the [manual](manual.md\) and the [API reference documentation](http://gli.g-truc.net/0.8.0/api/index.html\).)
-[comment]: <> (The source code and the documentation are licensed under the [Happy Bunny License (Modified MIT\) or the MIT License](manual.md#section0\).)
-
 Don't hesitate to contribute to the project by submitting [issues](https://github.com/kotlin-graphics/gli/issues) or [pull requests](https://github.com/kotlin-graphics/gli/pulls) for bugs and features. Any feedback is welcome at [elect86@gmail.com](mailto://elect86@gmail.com).
 
-
+Kotlin:
 ```kotlin
 import gli_.gli
 
-fun createTexture(filename: String) {
+fun createTexture(filename: String): Int {
 
-	val texture = gli.load(filename)
-	if(texture.empty())
-		return 0
+    val texture = gli.load(filename)
+    if(texture.empty())
+        return 0
 
-	gl.profile = gl.Profile.GL33
-	val format = gl.translate(texture.format, texture.swizzles)
-	val target = GL.translate(Texture.target());
-	assert(gli::is_compressed(Texture.format()) && Target == gli::TARGET_2D);
+    gli.gl.profile = gl.Profile.GL33
+    val format = gli.gl.translate(texture.format, texture.swizzles)
+    val target = gli.gl.translate(texture.target)
+    assert(texture.format.isCompressed && target == gl.Target._2D)
 
-	GLuint TextureName = 0;
-	glGenTextures(1, &TextureName);
-	glBindTexture(Target, TextureName);
-	glTexParameteri(Target, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(Target, GL_TEXTURE_MAX_LEVEL, static_cast<GLint>(Texture.levels() - 1));
-	glTexParameteriv(Target, GL_TEXTURE_SWIZZLE_RGBA, &Format.Swizzles[0]);
-	glTexStorage2D(Target, static_cast<GLint>(Texture.levels()), Format.Internal, Extent.x, Extent.y);
-	for(std::size_t Level = 0; Level < Texture.levels(); ++Level)
-	{
-		glm::tvec3<GLsizei> Extent(Texture.extent(Level));
-		glCompressedTexSubImage2D(
-			Target, static_cast<GLint>(Level), 0, 0, Extent.x, Extent.y,
-			Format.Internal, static_cast<GLsizei>(Texture.size(Level)), Texture.data(0, 0, Level));
-	}
+    val textureName = intBufferBig(1)
+    glGenTextures(textureName)
+    glBindTexture(target.i, textureName[0])
+    glTexParameteri(target.i, GL_TEXTURE_BASE_LEVEL, 0)
+    glTexParameteri(target.i, GL_TEXTURE_MAX_LEVEL, texture.levels() - 1)
+    val swizzles = intBufferBig(4)
+    format.swizzles to swizzles
+    glTexParameteriv(target.i, GL_TEXTURE_SWIZZLE_RGBA, swizzles)
+    var extent = texture.extent()
+    glTexStorage2D(target.i, texture.levels(), format.internal.i, extent.x, extent.y)
+    for(level in 0 until texture.levels()) {
+        extent = texture.extent(level)
+        glCompressedTexSubImage2D(
+                target.i, level, 0, 0, extent.x, extent.y,
+                format.internal.i, texture.data(0, 0, level))
+    }
+    return textureName[0]
+}
+```
 
-	return TextureName;
+Kotlin with [gl-next](https://github.com/kotlin-graphics/gln):
+```kotlin
+    fun createTexture(filename: String): Int {
+
+        val texture = gli.load(filename)
+        if(texture.empty())
+            return 0
+
+        gli.gl.profile = gl.Profile.GL33
+        val (target, format) = gli.gl.translate(texture)
+        assert(texture.format.isCompressed && target == gl.Target._2D)
+
+        return initTexture2d {
+            levels = 0 until texture.levels()
+            swizzles = format.swizzles
+            storage(texture.levels(), format.internal, texture.extent())
+            for(level in 0 until texture.levels())
+                compressedSubImage(level, texture.extent(level), format.internal, texture.data(0, 0, level))
+        }
+    }
+```
+
+Java:
+```java
+public static int createTexture(String filename) {
+
+    Texture texture = gli.load(filename);
+    if (texture.empty())
+        return 0;
+
+    gli_.gli.gl.setProfile(gl.Profile.GL33);
+    gl.Format format = gli_.gli.gl.translate(texture.getFormat(), texture.getSwizzles());
+    gl.Target target = gli_.gli.gl.translate(texture.getTarget());
+    assert (texture.getFormat().isCompressed() && target == gl.Target._2D);
+
+    IntBuffer textureName = intBufferBig(1);
+    glGenTextures(textureName);
+    glBindTexture(target.getI(), textureName.get(0));
+    glTexParameteri(target.getI(), GL12.GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(target.getI(), GL12.GL_TEXTURE_MAX_LEVEL, texture.levels() - 1);
+    IntBuffer swizzles = intBufferBig(4);
+    texture.getSwizzles().to(swizzles);
+    glTexParameteriv(target.getI(), GL33.GL_TEXTURE_SWIZZLE_RGBA, swizzles);
+    Vec3i extent = texture.extent(0);
+    glTexStorage2D(target.getI(), texture.levels(), format.getInternal().getI(), extent.x, extent.y);
+    for (int level = 0; level < texture.levels(); level++) {
+        extent = texture.extent(level);
+        glCompressedTexSubImage2D(
+            target.getI(), level, 0, 0, extent.x, extent.y,
+            format.getInternal().getI(), texture.data(0, 0, level));
+    }
+    return textureName.get(0);
 }
 ```
