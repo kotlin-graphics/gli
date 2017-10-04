@@ -60,8 +60,9 @@ Kotlin with [gl-next](https://github.com/kotlin-graphics/gln):
             levels = 0 until texture.levels()
             swizzles = format.swizzles
             storage(texture.levels(), format.internal, texture.extent())
-            for(level in 0 until texture.levels())
-                compressedSubImage(level, texture.extent(level), format.internal, texture.data(0, 0, level))
+            levels.forEach {
+                compressedSubImage(it, texture.extent(it), format.internal, texture.data(0, 0, it))
+            }
         }
     }
 ```
