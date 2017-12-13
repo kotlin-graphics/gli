@@ -1,5 +1,11 @@
 ![gli](/src/main/resources/logo-mini.png)
 
+[![Build Status](https://travis-ci.org/kotlin-graphics/gli.svg?branch=master)](https://travis-ci.org/kotlin-graphics/gli) 
+[![license](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/kotlin-graphics/gli/blob/master/LICENSE) 
+![](https://reposs.herokuapp.com/?path=kotlin-graphics/gli&color=yellow) 
+[![Release](https://jitpack.io/v/kotlin-graphics/gli.svg)](https://jitpack.io/#kotlin-graphics/gli) 
+[![Slack Status](http://slack.kotlinlang.org/badge.svg)](http://slack.kotlinlang.org/)
+
 This is the Kotlin port of the original [OpenGL Image](http://gli.g-truc.net/) (*GLI*), written by [g-truc](https://github.com/Groovounet) ([repository](https://github.com/g-truc/gli)), a header only C++ image library for graphics software.
 
 *GLI* provides classes and functions to load image files (*[KTX](https://www.khronos.org/opengles/sdk/tools/KTX/)* and *[DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943990%28v=vs.85%29.aspx)*), facilitate graphics APIs texture creation, compare textures, access texture texels, sample textures, convert textures, generate mipmaps, etc.
