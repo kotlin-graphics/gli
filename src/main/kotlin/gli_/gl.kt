@@ -23,6 +23,10 @@ object gl {
             updateTable()
         }
 
+    init {
+        updateTable()
+    }
+
     fun translate(texture: Texture) = translate(texture.target) to translate(texture.format, texture.swizzles)
 
     fun translate(target: gli_.Target) = tableT[target.i]
