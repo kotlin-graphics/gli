@@ -38,7 +38,7 @@ interface load {
     /** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
      *  @param uri Uri of the file to open including filaname and filename extension */
     fun loadImage(path: Path): Texture {
-        val image = ImageIO.read(path.toFile()).flipY()
+        val image = ImageIO.read(path.toFile())//.flipY() TODO test
         val data = (image.raster.dataBuffer as DataBufferByte).data
         val format = when (image.type) {
             TYPE_3BYTE_BGR -> { // switch blue and red
