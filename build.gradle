@@ -30,7 +30,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:37a0509459b8524ce920a541e9b778cb1fddc553'
+    compile 'com.github.kotlin-graphics:glm:9fb521ba69a47d182205032910739ce812a692f7'
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
@@ -67,9 +67,17 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-task packageSources(type: Jar, dependsOn: 'classes') {
-    from sourceSets.main.allSource
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
-artifacts { archives packageSources }
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
