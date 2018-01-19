@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*
@@ -24,8 +25,8 @@ class coreTexture1dArray : StringSpec() {
 
                     val size = Vec1i(it)
 
-                    val textureA = Texture1dArray(format, size, gli.levels(size), 1)
-                    val textureB = Texture1dArray(format, size, gli.levels(size), 1)
+                    val textureA = Texture1dArray(format, size, glm.levels(size), 1)
+                    val textureB = Texture1dArray(format, size, glm.levels(size), 1)
 
                     textureA shouldBe textureB
                 }

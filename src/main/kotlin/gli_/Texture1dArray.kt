@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec3.Vec3i
 
@@ -30,7 +31,7 @@ class Texture1dArray : Texture {
             layers: Int,
             swizzles: Swizzles = Swizzles()
     ) :
-            super(Target._1D_ARRAY, format, Vec3i(extent.x, 1, 1), layers, 1, gli.levels(extent), swizzles)
+            super(Target._1D_ARRAY, format, Vec3i(extent.x, 1, 1), layers, 1, glm.levels(extent), swizzles)
 
     /** Create a texture1d_array view with an existing storage_linear   */
     constructor(

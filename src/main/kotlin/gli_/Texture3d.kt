@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec3.Vec3i
 
 /**
@@ -18,7 +19,7 @@ class Texture3d : Texture {
 
     /** Create a texture3d and allocate a new storage_linear with a complete mipmap chain.  */
     constructor(format: Format, extent: Vec3i, swizzles: Swizzles = Swizzles()) :
-            super(Target._3D, format, extent, 1, 1, gli.levels(extent), swizzles)
+            super(Target._3D, format, extent, 1, 1, glm.levels(extent), swizzles)
 
     /** Create a texture3d view with an existing storage_linear.    */
     constructor(texture: Texture) : super(texture, Target._3D, texture.format)

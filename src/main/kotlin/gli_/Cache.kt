@@ -28,7 +28,7 @@ class Cache {
 
         baseAddresses = LongArray(layers * faces * levels)
 
-        assert(gli.levels(storage.extent(0)) < imageMemorySize.size)
+        assert(glm.levels(storage.extent(0)) < imageMemorySize.size)
 
         for (layer in 0 until layers)
 

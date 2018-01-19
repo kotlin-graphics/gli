@@ -83,7 +83,7 @@ class coreTexture2d : StringSpec() {
 
                     val size = Vec3i(it)
 
-                    val textureA = Texture2d(format, size, gli.levels(size))
+                    val textureA = Texture2d(format, size, glm.levels(size))
                     val textureB = Texture2d(format, size)
 
                     textureA shouldBe textureB

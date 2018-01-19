@@ -5,7 +5,6 @@ object gli :
         clear,
         copy,
         duplicate,
-        levels,
         load,
         loadDds,
         loadKmg,

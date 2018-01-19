@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*
@@ -24,7 +25,7 @@ class coreTexture3d : StringSpec() {
 
                     val size = Vec3i(it)
 
-                    val textureA = Texture3d(format, size, gli.levels(size))
+                    val textureA = Texture3d(format, size, glm.levels(size))
                     val textureB = Texture3d(format, size)
 
                     textureA shouldBe textureB

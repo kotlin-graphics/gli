@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 
@@ -21,7 +22,7 @@ class Texture2dArray : Texture {
     constructor(format: Format, extent: Vec2i, layers: Int, swizzles: Swizzles = Swizzles()) : this(format, Vec3i(extent, 1), layers, swizzles)
 
     constructor(format: Format, extent: Vec3i, layers: Int, swizzles: Swizzles = Swizzles()) :
-            super(Target._2D_ARRAY, format, extent, layers, 1, gli.levels(extent), swizzles)
+            super(Target._2D_ARRAY, format, extent, layers, 1, glm.levels(extent), swizzles)
 
     /** Create a texture2d_array view with an existing storage_linear   */
     constructor(texture: Texture) : super(texture, Target._2D_ARRAY, texture.format)

@@ -103,7 +103,7 @@ class size : StringSpec() {
         "can compute npot texture size" {
 
             run {
-                val storage = Storage(Format.RGBA8_UNORM_PACK8, Vec3i(12, 12, 1), 1, 1, gli.levels(12))
+                val storage = Storage(Format.RGBA8_UNORM_PACK8, Vec3i(12, 12, 1), 1, 1, glm.levels(12))
 
                 val levelSize0 = storage.levelSize(0)
                 levelSize0 shouldBe 12 * 12 * Vec4ub.size
@@ -119,7 +119,7 @@ class size : StringSpec() {
             }
 
             run {
-                val storage = Storage(Format.RGB_DXT1_UNORM_BLOCK8, Vec3i(12, 12, 1), 1, 1, gli.levels(12))
+                val storage = Storage(Format.RGB_DXT1_UNORM_BLOCK8, Vec3i(12, 12, 1), 1, 1, glm.levels(12))
                 val levelSize0 = storage.levelSize(0)
                 val levelSizeA = 3 * 3 * Format.RGB_DXT1_UNORM_BLOCK8.blockSize
                 levelSize0 shouldBe levelSizeA

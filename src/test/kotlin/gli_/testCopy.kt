@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
@@ -51,7 +52,7 @@ class testCopy : StringSpec() {
             // Scenario: Using gli.copy on a generic texture 2d to copy all images at once
             run {
                 val textureExtent = Vec3i(textureExpected.extent_(), 1)
-                val textureScenario = Texture(textureExpected.target, textureExpected.format, textureExtent, 1, 1, gli.levels(textureExtent))
+                val textureScenario = Texture(textureExpected.target, textureExpected.format, textureExtent, 1, 1, glm.levels(textureExtent))
                 textureExpected shouldNotBe textureScenario
 
                 gli.copyLevel(textureExpected, 0, textureScenario, 0, textureExpected.levels())
@@ -61,7 +62,7 @@ class testCopy : StringSpec() {
             // Scenario: Using gli.copy on a generic texture 2d to copy all images one by one
             run {
                 val textureExtent = Vec3i(textureExpected.extent_(), 1)
-                val textureScenario = Texture(textureExpected.target, textureExpected.format, textureExtent, 1, 1, gli.levels(textureExtent))
+                val textureScenario = Texture(textureExpected.target, textureExpected.format, textureExtent, 1, 1, glm.levels(textureExtent))
                 textureExpected shouldNotBe textureScenario
 
                 for (levelIndex in 0 until textureExpected.levels())
@@ -92,7 +93,7 @@ class testCopy : StringSpec() {
             // Scenario: Using member gli.texture.copy on a generic texture 2d
             run {
                 val textureExtent = Vec3i(textureExpected.extent_(), 1)
-                val textureScenario = Texture(textureExpected.target, textureExpected.format, textureExtent, 1, 1, gli.levels(textureExtent))
+                val textureScenario = Texture(textureExpected.target, textureExpected.format, textureExtent, 1, 1, glm.levels(textureExtent))
                 textureExpected shouldNotBe textureScenario
 
                 for (level in 0 until textureExpected.levels())

@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
@@ -14,10 +15,10 @@ class coreComparison : StringSpec() {
 
         "texture1d" {
 
-            val textureA = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(32), gli.levels(32))
+            val textureA = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(32), glm.levels(32))
 
             run {
-                val textureB = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(32), gli.levels(32))
+                val textureB = Texture1d(Format.RGBA8_UNORM_PACK8, Vec1i(32), glm.levels(32))
 
                 textureA shouldBe textureB
                 (textureA != textureB) shouldBe false

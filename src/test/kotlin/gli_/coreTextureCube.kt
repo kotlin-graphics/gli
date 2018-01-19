@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.b
+import glm_.glm
 import glm_.set
 import glm_.vec1.*
 import glm_.vec2.*
@@ -27,7 +28,7 @@ class coreTextureCube : StringSpec() {
 
                     val size = Vec2i(it)
 
-                    val textureA = TextureCube(format, size, gli.levels(size))
+                    val textureA = TextureCube(format, size, glm.levels(size))
                     val textureB = TextureCube(format, size)
 
                     textureA shouldBe textureB

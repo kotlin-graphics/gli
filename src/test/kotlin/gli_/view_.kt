@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.b
+import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
@@ -154,7 +155,7 @@ class view_ : StringSpec() {
     ) {
         for (format in formats) {
 
-            val textureA = Texture2d(format, textureSize, gli.levels(textureSize))
+            val textureA = Texture2d(format, textureSize, glm.levels(textureSize))
 
             for (index in 0 until textureA.size)
                 textureA.data<Byte>()[index] = index.b
@@ -243,14 +244,14 @@ class view_ : StringSpec() {
     ) {
         for (format in formats) {
 
-            val textureA = Texture3d(format, textureSize, gli.levels(textureSize))
+            val textureA = Texture3d(format, textureSize, glm.levels(textureSize))
             val textureViewA = Texture3d(gli.view(
                     textureA, textureA.baseLevel, textureA.maxLevel))
 
             textureA shouldBe textureViewA
 
             val sizeB = textureSize / Vec3i(2)
-            val textureB = Texture3d(format, sizeB, gli.levels(sizeB))
+            val textureB = Texture3d(format, sizeB, glm.levels(sizeB))
 
             val textureViewB = Texture3d(gli.view(
                     textureA, textureA.baseLevel + 1, textureA.maxLevel))

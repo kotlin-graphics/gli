@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.b
+import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
@@ -37,8 +38,8 @@ class coreTexture : StringSpec() {
 
                         val size = Vec3i(it)
 
-                        val textureA = Texture(target, format, size, 1, faces, gli.levels(size))
-                        val textureB = Texture(target, format, size, 1, faces, gli.levels(size))
+                        val textureA = Texture(target, format, size, 1, faces, glm.levels(size))
+                        val textureB = Texture(target, format, size, 1, faces, glm.levels(size))
 
                         textureA shouldBe textureB
                     }

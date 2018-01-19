@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 
@@ -19,7 +20,7 @@ class TextureCubeArray : Texture {
 
     /** Create a texture2d_array and allocate a new storage_linear with a complete mipmap chain */
     constructor(format: Format, extent: Vec2i, layers: Int, swizzles: Swizzles = Swizzles()) :
-            super(Target.CUBE_ARRAY, format, Vec3i(extent, 1), layers, 6, gli.levels(extent), swizzles)
+            super(Target.CUBE_ARRAY, format, Vec3i(extent, 1), layers, 6, glm.levels(extent), swizzles)
 
     /** Create a texture2d_array view with an existing storage_linear   */
     constructor(texture: Texture) : super(texture, Target.CUBE_ARRAY, texture.format)

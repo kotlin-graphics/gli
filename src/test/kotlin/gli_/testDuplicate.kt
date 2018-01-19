@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
@@ -45,7 +46,7 @@ class testDuplicate : StringSpec() {
             val textureA = Texture1d(
                     format,
                     textureSize,
-                    gli.levels(textureSize))
+                    glm.levels(textureSize))
 
             val textureB = Texture1d(gli.duplicate(textureA))
 
@@ -123,7 +124,7 @@ class testDuplicate : StringSpec() {
                     format,
                     textureSize,
                     4,
-                    gli.levels(textureSize))
+                    glm.levels(textureSize))
 
             val textureH = Texture1dArray(textureK, 1, 2, 1, 2)
             val textureI = Texture1dArray(gli.duplicate(textureH))
