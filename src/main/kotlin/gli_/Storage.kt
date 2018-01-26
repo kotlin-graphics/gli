@@ -1,6 +1,7 @@
 package gli_
 
 import gli_.buffer.destroy
+import glm_.L
 import glm_.glm
 import glm_.size
 import glm_.vec1.Vec1i

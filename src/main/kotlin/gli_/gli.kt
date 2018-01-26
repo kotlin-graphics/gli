@@ -1,5 +1,8 @@
 package gli_
 
+import glm_.L
+import org.lwjgl.system.MemoryUtil
+
 
 object gli :
         clear,
@@ -42,3 +45,5 @@ class Java {
         val gli = gli_.gli
     }
 }
+
+fun memCopy(src: Long, dst: Long, bytes: Int) = MemoryUtil.memCopy(src, dst, bytes.L)
