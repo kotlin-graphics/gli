@@ -20,9 +20,11 @@ import javax.imageio.spi.IIORegistry
 
 interface load {
 
-    fun load(uri: URI, flipY: Boolean = false) = load(Paths.get(uri), flipY)
+    fun load(uri: URI) = load(Paths.get(uri))
+    fun load(uri: URI, flipY: Boolean) = load(Paths.get(uri), flipY)
 
-    fun load(filename: String, flipY: Boolean = false) = load(Paths.get(filename), flipY)
+    fun load(filename: String) = load(Paths.get(filename))
+    fun load(filename: String, flipY: Boolean) = load(Paths.get(filename), flipY)
 
     fun load(path: Path, flipY: Boolean = false) = when (path.extension) {
         "dds" -> gli.loadDds(path)
@@ -47,7 +49,7 @@ interface load {
      *  @param uri Uri of the file to open including filaname and filename extension */
     fun loadImage(path: Path, flipY: Boolean = false): Texture {
         val image = ImageIO.read(path.toFile())
-        if(flipY) image.flipY()
+        if (flipY) image.flipY()
         val extent = Vec3i(image.width, image.height, 1)
         return when (image.type) {
             TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)

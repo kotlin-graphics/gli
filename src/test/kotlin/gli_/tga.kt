@@ -10,13 +10,13 @@ import javax.imageio.spi.IIORegistry
 class tga : StringSpec() {
 
     init {
-        "tga fail" {
-
-            val url = this.javaClass.classLoader.getResource("PlyonTexture.tga")
-            val image = ImageIO.read(url)
-
-            assert(image == null)
-        }
+//        "tga fail" {
+//
+//            val url = this.javaClass.classLoader.getResource("PlyonTexture.tga")
+//            val image = ImageIO.read(url)
+//
+//            assert(image == null)
+//        }
 
         "tga success" {
 
