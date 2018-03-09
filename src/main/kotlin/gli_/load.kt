@@ -3,8 +3,7 @@ package gli_
 import glm_.set
 import glm_.vec3.Vec3i
 import java.awt.image.BufferedImage
-import java.awt.image.BufferedImage.TYPE_3BYTE_BGR
-import java.awt.image.BufferedImage.TYPE_4BYTE_ABGR
+import java.awt.image.BufferedImage.*
 import java.awt.image.DataBufferByte
 import java.io.File
 import java.net.URI
@@ -61,6 +60,9 @@ interface load {
                     data[it * 4 + 2] = tmp  // write blue
                 }
                 Format.RGBA8_UNORM_PACK8
+            }
+            TYPE_BYTE_INDEXED -> {
+                Format.R8_UNORM_PACK8
             }
             else -> throw Error("not yet supported")
         }
