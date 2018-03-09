@@ -50,6 +50,13 @@ interface load {
     fun loadImage(path: Path, flipY: Boolean = false): Texture {
         val image = ImageIO.read(path.toFile())
         if (flipY) image.flipY()
+        return createTexture(image)
+    }
+
+    /**
+     * creates a texture from an BufferedImage
+     */
+    fun createTexture(image: BufferedImage): Texture {
         val extent = Vec3i(image.width, image.height, 1)
         return when (image.type) {
             TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)
