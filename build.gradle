@@ -11,13 +11,13 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.21'
+    ext.kotlinVersion = '1.2.30'
 
     repositories {
         jcenter()   // shadow
         mavenCentral()
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+        maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots/") }
     }
 
     dependencies {
@@ -30,7 +30,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:4dfa81094ac86ae9ab62719d9ea6bcd1f5cb5bc3'
+    compile 'com.github.kotlin-graphics:glm:9ff4a97b8f7238dc08fde08d519da32c023edb8c'
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
@@ -45,7 +45,7 @@ dependencies {
             ext.lwjglNatives = "natives-macos"
             break
     }
-    ext.lwjglVersion = "3.1.5-SNAPSHOT"
+    ext.lwjglVersion = "3.1.6-SNAPSHOT"
     compile "org.lwjgl:lwjgl:${lwjglVersion}"
     compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
     compile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
@@ -62,9 +62,9 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url 'https://jitpack.io' }
+    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+    maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots/") }
+    maven { setUrl('https://jitpack.io') }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
