@@ -30,7 +30,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:107cfdea7469ab2a3561dd5441503709300ec718'
+    compile 'com.github.kotlin-graphics:glm:caba5a51f450898f333f93ffc285df0f4a8e35e8'
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
