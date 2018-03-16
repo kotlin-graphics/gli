@@ -1,6 +1,7 @@
 package gli_
 
 import gli_.buffer.destroy
+import glm_.b
 import glm_.glm
 import glm_.set
 import glm_.vec1.Vec1i
@@ -240,7 +241,7 @@ open class Texture {
         return cache.extent(level)
     }
 
-    fun clear() = data().run { for (i in 0 until capacity()) set(i, 0) }
+    fun clear() = data().run { for (i in 0 until capacity()) set(i, 0.b) }
 
     infix fun clear(texel: Any) {
         assert(notEmpty() && format.blockSize == getSize(texel::class))
