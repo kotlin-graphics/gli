@@ -320,9 +320,9 @@ class coreTexture : StringSpec() {
 
                 val ns = measureNanoTime {
                     for (levelIndex in 0 until texture.levels()) {
-                        val extent = texture.extent(levelIndex)
-                        for (y in 0 until extent.y)
-                            for (x in 0 until extent.x) {
+                        val ext = texture.extent(levelIndex)
+                        for (y in 0 until ext.y)
+                            for (x in 0 until ext.x) {
                                 val texel = texture.load<Byte>(Vec2i(x, y), levelIndex)
                                 error += if (texel == 255.b) 0 else 1
                             }

@@ -49,7 +49,7 @@ class Image {
         storage = Storage(image.storage!!)
         this.format = format
         baseLevel = image.baseLevel
-        data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(image.data), image.data!!.remaining())
+        data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(image.data!!), image.data!!.remaining())
         size = image.size
         assert(format.blockSize == image.format.blockSize)
     }
