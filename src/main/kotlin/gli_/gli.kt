@@ -19,7 +19,8 @@ object gli :
         saveKtx,
         view {
 
-    @JvmField val gl = gli_.gl
+    @JvmField
+    val gl = gli_.gl
     val dx = gli_.dx
 
     /** Texture filtring modes  */
@@ -47,3 +48,11 @@ class Java {
 }
 
 fun memCopy(src: Long, dst: Long, bytes: Int) = MemoryUtil.memCopy(src, dst, bytes.L)
+
+
+const val GLI_VERSION_MAJOR = 0
+const val GLI_VERSION_MINOR = 8
+const val GLI_VERSION_PATCH = 3
+const val GLI_VERSION_REVISION = 0
+const val GLI_VERSION_BUILD = 0
+const val GLI_VERSION = 830.0
