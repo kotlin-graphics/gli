@@ -4,7 +4,7 @@ import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
-import io.kotlintest.matchers.shouldBe
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 class testDuplicate : StringSpec() {

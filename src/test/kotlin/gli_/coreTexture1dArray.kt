@@ -5,7 +5,7 @@ import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*
 import glm_.vec4.*
-import io.kotlintest.matchers.shouldBe
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 /**

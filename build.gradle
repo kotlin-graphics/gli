@@ -11,7 +11,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.40-eap-51'
+    ext.kotlinVersion = '1.2.40'
 
     repositories {
         jcenter()   // shadow
@@ -22,7 +22,8 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.3'
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.1.0"
     }
 }
 
@@ -30,9 +31,9 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:e5e87625d1e655719e90d4ca377344397184011b'
+    compile 'com.github.kotlin-graphics:glm:7dcdec524aa79ff01ea7e169125ed13365e76d5c'
 
-    testCompile 'io.kotlintest:kotlintest:2.0.7'
+    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.4'
 
     switch (OperatingSystem.current()) {
         case OperatingSystem.WINDOWS:
