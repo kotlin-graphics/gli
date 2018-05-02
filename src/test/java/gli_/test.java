@@ -39,11 +39,11 @@ public class test {
         texture.getSwizzles().to(swizzles);
         glTexParameteriv(target.getI(), GL33.GL_TEXTURE_SWIZZLE_RGBA, swizzles);
         Vec3i extent = texture.extent(0);
-        glTexStorage2D(target.getI(), texture.levels(), format.getInternal().getI(), extent.x, extent.y);
+        glTexStorage2D(target.getI(), texture.levels(), format.getInternal().getI(), extent.getX(), extent.getY());
         for (int level = 0; level < texture.levels(); level++) {
             extent = texture.extent(level);
             glCompressedTexSubImage2D(
-                    target.getI(), level, 0, 0, extent.x, extent.y,
+                    target.getI(), level, 0, 0, extent.getX(), extent.getY(),
                     format.getInternal().getI(), texture.data(0, 0, level));
         }
         return textureName.get(0);

@@ -11,7 +11,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.40'
+    ext.kotlinVersion = '1.2.41'
 
     repositories {
         jcenter()   // shadow
@@ -31,9 +31,9 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:7dcdec524aa79ff01ea7e169125ed13365e76d5c'
+    compile 'com.github.kotlin-graphics:glm:8f773c01565b46a87ba1eb9e715cf0fe372fc4d0'
 
-    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.4'
+    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
 
     switch (OperatingSystem.current()) {
         case OperatingSystem.WINDOWS:
