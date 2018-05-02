@@ -31,7 +31,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile 'com.github.kotlin-graphics:glm:8f773c01565b46a87ba1eb9e715cf0fe372fc4d0'
+    compile 'com.github.kotlin-graphics:glm:be40ccfb45812df60c08a32312d37dcd7579b340'
 
     testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
 
