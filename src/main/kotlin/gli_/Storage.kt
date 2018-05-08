@@ -1,14 +1,12 @@
 package gli_
 
-import gli_.buffer.destroy
-import glm_.L
+import glm_.buffer.free
 import glm_.glm
 import glm_.size
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.ByteBuffer
 
 /**
@@ -160,7 +158,7 @@ class Storage {
         return faceSize(baseLevel, maxLevel) * (maxFace - baseFace + 1)
     }
 
-    fun destroy() = data?.destroy()
+    fun destroy() = data?.free()
 
     override fun equals(other: Any?): Boolean {
         return if (other !is Storage) false

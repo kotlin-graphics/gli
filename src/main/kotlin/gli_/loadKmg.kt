@@ -1,11 +1,10 @@
 package gli_
 
-import gli_.buffer.bufferBig
+import glm_.buffer.bufferBig
 import glm_.i
 import glm_.size
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil.memAddress
-import org.lwjgl.system.MemoryUtil.memCopy
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

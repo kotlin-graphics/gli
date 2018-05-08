@@ -1,6 +1,6 @@
-package gli
+package gli_
 
-import gli_.buffer.intBufferBig
+import glm_.buffer.intBufferBig
 import gli_.gl
 import gli_.gli
 import io.kotlintest.specs.StringSpec

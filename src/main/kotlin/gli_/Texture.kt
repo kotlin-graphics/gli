@@ -1,6 +1,6 @@
 package gli_
 
-import gli_.buffer.destroy
+import glm_.buffer.free
 import glm_.b
 import glm_.glm
 import glm_.set
@@ -356,7 +356,7 @@ open class Texture {
         data<T>(layer, face, level)[imageOffset] = texel
     }
 
-    open fun dispose() = storage?.data()?.destroy()
+    open fun dispose() = storage?.data()?.free()
 
     override fun equals(other: Any?) = when {
         other !is Texture -> false

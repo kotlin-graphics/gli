@@ -1,14 +1,13 @@
 package gli_
 
-import gli_.buffer.bufferBig
 import gli_.detail.has
 import gli_.detail.or
 import gli_.dx.has
 import glm_.L
 import glm_.b
+import glm_.buffer.bufferBig
 import glm_.size
 import org.lwjgl.system.MemoryUtil.memAddress
-import org.lwjgl.system.MemoryUtil.memCopy
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.Paths

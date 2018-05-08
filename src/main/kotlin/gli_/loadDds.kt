@@ -1,6 +1,6 @@
 package gli_
 
-import gli_.buffer.bufferBig
+import glm_.buffer.bufferBig
 import gli_.detail.has
 import gli_.dx.has
 import gli_.dx.or

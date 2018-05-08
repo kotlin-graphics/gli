@@ -1,6 +1,6 @@
 package gli_
 
-import gli_.buffer.destroy
+import glm_.buffer.free
 import glm_.glm
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil
@@ -181,5 +181,5 @@ class Image {
         return result
     }
 
-    fun dispose() = data!!.destroy()
+    fun dispose() = data!!.free()
 }
