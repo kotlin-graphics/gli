@@ -1,8 +1,10 @@
 package gli_
 
 import glm_.buffer.adr
+import glm_.buffer.cap
 import glm_.buffer.free
 import glm_.glm
+import glm_.set
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memByteBuffer
@@ -121,7 +123,7 @@ class Image {
     /** Clear the entire image storage_linear with zeros    */
     fun clear() {
         assert(notEmpty())
-        repeat(storage!!.data().capacity()) { storage!!.data().put(it, 0) }
+        repeat(storage!!.data().cap) { storage!!.data()[it] = 0 }
     }
 
     /** Clear the entire image storage_linear with Texel which type must match the image storage_linear format block size

@@ -3,6 +3,7 @@ package gli_
 import glm_.BYTES
 import glm_.buffer.adr
 import glm_.buffer.bufferBig
+import glm_.buffer.pos
 import glm_.glm
 import glm_.size
 import java.nio.channels.FileChannel
@@ -52,8 +53,8 @@ interface saveKtx {
 
         for (level in 0 until texture.levels()) {
 
-            var imageSize = data.ptr
-            data.ptr += Int.BYTES
+            var imageSize = data.pos
+            data.pos += Int.BYTES
 
             for (layer in 0 until texture.layers())
                 for (face in 0 until texture.faces()) {
@@ -65,16 +66,16 @@ interface saveKtx {
                     val paddedSize = glm.ceilMultiple(faceSize, 4)
 
                     imageSize += paddedSize
-                    data.ptr += paddedSize
+                    data.pos += paddedSize
 
-                    assert(data.ptr <= data.size)
+                    assert(data.pos <= data.size)
                 }
 
             imageSize = glm.ceilMultiple(imageSize, 4)
         }
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
-            data.ptr = 0
+            data.pos = 0
             while (data.hasRemaining()) it.write(data)
         }
 

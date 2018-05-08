@@ -2,6 +2,7 @@ package gli_
 
 import glm_.buffer.adr
 import glm_.buffer.bufferBig
+import glm_.buffer.pos
 import glm_.size
 import java.nio.channels.FileChannel
 import java.nio.file.Path
@@ -55,13 +56,13 @@ interface saveKmg {
                     val src = texture.data(layer, face, level)
                     memCopy(src.adr, data.adr, faceSize)
 
-                    data.ptr += faceSize
-                    assert(data.ptr <= data.size)
+                    data.pos += faceSize
+                    assert(data.pos <= data.size)
                 }
             }
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
-            data.ptr = 0
+            data.pos = 0
             while (data.hasRemaining()) it.write(data)
         }
 

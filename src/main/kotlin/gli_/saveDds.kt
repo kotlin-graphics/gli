@@ -7,6 +7,8 @@ import glm_.L
 import glm_.b
 import glm_.buffer.adr
 import glm_.buffer.bufferBig
+import glm_.buffer.cap
+import glm_.buffer.pos
 import glm_.size
 import java.nio.channels.FileChannel
 import java.nio.file.Path
@@ -130,10 +132,10 @@ interface saveDds {
 
         val src = texture.data()
         val dst = data
-        memCopy(src.adr, dst.adr, src.capacity())
+        memCopy(src.adr, dst.adr, src.cap)
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
-            data.ptr = 0
+            data.pos = 0
             while (data.hasRemaining()) it.write(data)
             it.truncate(data.size.L)
         }

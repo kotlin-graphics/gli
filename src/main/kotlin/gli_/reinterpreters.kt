@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.BYTES
+import glm_.buffer.cap
 import glm_.set
 import glm_.vec1.*
 import glm_.vec2.*
@@ -211,53 +212,53 @@ fun getSize(clazz: KClass<*>) = when (clazz) {
 }
 
 fun _clear(data: ByteBuffer, texel: Any) = when (texel) {
-    is Byte -> for (i in 0 until data.capacity()) data[i] = texel
-    is Short -> for (i in 0 until data.capacity() step Short.BYTES) data.putShort(i, texel)
-    is Int -> for (i in 0 until data.capacity() step Int.BYTES) data.putInt(i, texel)
-    is Long -> for (i in 0 until data.capacity() step Long.BYTES) data.putLong(i, texel)
-    is Vec1b -> for (i in 0 until data.capacity()) data[i] = texel.x
-    is Vec2b -> for (i in 0 until data.capacity() step Vec2b.size) {
+    is Byte -> for (i in 0 until data.cap) data[i] = texel
+    is Short -> for (i in 0 until data.cap step Short.BYTES) data.putShort(i, texel)
+    is Int -> for (i in 0 until data.cap step Int.BYTES) data.putInt(i, texel)
+    is Long -> for (i in 0 until data.cap step Long.BYTES) data.putLong(i, texel)
+    is Vec1b -> for (i in 0 until data.cap) data[i] = texel.x
+    is Vec2b -> for (i in 0 until data.cap step Vec2b.size) {
         data[i] = texel.x
         data[i + Byte.BYTES] = texel.y
     }
-    is Vec3b -> for (i in 0 until data.capacity() step Vec3b.size) {
+    is Vec3b -> for (i in 0 until data.cap step Vec3b.size) {
         data[i] = texel.x
         data[i + Byte.BYTES] = texel.y
         data[i + Byte.BYTES * 2] = texel.z
     }
-    is Vec4b -> for (i in 0 until data.capacity() step Vec4b.size) {
+    is Vec4b -> for (i in 0 until data.cap step Vec4b.size) {
         data[i] = texel.x
         data[i + Byte.BYTES] = texel.y
         data[i + Byte.BYTES * 2] = texel.z
         data[i + Byte.BYTES * 3] = texel.w
     }
-    is Vec1ub -> for (i in 0 until data.capacity()) data[i] = texel.x.v
-    is Vec2ub -> for (i in 0 until data.capacity() step Vec2ub.size) {
+    is Vec1ub -> for (i in 0 until data.cap) data[i] = texel.x.v
+    is Vec2ub -> for (i in 0 until data.cap step Vec2ub.size) {
         data[i] = texel.x.v
         data[i + Byte.BYTES] = texel.y.v
     }
-    is Vec3ub -> for (i in 0 until data.capacity() step Vec3ub.size) {
+    is Vec3ub -> for (i in 0 until data.cap step Vec3ub.size) {
         data[i] = texel.x.v
         data[i + Byte.BYTES] = texel.y.v
         data[i + Byte.BYTES * 2] = texel.z.v
     }
-    is Vec4ub -> for (i in 0 until data.capacity() step Vec4ub.size) {
+    is Vec4ub -> for (i in 0 until data.cap step Vec4ub.size) {
         data[i] = texel.x.v
         data[i + Byte.BYTES] = texel.y.v
         data[i + Byte.BYTES * 2] = texel.z.v
         data[i + Byte.BYTES * 3] = texel.w.v
     }
-    is Vec1 -> for (i in 0 until data.capacity() step Vec1.size) data.putFloat(i, texel.x)
-    is Vec2 -> for (i in 0 until data.capacity() step Vec2.size) {
+    is Vec1 -> for (i in 0 until data.cap step Vec1.size) data.putFloat(i, texel.x)
+    is Vec2 -> for (i in 0 until data.cap step Vec2.size) {
         data.putFloat(i, texel.x)
         data.putFloat(i + Float.BYTES, texel.y)
     }
-    is Vec3 -> for (i in 0 until data.capacity() step Vec3.size) {
+    is Vec3 -> for (i in 0 until data.cap step Vec3.size) {
         data.putFloat(i, texel.x)
         data.putFloat(i + Float.BYTES, texel.y)
         data.putFloat(i + Float.BYTES * 2, texel.z)
     }
-    is Vec4 -> for (i in 0 until data.capacity() step Vec4.size) {
+    is Vec4 -> for (i in 0 until data.cap step Vec4.size) {
         data.putFloat(i, texel.x)
         data.putFloat(i + Float.BYTES, texel.y)
         data.putFloat(i + Float.BYTES * 2, texel.z)

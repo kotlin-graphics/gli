@@ -2,6 +2,7 @@ package gli_
 
 import glm_.buffer.adr
 import glm_.buffer.bufferBig
+import glm_.buffer.pos
 import glm_.i
 import glm_.size
 import glm_.vec3.Vec3i
@@ -28,7 +29,7 @@ interface loadKmg {
         val buffer = FileChannel.open(path, StandardOpenOption.READ).use { channel ->
             bufferBig(channel.size().i).also {
                 while (channel.read(it) > 0) Unit
-                it.position(0)
+                it.pos = 0
                 it.order(ByteOrder.nativeOrder())
             }
         }
@@ -73,8 +74,8 @@ interface loadKmg {
                     val dst = texture.data(layer, face, level)
                     memCopy(data.adr, dst.adr, faceSize)
 
-                    data.ptr += faceSize
-                    assert(data.ptr <= data.size)
+                    data.pos += faceSize
+                    assert(data.pos <= data.size)
                 }
             }
 

@@ -2,6 +2,7 @@ package gli_
 
 import glm_.b
 import glm_.buffer.adr
+import glm_.buffer.cap
 import glm_.buffer.free
 import glm_.glm
 import glm_.set
@@ -242,7 +243,7 @@ open class Texture {
         return cache.extent(level)
     }
 
-    fun clear() = data().run { for (i in 0 until capacity()) set(i, 0.b) }
+    fun clear() = data().run { for (i in 0 until cap) set(i, 0.b) }
 
     infix fun clear(texel: Any) {
         assert(notEmpty() && format.blockSize == getSize(texel::class))
@@ -321,7 +322,7 @@ open class Texture {
             Vec4b::class, Vec4ub::class -> {
                 val texel = Vec4b()
                 val data = data()
-                for (i in 0 until data.capacity() step Vec4b.length) {
+                for (i in 0 until data.cap step Vec4b.length) {
                     texel.put(data, i)
                     for (j in 0 until Vec4b.length)
                         data[i + j] = texel[swizzles[j].i]

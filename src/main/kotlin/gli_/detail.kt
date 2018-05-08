@@ -3,6 +3,7 @@ package gli_
 import gli_.Swizzle.*
 import gli_.detail.Cap.*
 import glm_.BYTES
+import glm_.buffer.pos
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4i
 import java.nio.ByteBuffer
@@ -411,11 +412,11 @@ object detail {
             pitch = buffer.int
             depth = buffer.int
             mipMapLevels = buffer.int
-            buffer.ptr += reserved1.size * Int.BYTES
+            buffer.pos += reserved1.size * Int.BYTES
             format = DdsPixelFormat(buffer)
             surfaceFlags = buffer.int
             cubemapFlags = buffer.int
-            buffer.ptr += reserved2.size * Int.BYTES
+            buffer.pos += reserved2.size * Int.BYTES
         }
 
         constructor()
@@ -429,12 +430,12 @@ object detail {
                     .putInt(pitch)
                     .putInt(depth)
                     .putInt(mipMapLevels)
-            data.ptr += reserved1.size * Int.BYTES
+            data.pos += reserved1.size * Int.BYTES
             format to data
             data
                     .putInt(surfaceFlags)
                     .putInt(cubemapFlags)
-            data.ptr += reserved2.size * Int.BYTES
+            data.pos += reserved2.size * Int.BYTES
         }
 
         companion object {

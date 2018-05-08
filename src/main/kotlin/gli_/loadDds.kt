@@ -6,6 +6,8 @@ import gli_.dx.has
 import gli_.dx.or
 import glm_.b
 import glm_.buffer.adr
+import glm_.buffer.cap
+import glm_.buffer.pos
 import glm_.glm
 import glm_.i
 import glm_.size
@@ -37,7 +39,7 @@ interface loadDds {
         val buffer = FileChannel.open(path, StandardOpenOption.READ).use { channel ->
             bufferBig(channel.size().i).also {
                 while (channel.read(it) > 0) Unit
-                it.position(0)
+                it.pos = 0
                 it.order(ByteOrder.nativeOrder())
             }
         }
@@ -48,7 +50,7 @@ interface loadDds {
     /** Loads a texture storage_linear from DDS file. Returns an empty storage_linear in case of failure.   */
     fun loadDds(data: ByteBuffer): Texture {
 
-        assert(data.capacity() >= detail.FOURCC_DDS.size)
+        assert(data.cap >= detail.FOURCC_DDS.size)
 
         if (!detail.FOURCC_DDS.all { data.get() == it.b })
             return Texture()
@@ -128,7 +130,7 @@ interface loadDds {
         val texture = Texture(getTarget(header, header10), format, Vec3i(header.width, header.height, depthCount),
                 glm.max(header10.arraySize, 1), faceCount, mipMapCount)
 
-        assert(data.size == data.ptr + texture.size)
+        assert(data.size == data.pos + texture.size)
 
         memCopy(data.adr, texture.data().adr, texture.size)
 

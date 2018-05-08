@@ -3,6 +3,7 @@ package gli_
 import glm_.BYTES
 import glm_.buffer.adr
 import glm_.buffer.bufferBig
+import glm_.buffer.pos
 import glm_.glm
 import glm_.i
 import glm_.size
@@ -30,7 +31,7 @@ interface loadKtx {
         val buffer = FileChannel.open(path, StandardOpenOption.READ).use { channel ->
             bufferBig(channel.size().i).also {
                 while (channel.read(it) > 0) Unit
-                it.position(0)
+                it.pos = 0
                 it.order(ByteOrder.nativeOrder())
             }
         }
@@ -58,7 +59,7 @@ interface loadKtx {
         val header = ktx.Header10(data)
 
         // Skip key value data
-        data.ptr += header.bytesOfKeyValueData
+        data.pos += header.bytesOfKeyValueData
 
         gl.profile = gl.Profile.KTX
         val format = gl.find(
@@ -82,7 +83,7 @@ interface loadKtx {
 
         for (level in 0 until texture.levels()) {
 
-            data.ptr += Int.BYTES
+            data.pos += Int.BYTES
 
             for (layer in 0 until texture.layers())
                 for (face in 0 until texture.faces()) {
@@ -90,7 +91,7 @@ interface loadKtx {
                     val faceSize = texture.size(level)
                     val dst = texture.data(layer, face, level)
                     memCopy(data.adr, dst.adr, faceSize)
-                    data.ptr += glm.max(blockSize, glm.ceilMultiple(faceSize, 4))
+                    data.pos += glm.max(blockSize, glm.ceilMultiple(faceSize, 4))
                 }
         }
         return texture
