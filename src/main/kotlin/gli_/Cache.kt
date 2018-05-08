@@ -1,8 +1,8 @@
 package gli_
 
+import glm_.buffer.adr
 import glm_.vec3.Vec3i
 import glm_.glm
-import org.lwjgl.system.MemoryUtil.memAddress
 
 /** Pre compute at texture instance creation some information for faster access to texels   */
 class Cache {
@@ -38,7 +38,7 @@ class Cache {
 
                     val index = indexCache(layer, face, level)
                     val offset = storage.baseOffset(baseLayer + layer, baseFace + face, baseLevel + level)
-                    baseAddresses[index] = memAddress(storage.data()) + offset
+                    baseAddresses[index] = storage.data().adr + offset
                 }
 
         for (level in 0 until levels) {

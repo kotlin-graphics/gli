@@ -5,12 +5,11 @@ import gli_.detail.has
 import gli_.dx.has
 import gli_.dx.or
 import glm_.b
+import glm_.buffer.adr
 import glm_.glm
 import glm_.i
 import glm_.size
 import glm_.vec3.Vec3i
-import org.lwjgl.system.MemoryUtil.memAddress
-import org.lwjgl.system.MemoryUtil.memCopy
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -131,7 +130,7 @@ interface loadDds {
 
         assert(data.size == data.ptr + texture.size)
 
-        memCopy(memAddress(data), memAddress(texture.data()), texture.size)
+        memCopy(data.adr, texture.data().adr, texture.size)
 
         return texture
     }

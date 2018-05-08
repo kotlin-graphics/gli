@@ -1,9 +1,6 @@
 package gli_
 
-import glm_.L
-import org.lwjgl.system.MemoryUtil.memAddress
-import org.lwjgl.system.MemoryUtil.memCopy
-import org.lwjgl.system.libc.LibCString.nmemcpy
+import glm_.buffer.adr
 
 
 interface duplicate {
@@ -12,7 +9,7 @@ interface duplicate {
 
         val result = Image(image.format, image.extent())
 
-        memCopy(memAddress(image.data()), memAddress(result.data()), image.data()!!.remaining())
+        memCopy(image.data()!!.adr, result.data()!!.adr, image.data()!!.remaining())
 
         return result
     }
@@ -75,8 +72,8 @@ interface duplicate {
                 maxLevel - baseLevel + 1)
 
         memCopy(
-                memAddress(texture.data(0, 0, baseLevel)),
-                memAddress(duplicate.data()),
+                texture.data(0, 0, baseLevel).adr,
+                duplicate.data().adr,
                 duplicate.size)
 
         return duplicate
@@ -102,8 +99,8 @@ interface duplicate {
 
         for (layer in 0 until duplicate.layers())
             memCopy(
-                    memAddress(texture.data(layer + baseLayer, 0, baseLevel)),
-                    memAddress(duplicate.data(layer, 0, 0)),
+                    texture.data(layer + baseLayer, 0, baseLevel).adr,
+                    duplicate.data(layer, 0, 0).adr,
                     duplicate[layer].size)
 
         return duplicate
@@ -123,8 +120,8 @@ interface duplicate {
                 maxLevel - baseLevel + 1)
 
         memCopy(
-                memAddress(texture.data(0, 0, baseLevel)),
-                memAddress(duplicate.data()),
+                texture.data(0, 0, baseLevel).adr,
+                duplicate.data().adr,
                 duplicate.size)
 
         return duplicate
@@ -150,8 +147,8 @@ interface duplicate {
 
         for (layer in 0 until duplicate.layers())
             memCopy(
-                    memAddress(texture.data(layer + baseLayer, 0, baseLevel)),
-                    memAddress(duplicate.data(layer, 0, 0)),
+                    texture.data(layer + baseLayer, 0, baseLevel).adr,
+                    duplicate.data(layer, 0, 0).adr,
                     duplicate[layer].size)
 
         return duplicate
@@ -171,8 +168,8 @@ interface duplicate {
                 maxLevel - baseLevel + 1)
 
         memCopy(
-                memAddress(texture.data(0, 0, baseLevel)),
-                memAddress(duplicate.data()),
+                texture.data(0, 0, baseLevel).adr,
+                duplicate.data().adr,
                 duplicate.size)
 
         return duplicate
@@ -196,8 +193,8 @@ interface duplicate {
 
         for (face in 0 until duplicate.faces())
             memCopy(
-                    memAddress(texture[face + baseFace][baseLevel].data()),
-                    memAddress(duplicate[face].data()),
+                    texture[face + baseFace][baseLevel].data()!!.adr,
+                    duplicate[face].data().adr,
                     duplicate[face].size)
 
         return duplicate
@@ -227,8 +224,8 @@ interface duplicate {
         for (layer in 0 until duplicate.layers())
             for (face in 0 until duplicate[layer].faces())
                 memCopy(
-                        memAddress(texture[layer + baseLayer][face + baseFace][baseLevel].data()),
-                        memAddress(duplicate[layer][face].data()),
+                        texture[layer + baseLayer][face + baseFace][baseLevel].data()!!.adr,
+                        duplicate[layer][face].data().adr,
                         duplicate[layer][face].size)
 
         return duplicate
@@ -252,10 +249,10 @@ interface duplicate {
         }
 
         for (layerIndex in 0..maxLayer - baseLayer)
-            for (faceIndex in 0..maxFace - baseFace) {
-                val d = memAddress(dst.data(layerIndex, faceIndex, baseLevel))
-                val s = memAddress(src.data(baseLayer + layerIndex, baseFace + faceIndex, baseLevel))
-                nmemcpy(d, s, levelsSize.L)
-            }
+            for (faceIndex in 0..maxFace - baseFace)
+                memCopy(
+                        src.data(baseLayer + layerIndex, baseFace + faceIndex, baseLevel).adr,
+                        dst.data(layerIndex, faceIndex, baseLevel).adr,
+                        levelsSize)
     }
 }

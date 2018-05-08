@@ -1,8 +1,8 @@
 package gli_
 
+import glm_.buffer.adr
 import glm_.buffer.bufferBig
 import glm_.size
-import org.lwjgl.system.MemoryUtil.memAddress
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -53,7 +53,7 @@ interface saveKmg {
                 for (face in 0 until texture.faces()) {
 
                     val src = texture.data(layer, face, level)
-                    memCopy(memAddress(src), memAddress(data), faceSize)
+                    memCopy(src.adr, data.adr, faceSize)
 
                     data.ptr += faceSize
                     assert(data.ptr <= data.size)

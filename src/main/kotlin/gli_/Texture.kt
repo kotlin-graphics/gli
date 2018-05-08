@@ -1,7 +1,8 @@
 package gli_
 
-import glm_.buffer.free
 import glm_.b
+import glm_.buffer.adr
+import glm_.buffer.free
 import glm_.glm
 import glm_.set
 import glm_.vec1.Vec1i
@@ -9,7 +10,7 @@ import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
-import org.lwjgl.system.MemoryUtil.*
+import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
@@ -260,7 +261,7 @@ open class Texture {
             blockData: T
     ) {
         val baseOffset = storage!!.baseOffset(layer, face, level)
-        val baseAddress = memAddress(storage!!.data()) + baseOffset
+        val baseAddress = storage!!.data().adr + baseOffset
 
         val blockOffset = texelOffset / storage!!.blockExtent
         val blockExtent = texelExtent / storage!!.blockExtent + blockOffset
@@ -294,9 +295,8 @@ open class Texture {
         assert(levelSrc < textureSrc.levels())
         assert(levelDst < levels())
 
-        memCopy(
-                memAddress(textureSrc.data(layerSrc, faceSrc, levelSrc)),
-                memAddress(data(layerDst, faceDst, levelDst)),
+        memCopy(textureSrc.data(layerSrc, faceSrc, levelSrc).adr,
+                data(layerDst, faceDst, levelDst).adr,
                 size(levelDst))
     }
 

@@ -1,10 +1,10 @@
 package gli_
 
+import glm_.buffer.adr
 import glm_.buffer.free
 import glm_.glm
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
@@ -37,7 +37,7 @@ class Image {
         storage = Storage(format, extent, 1, 1, 1)
         this.format = format
         baseLevel = 0
-        data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(storage!!.data()), storage!!.data().remaining())
+        data = MemoryUtil.memByteBuffer(storage!!.data().adr, storage!!.data().remaining())
         size = computeSize(0)
     }
 
@@ -49,7 +49,7 @@ class Image {
         storage = Storage(image.storage!!)
         this.format = format
         baseLevel = image.baseLevel
-        data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(image.data!!), image.data!!.remaining())
+        data = MemoryUtil.memByteBuffer(image.data!!.adr, image.data!!.remaining())
         size = image.size
         assert(format.blockSize == image.format.blockSize)
     }
@@ -69,7 +69,7 @@ class Image {
 
     fun computeData(baseLayer: Int, baseFace: Int, baseLevel: Int): ByteBuffer {
         val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
-        return memByteBuffer(memAddress(storage!!.data()) + baseOffset, storage!!.data().remaining() - baseOffset)
+        return memByteBuffer(storage!!.data().adr + baseOffset, storage!!.data().remaining() - baseOffset)
     }
 
     fun computeSize(level: Int): Int {

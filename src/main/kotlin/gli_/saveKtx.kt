@@ -1,10 +1,10 @@
 package gli_
 
 import glm_.BYTES
+import glm_.buffer.adr
 import glm_.buffer.bufferBig
 import glm_.glm
 import glm_.size
-import org.lwjgl.system.MemoryUtil.memAddress
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -60,7 +60,7 @@ interface saveKtx {
 
                     val faceSize = texture.size(level)
 
-                    memCopy(memAddress(texture.data(layer, face, level)), memAddress(data), faceSize)
+                    memCopy(texture.data(layer, face, level).adr, data.adr, faceSize)
 
                     val paddedSize = glm.ceilMultiple(faceSize, 4)
 

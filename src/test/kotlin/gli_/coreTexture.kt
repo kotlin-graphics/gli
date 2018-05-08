@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.b
+import glm_.buffer.adr
 import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
@@ -10,7 +11,6 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import org.lwjgl.system.MemoryUtil.NULL
-import org.lwjgl.system.MemoryUtil.memAddress
 import java.nio.file.Files
 import kotlin.system.measureNanoTime
 
@@ -373,7 +373,7 @@ class coreTexture : StringSpec() {
                         textures.forEach {
                             for (layerIndex in 0 until it.layers())
                                 for (levelIndex in 0 until it.levels()) {
-                                    val baseAddress = memAddress(it.data(layerIndex, 0, levelIndex))
+                                    val baseAddress = it.data(layerIndex, 0, levelIndex).adr
                                     error += if (baseAddress != NULL) 0 else 1
                                 }
                         }
@@ -428,7 +428,7 @@ class coreTexture : StringSpec() {
                                 for (levelIndex in 0 until it.levels()) {
                                     val extent = it.extent(levelIndex)
                                     val size = it.size(levelIndex)
-                                    val baseAddress = memAddress(it.data(layerIndex, 0, levelIndex))
+                                    val baseAddress = it.data(layerIndex, 0, levelIndex).adr
 
                                     error += if (extent.x != 0) 0 else 1
                                     error += if (extent.y != 0) 0 else 1
@@ -458,7 +458,7 @@ class coreTexture : StringSpec() {
                         textures.forEach {
                             for (layerIndex in 0 until it.layers())
                                 for (levelIndex in 0 until it.levels()) {
-                                    val baseAddress = memAddress(it.data(layerIndex, 0, levelIndex))
+                                    val baseAddress = it.data(layerIndex, 0, levelIndex).adr
                                     error += if (baseAddress != NULL) 0 else 1
                                 }
                         }
@@ -513,7 +513,7 @@ class coreTexture : StringSpec() {
                                 for (levelIndex in 0 until it.levels()) {
                                     val extent = it.extent(levelIndex)
                                     val size = it.size(levelIndex)
-                                    val baseAddress = memAddress(it.data(layerIndex, 0, levelIndex))
+                                    val baseAddress = it.data(layerIndex, 0, levelIndex).adr
 
                                     error += if (extent.x != 0) 0 else 1
                                     error += if (extent.y != 0) 0 else 1

@@ -1,12 +1,12 @@
 package gli_
 
 import glm_.BYTES
+import glm_.buffer.adr
 import glm_.buffer.bufferBig
 import glm_.glm
 import glm_.i
 import glm_.size
 import glm_.vec3.Vec3i
-import org.lwjgl.system.MemoryUtil.memAddress
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -89,7 +89,7 @@ interface loadKtx {
 
                     val faceSize = texture.size(level)
                     val dst = texture.data(layer, face, level)
-                    memCopy(memAddress(data), memAddress(dst), faceSize)
+                    memCopy(data.adr, dst.adr, faceSize)
                     data.ptr += glm.max(blockSize, glm.ceilMultiple(faceSize, 4))
                 }
         }

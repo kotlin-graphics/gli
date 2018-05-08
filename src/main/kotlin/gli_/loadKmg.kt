@@ -1,10 +1,10 @@
 package gli_
 
+import glm_.buffer.adr
 import glm_.buffer.bufferBig
 import glm_.i
 import glm_.size
 import glm_.vec3.Vec3i
-import org.lwjgl.system.MemoryUtil.memAddress
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -71,7 +71,7 @@ interface loadKmg {
                 for (face in 0 until texture.faces()) {
 
                     val dst = texture.data(layer, face, level)
-                    memCopy(memAddress(data), memAddress(dst), faceSize)
+                    memCopy(data.adr, dst.adr, faceSize)
 
                     data.ptr += faceSize
                     assert(data.ptr <= data.size)

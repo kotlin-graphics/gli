@@ -5,9 +5,9 @@ import gli_.detail.or
 import gli_.dx.has
 import glm_.L
 import glm_.b
+import glm_.buffer.adr
 import glm_.buffer.bufferBig
 import glm_.size
-import org.lwjgl.system.MemoryUtil.memAddress
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -130,7 +130,7 @@ interface saveDds {
 
         val src = texture.data()
         val dst = data
-        memCopy(memAddress(src), memAddress(dst), src.capacity())
+        memCopy(src.adr, dst.adr, src.capacity())
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
             data.ptr = 0

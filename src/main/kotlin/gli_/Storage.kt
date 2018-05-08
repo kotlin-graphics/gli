@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.buffer.adr
 import glm_.buffer.free
 import glm_.glm
 import glm_.size
@@ -42,7 +43,7 @@ class Storage {
         blockCount = Vec3i(storage.blockCount)
         blockExtent = Vec3i(storage.blockExtent)
         extent = Vec3i(storage.extent)
-        data = MemoryUtil.memByteBuffer(MemoryUtil.memAddress(storage.data), storage.data!!.remaining())
+        data = MemoryUtil.memByteBuffer(storage.data!!.adr, storage.data!!.remaining())
     }
 
     constructor(format: Format, extent: Vec3i, layers: Int, faces: Int, levels: Int) {
@@ -119,8 +120,8 @@ class Storage {
 
         val baseOffsetSrc = storageSrc.baseOffset(layerSrc, faceSrc, levelSrc)
         val baseOffsetDst = baseOffset(layerDst, faceDst, levelDst)
-        val imageSrc = MemoryUtil.memAddress(storageSrc.data) + baseOffsetSrc
-        val imageDst = MemoryUtil.memAddress(data) + baseOffsetDst
+        val imageSrc = storageSrc.data!!.adr + baseOffsetSrc
+        val imageDst = data!!.adr + baseOffsetDst
 
         for (blockIndexZ in 0 until blockCount.z)
             for (blockIndexY in 0 until blockCount.y) {
