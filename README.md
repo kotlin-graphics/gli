@@ -46,7 +46,9 @@ fun createTexture(filename: String): Int {
                 target.i, level, 0, 0, extent.x, extent.y,
                 format.internal.i, texture.data(0, 0, level))
     }
-    return textureName[0]
+    val texName = textureName[0]
+    textureName.free()
+    return texName
 }
 ```
 
@@ -102,6 +104,8 @@ public static int createTexture(String filename) {
             target.getI(), level, 0, 0, extent.x, extent.y,
             format.getInternal().getI(), texture.data(0, 0, level));
     }
-    return textureName.get(0);
+    int texName = textureName.get(0);
+    MemoryUtil.memFree(textureName);
+    return texName
 }
 ```
