@@ -310,7 +310,7 @@ class TGAImageReader(originatingProvider: ImageReaderSpi) : ImageReader(originat
 
         // set up to read the data
         val intData = (raster.dataBuffer as DataBufferInt).data // CHECK:  is this valid / acceptible?
-        var index = 0 // the index in the intData array
+        var index: Int // the index in the intData array
         var runLength = 0 // the number of pixels in a run length
         var readPixel = true // if true then a raw pixel is read.  Used by the RLE.
         var isRaw = false // if true then the next pixels should be read.  Used by the RLE.

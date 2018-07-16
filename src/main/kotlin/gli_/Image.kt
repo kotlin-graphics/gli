@@ -183,5 +183,5 @@ class Image {
         return result
     }
 
-    fun dispose() = data!!.free()
+    fun dispose() = data?.free()
 }

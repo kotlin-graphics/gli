@@ -3,6 +3,7 @@ package gli_
 import glm_.BYTES
 import glm_.buffer.adr
 import glm_.buffer.bufferBig
+import glm_.buffer.free
 import glm_.buffer.pos
 import glm_.glm
 import glm_.size
@@ -78,6 +79,8 @@ interface saveKtx {
             data.pos = 0
             while (data.hasRemaining()) it.write(data)
         }
+
+        data.free()
 
         return true
     }

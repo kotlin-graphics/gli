@@ -357,7 +357,7 @@ open class Texture {
         data<T>(layer, face, level)[imageOffset] = texel
     }
 
-    open fun dispose() = storage?.data()?.free()
+    open fun dispose() = storage?.dispose()
 
     override fun equals(other: Any?) = when {
         other !is Texture -> false

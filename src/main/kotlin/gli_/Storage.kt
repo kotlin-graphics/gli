@@ -159,7 +159,7 @@ class Storage {
         return faceSize(baseLevel, maxLevel) * (maxFace - baseFace + 1)
     }
 
-    fun destroy() = data?.free()
+    fun dispose() = data?.free()
 
     override fun equals(other: Any?): Boolean {
         return if (other !is Storage) false
