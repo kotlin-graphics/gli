@@ -260,7 +260,7 @@ enum class Format {
     val i = ordinal - 1   // INVALID -> -1
 
     companion object {
-        fun of(i: Int) = values().find { it.i == i } ?: INVALID
+        infix fun of(i: Int) = values().find { it.i == i } ?: INVALID
     }
 
     val isValid get() = this in FORMAT_FIRST..FORMAT_LAST
@@ -333,7 +333,7 @@ enum class Swizzle {
     val i = ordinal
 
     companion object {
-        fun of(i: Int) = values().find { it.i == i }!!
+        infix fun of(i: Int) = values().first { it.i == i }
     }
 
     fun isChannel() = this in SWIZZLE_CHANNEL_FIRST..SWIZZLE_CHANNEL_LAST

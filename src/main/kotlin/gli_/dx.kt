@@ -163,7 +163,7 @@ object dx {
         FORCE_DWORD(0x7fffffff);
 
         companion object {
-            fun of(i: Int) = values().find { it.i == i }!!
+            infix fun of(i: Int) = values().first { it.i == i }
         }
     }
 
@@ -332,7 +332,7 @@ object dx {
         ASTC_12X12_UNORM_SRGB(187);
 
         companion object {
-            fun of(i: Int) = values().find { it.i == i }!!
+            infix fun of(i: Int) = values().first { it.i == i }
         }
     }
 
@@ -473,7 +473,7 @@ object dx {
         val i = ordinal
 
         companion object {
-            fun of(i: Int) = Dxgi_format_dds.values().find { it.i == i }!!
+            infix fun of(i: Int) = Dxgi_format_dds.values().first { it.i == i }
         }
     }
 
@@ -501,7 +501,7 @@ object dx {
         LUMINANCE_ALPHAPIXELS(LUMINANCE.i or ALPHAPIXELS.i);
 
         companion object {
-            fun of(i: Int) = values().find { it.i == i }!!
+            infix fun of(i: Int) = values().first { it.i == i }
         }
     }
 

@@ -300,7 +300,7 @@ object gl {
         RGBA16_SSCALED_GTC(0xF011);
 
         companion object {
-            fun of(int: Int) = values().first { it.i == int }
+            infix fun of(int: Int) = values().first { it.i == int }
         }
     }
 
@@ -331,7 +331,7 @@ object gl {
         SRGB_ALPHA_EXT(0x8C42);          //SRGB_ALPHA_EXT
 
         companion object {
-            fun of(int: Int) = values().first { it.i == int }
+            infix fun of(int: Int) = values().first { it.i == int }
         }
     }
 
@@ -369,7 +369,7 @@ object gl {
         UINT16_A1RGB5_GTC(0xFFFC);
 
         companion object {
-            fun of(int: Int) = values().first { it.i == int }
+            infix fun of(int: Int) = values().first { it.i == int }
         }
     }
 

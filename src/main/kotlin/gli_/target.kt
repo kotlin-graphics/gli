@@ -46,7 +46,7 @@ enum class Target {
     }
 
     companion object {
-        fun of(int: Int) = values().first { it.i == int }
+        infix fun of(int: Int) = values().first { it.i == int }
     }
 }
 
