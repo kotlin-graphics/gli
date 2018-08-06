@@ -11,7 +11,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.51'
+    ext.kotlinVersion = '1.2.60'
 
     repositories {
         jcenter()   // shadow
@@ -31,7 +31,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    implementation 'com.github.kotlin-graphics:glm:432a0e1'
+    implementation 'com.github.kotlin-graphics:glm:a8b5810'
 
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
 
