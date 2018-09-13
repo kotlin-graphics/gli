@@ -8,7 +8,9 @@ import java.awt.image.BufferedImage.*
 import java.awt.image.DataBufferByte
 import java.awt.image.DataBufferInt
 import java.awt.image.DataBufferUShort
+import java.lang.IllegalArgumentException
 import java.net.URI
+import java.nio.*
 import java.nio.file.Path
 import java.nio.file.Paths
 import javax.imageio.ImageIO
@@ -39,6 +41,27 @@ interface load {
             loadImage(path, flipY)
         }
         else -> throw Error("unsupported extension: ${path.fileName}")
+    }
+
+    fun load(buffer: ByteBuffer, type: String, flipY: Boolean = false): Texture {
+        return when(type) {
+            "dds"  -> gli.loadDds(buffer)
+            "kmg"  -> gli.loadKmg(buffer)
+            "ktx"  -> gli.loadKtx(buffer)
+            "jpeg", "jpg", "png", "gif", "bmp", "wbmp" -> {
+                val image = ImageIO.read(ByteBufferBackedInputStream(buffer))
+                gli.createTexture(image)
+            }
+            "tga"  -> {
+                if(!tgaAdded){
+                    IIORegistry.getDefaultInstance().registerServiceProvider(TgaImageReaderSpi())
+                    tgaAdded = true
+                }
+                val image = ImageIO.read(ByteBufferBackedInputStream(buffer)).also { if(flipY) it.flipY() }
+                createTexture(image)
+            }
+            else -> throw IllegalArgumentException("Type not supported")
+        }
     }
 
     fun loadImage(filename: String, flipY: Boolean = false) = loadImage(Paths.get(filename), flipY)
