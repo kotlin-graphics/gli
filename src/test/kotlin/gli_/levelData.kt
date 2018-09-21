@@ -1,15 +1,6 @@
 package gli_
 
-import glm_.buffer.intBufferBig
-import gli_.gl
-import gli_.gli
 import io.kotlintest.specs.StringSpec
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL12
-import org.lwjgl.opengl.GL13.glCompressedTexSubImage2D
-import org.lwjgl.opengl.GL33
-import org.lwjgl.opengl.GL42.glTexStorage2D
 
 /**
  * Created by GBarbieri on 21.04.2017.

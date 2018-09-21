@@ -3,7 +3,7 @@ package gli_
 import gli_.Swizzle.*
 import gli_.detail.Cap.*
 import glm_.BYTES
-import glm_.buffer.pos
+import kool.pos
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4i
 import java.nio.ByteBuffer

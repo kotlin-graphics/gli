@@ -1,9 +1,6 @@
 package gli_
 
 import glm_.b
-import glm_.buffer.adr
-import glm_.buffer.cap
-import glm_.buffer.free
 import glm_.glm
 import glm_.set
 import glm_.vec1.Vec1i
@@ -11,6 +8,8 @@ import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
+import kool.adr
+import kool.cap
 import org.lwjgl.system.MemoryUtil.memByteBuffer
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass

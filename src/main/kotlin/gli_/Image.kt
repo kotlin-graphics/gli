@@ -1,8 +1,8 @@
 package gli_
 
-import glm_.buffer.adr
-import glm_.buffer.cap
-import glm_.buffer.free
+import kool.adr
+import kool.cap
+import kool.free
 import glm_.glm
 import glm_.set
 import glm_.vec3.Vec3i

@@ -1,8 +1,8 @@
 package gli_
 
-import glm_.buffer.adr
-import glm_.buffer.bufferBig
-import glm_.buffer.pos
+import kool.adr
+import kool.bufferBig
+import kool.pos
 import glm_.size
 import java.nio.channels.FileChannel
 import java.nio.file.Path

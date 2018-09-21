@@ -1,8 +1,8 @@
 package gli_
 
-import glm_.buffer.adr
 import glm_.vec3.Vec3i
 import glm_.glm
+import kool.adr
 
 /** Pre compute at texture instance creation some information for faster access to texels   */
 class Cache {

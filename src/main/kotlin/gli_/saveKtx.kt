@@ -1,10 +1,10 @@
 package gli_
 
 import glm_.BYTES
-import glm_.buffer.adr
-import glm_.buffer.bufferBig
-import glm_.buffer.free
-import glm_.buffer.pos
+import kool.adr
+import kool.bufferBig
+import kool.free
+import kool.pos
 import glm_.glm
 import glm_.size
 import java.nio.channels.FileChannel

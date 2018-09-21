@@ -1,7 +1,7 @@
 package gli_
 
 import glm_.b
-import glm_.buffer.adr
+import kool.adr
 import glm_.glm
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i

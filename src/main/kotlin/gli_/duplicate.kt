@@ -1,6 +1,6 @@
 package gli_
 
-import glm_.buffer.adr
+import kool.adr
 
 
 interface duplicate {

@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL33;
 import java.nio.IntBuffer;
 
 import static gli_.Java.gli;
-import static glm_.buffer.BufferKt.intBufferBig;
+import static kool.BufferKt.intBufferBig;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.glCompressedTexSubImage2D;
 import static org.lwjgl.opengl.GL42.glTexStorage2D;

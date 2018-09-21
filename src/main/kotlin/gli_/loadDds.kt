@@ -1,13 +1,13 @@
 package gli_
 
-import glm_.buffer.bufferBig
+import kool.bufferBig
 import gli_.detail.has
 import gli_.dx.has
 import gli_.dx.or
 import glm_.b
-import glm_.buffer.adr
-import glm_.buffer.cap
-import glm_.buffer.pos
+import kool.adr
+import kool.cap
+import kool.pos
 import glm_.glm
 import glm_.i
 import glm_.size

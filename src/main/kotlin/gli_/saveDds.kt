@@ -5,10 +5,10 @@ import gli_.detail.or
 import gli_.dx.has
 import glm_.L
 import glm_.b
-import glm_.buffer.adr
-import glm_.buffer.bufferBig
-import glm_.buffer.cap
-import glm_.buffer.pos
+import kool.adr
+import kool.bufferBig
+import kool.cap
+import kool.pos
 import glm_.size
 import java.nio.channels.FileChannel
 import java.nio.file.Path
