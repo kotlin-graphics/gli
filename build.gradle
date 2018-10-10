@@ -31,7 +31,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    implementation 'com.github.kotlin-graphics:glm:f6fcad752fc3cf530f0da8bfe44ed4b3e26df314'
+    implementation 'com.github.kotlin-graphics:glm:f63d840cdebc3211e623f6773c6a03c73c19b262'
 
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.10'
 
