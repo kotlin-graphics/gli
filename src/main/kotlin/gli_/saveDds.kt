@@ -6,7 +6,7 @@ import gli_.dx.has
 import glm_.L
 import glm_.b
 import kool.adr
-import kool.bufferBig
+import kool.Buffer
 import kool.cap
 import kool.pos
 import glm_.size
@@ -72,7 +72,7 @@ interface saveDds {
 
         var length = texture.size + detail.FOURCC_DDS.size + detail.DdsHeader.SIZE
         if (requireDX10Header) length += detail.DdsHeader10.SIZE
-        val data = bufferBig(length)
+        val data = Buffer(length)
 
         detail.FOURCC_DDS.forEach { data.put(it.b) }
 

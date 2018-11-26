@@ -1,6 +1,6 @@
 package gli_
 
-import kool.bufferBig
+import kool.Buffer
 import gli_.detail.has
 import gli_.dx.has
 import gli_.dx.or
@@ -37,8 +37,8 @@ interface loadDds {
     fun loadDds(path: Path): Texture {
 
         val buffer = FileChannel.open(path, StandardOpenOption.READ).use { channel ->
-            bufferBig(channel.size().i).also {
-                while (channel.read(it) > 0) Unit
+            Buffer(channel.size().i).also {
+                while (channel.read(it) > 0);
                 it.pos = 0
                 it.order(ByteOrder.nativeOrder())
             }

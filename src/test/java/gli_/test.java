@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL33;
 import java.nio.IntBuffer;
 
 import static gli_.Java.gli;
-import static kool.BufferKt.intBufferBig;
+import static kool.UtilsKt.IntBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.glCompressedTexSubImage2D;
 import static org.lwjgl.opengl.GL42.glTexStorage2D;
@@ -30,12 +30,12 @@ public class test {
         gl.Target target = gli_.gli.gl.translate(texture.getTarget());
         assert (texture.getFormat().isCompressed() && target == gl.Target._2D);
 
-        IntBuffer textureName = intBufferBig(1);
+        IntBuffer textureName = IntBuffer(1);
         glGenTextures(textureName);
         glBindTexture(target.getI(), textureName.get(0));
         glTexParameteri(target.getI(), GL12.GL_TEXTURE_BASE_LEVEL, 0);
         glTexParameteri(target.getI(), GL12.GL_TEXTURE_MAX_LEVEL, texture.levels() - 1);
-        IntBuffer swizzles = intBufferBig(4);
+        IntBuffer swizzles = IntBuffer(4);
         texture.getSwizzles().to(swizzles);
         glTexParameteriv(target.getI(), GL33.GL_TEXTURE_SWIZZLE_RGBA, swizzles);
         Vec3i extent = texture.extent(0);

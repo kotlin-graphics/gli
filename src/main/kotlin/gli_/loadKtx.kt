@@ -2,7 +2,7 @@ package gli_
 
 import glm_.BYTES
 import kool.adr
-import kool.bufferBig
+import kool.Buffer
 import kool.pos
 import glm_.glm
 import glm_.i
@@ -29,8 +29,8 @@ interface loadKtx {
     fun loadKtx(path: Path): Texture {
 
         val buffer = FileChannel.open(path, StandardOpenOption.READ).use { channel ->
-            bufferBig(channel.size().i).also {
-                while (channel.read(it) > 0) Unit
+            Buffer(channel.size().i).also {
+                while (channel.read(it) > 0);
                 it.pos = 0
                 it.order(ByteOrder.nativeOrder())
             }

@@ -2,7 +2,7 @@ package gli_
 
 import glm_.BYTES
 import kool.adr
-import kool.bufferBig
+import kool.Buffer
 import kool.free
 import kool.pos
 import glm_.glm
@@ -29,7 +29,7 @@ interface saveKtx {
 
         val desc = texture.format.formatInfo
 
-        val data = bufferBig(computeKtxStorageSize(texture))
+        val data = Buffer(computeKtxStorageSize(texture))
 
         ktx.FOURCC_KTX10.forEach{ data.put(it) }
 
