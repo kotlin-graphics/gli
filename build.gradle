@@ -14,7 +14,7 @@ ext.moduleName = 'com.github.kotlin_graphics.gli'
 buildscript {
 
     ext.kotlinVersion = '1.3.10'
-    ext.glmVersion = '2520cd8568ae070f4bf4db7c97d978184c89fd95'
+    ext.glmVersion = 'e120699dd44836799e2aa4e0fbf789a5571ec329'
 
     repositories {
         jcenter()   // shadow
