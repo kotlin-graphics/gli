@@ -3,8 +3,6 @@ package gli_
 import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4b
-import io.kotlintest.matchers.gt
-import io.kotlintest.matchers.should
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
@@ -18,7 +16,7 @@ class core : StringSpec() {
             texture.clear(Vec4b(255, 127, 0, 255))
             val levels = texture.levels()
 
-            levels should gt(1)
+            assert(levels > 1)
 
             assert(texture.notEmpty())
 
