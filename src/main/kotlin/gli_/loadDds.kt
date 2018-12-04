@@ -1,17 +1,13 @@
 package gli_
 
-import kool.Buffer
 import gli_.detail.has
 import gli_.dx.has
 import gli_.dx.or
 import glm_.b
-import kool.adr
-import kool.cap
-import kool.pos
 import glm_.glm
 import glm_.i
-import glm_.size
 import glm_.vec3.Vec3i
+import kool.*
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -130,7 +126,7 @@ interface loadDds {
         val texture = Texture(getTarget(header, header10), format, Vec3i(header.width, header.height, depthCount),
                 glm.max(header10.arraySize, 1), faceCount, mipMapCount)
 
-        assert(data.size == data.pos + texture.size)
+        assert(data.rem == data.pos + texture.size)
 
         memCopy(data.adr, texture.data().adr, texture.size)
 

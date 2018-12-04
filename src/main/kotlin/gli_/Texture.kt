@@ -2,7 +2,7 @@ package gli_
 
 import glm_.b
 import glm_.glm
-import glm_.set
+import kool.set
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i

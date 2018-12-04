@@ -3,10 +3,10 @@ package gli_
 import kool.adr
 import kool.free
 import glm_.glm
-import glm_.size
 import glm_.vec1.Vec1i
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
+import kool.rem
 import org.lwjgl.system.MemoryUtil
 import java.nio.ByteBuffer
 
@@ -74,7 +74,7 @@ class Storage {
         return glm.max(extent shr level, 1)
     }
 
-    fun size() = data!!.size
+    fun size() = data!!.rem
 
     fun data() = data!!
 

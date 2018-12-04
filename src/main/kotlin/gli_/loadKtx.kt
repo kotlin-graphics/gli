@@ -6,8 +6,8 @@ import kool.Buffer
 import kool.pos
 import glm_.glm
 import glm_.i
-import glm_.size
 import glm_.vec3.Vec3i
+import kool.rem
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -43,7 +43,7 @@ interface loadKtx {
      *  @param data buffer of the texture container data to read  */
     fun loadKtx(data: ByteBuffer): Texture {
 
-        assert(data.size >= ktx.Header10.size)
+        assert(data.rem >= ktx.Header10.size)
 
         // KTX10
         run {

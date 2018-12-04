@@ -1,6 +1,6 @@
 package gli_
 
-import glm_.set
+import kool.set
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub

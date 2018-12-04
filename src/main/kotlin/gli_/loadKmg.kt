@@ -1,11 +1,11 @@
 package gli_
 
-import kool.adr
-import kool.Buffer
-import kool.pos
 import glm_.i
-import glm_.size
 import glm_.vec3.Vec3i
+import kool.Buffer
+import kool.adr
+import kool.pos
+import kool.rem
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -41,7 +41,7 @@ interface loadKmg {
      *  @param data buffer of the texture container data to read  */
     fun loadKmg(data: ByteBuffer): Texture {
 
-        assert(data.size >= kmg.Header10.size)
+        assert(data.rem >= kmg.Header10.size)
 
         // KMG100
         run {
@@ -75,7 +75,7 @@ interface loadKmg {
                     memCopy(data.adr, dst.adr, faceSize)
 
                     data.pos += faceSize
-                    assert(data.pos <= data.size)
+                    assert(data.pos <= data.rem)
                 }
             }
 
