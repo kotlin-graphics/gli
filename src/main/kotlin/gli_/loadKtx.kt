@@ -1,12 +1,12 @@
 package gli_
 
 import glm_.BYTES
+import kool.adr
+import kool.Buffer
+import kool.pos
 import glm_.glm
 import glm_.i
 import glm_.vec3.Vec3i
-import kool.Buffer
-import kool.adr
-import kool.pos
 import kool.rem
 import java.net.URI
 import java.nio.ByteBuffer
