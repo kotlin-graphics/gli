@@ -1,12 +1,8 @@
 package gli_
 
 import glm_.BYTES
-import kool.adr
-import kool.Buffer
-import kool.free
-import kool.pos
 import glm_.glm
-import glm_.size
+import kool.*
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -69,7 +65,7 @@ interface saveKtx {
                     imageSize += paddedSize
                     data.pos += paddedSize
 
-                    assert(data.pos <= data.size)
+                    assert(data.pos <= data.rem)
                 }
 
             imageSize = glm.ceilMultiple(imageSize, 4)

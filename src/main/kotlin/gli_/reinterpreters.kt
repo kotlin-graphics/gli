@@ -2,7 +2,7 @@ package gli_
 
 import glm_.BYTES
 import kool.cap
-import glm_.set
+import kool.set
 import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*

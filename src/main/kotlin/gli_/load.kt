@@ -1,7 +1,7 @@
 package gli_
 
 import gli_.tga.TgaImageReaderSpi
-import glm_.set
+import kool.set
 import glm_.vec3.Vec3i
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.*

@@ -4,7 +4,7 @@ import kool.adr
 import kool.cap
 import kool.free
 import glm_.glm
-import glm_.set
+import kool.set
 import glm_.vec3.Vec3i
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memByteBuffer

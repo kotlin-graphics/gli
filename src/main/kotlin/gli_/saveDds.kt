@@ -5,11 +5,7 @@ import gli_.detail.or
 import gli_.dx.has
 import glm_.L
 import glm_.b
-import kool.adr
-import kool.Buffer
-import kool.cap
-import kool.pos
-import glm_.size
+import kool.*
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -137,7 +133,7 @@ interface saveDds {
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
             data.pos = 0
             while (data.hasRemaining()) it.write(data)
-            it.truncate(data.size.L)
+            it.truncate(data.rem.L)
         }
 
         return true
