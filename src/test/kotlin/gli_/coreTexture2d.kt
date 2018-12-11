@@ -532,7 +532,7 @@ class coreTexture2d : StringSpec() {
             }
         }
 
-        "clear" {
+        "clear2" {
 
             val black = Vec4ub(0, 0, 0, 255)
             val color = Vec4ub(255, 127, 0, 255)

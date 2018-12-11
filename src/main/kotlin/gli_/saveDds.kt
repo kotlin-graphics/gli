@@ -132,8 +132,9 @@ interface saveDds {
 
         FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE).use {
             data.pos = 0
-            while (data.hasRemaining()) it.write(data)
-            it.truncate(data.rem.L)
+            while (data.hasRemaining())
+                it.write(data)
+//            it.truncate(data.rem.L)
         }
 
         return true
