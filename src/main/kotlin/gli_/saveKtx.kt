@@ -65,7 +65,7 @@ interface saveKtx {
                     imageSize += paddedSize
                     data.pos += paddedSize
 
-                    assert(data.pos <= data.rem)
+                    assert(data.pos <= data.cap)
                 }
 
             imageSize = glm.ceilMultiple(imageSize, 4)

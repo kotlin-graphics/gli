@@ -1,9 +1,6 @@
 package gli_
 
-import kool.Buffer
-import kool.adr
-import kool.pos
-import kool.rem
+import kool.*
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -57,7 +54,7 @@ interface saveKmg {
                     memCopy(src.adr, data.adr, faceSize)
 
                     data.pos += faceSize
-                    assert(data.pos <= data.rem)
+                    assert(data.pos <= data.cap)
                 }
             }
 

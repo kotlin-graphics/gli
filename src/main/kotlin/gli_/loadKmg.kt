@@ -2,10 +2,7 @@ package gli_
 
 import glm_.i
 import glm_.vec3.Vec3i
-import kool.Buffer
-import kool.adr
-import kool.pos
-import kool.rem
+import kool.*
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -75,7 +72,7 @@ interface loadKmg {
                     memCopy(data.adr, dst.adr, faceSize)
 
                     data.pos += faceSize
-                    assert(data.pos <= data.rem)
+                    assert(data.pos <= data.cap)
                 }
             }
 
