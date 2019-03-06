@@ -2,7 +2,9 @@ package gli_
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import java.nio.file.Files
+import java.io.*
+import java.nio.*
+import java.nio.file.*
 
 
 class coreLoad : StringSpec() {
@@ -90,6 +92,37 @@ class coreLoad : StringSpec() {
             params.forEach {
                 loadFileKtx(it)
                 loadFileKmg(it)
+                loaFileDds(it)
+            }
+        }
+
+        "loadPng" {
+            val filename = "kueken7_srgb8.png"
+
+            gli.load(uriOf(filename))
+        }
+
+        "loadJpg" {
+            val files = listOf("kueken7_rgb8.jpg", "kueken7_srgb8.jpg", "kueken8_srgb8.jpg")
+            for(file in files) {
+                gli.load(uriOf(file))
+            }
+        }
+
+        "loadFromMemory" {
+            val files = listOf("kueken7_srgb8.png",
+                               "kueken7_rgb8.jpg",
+                               "kueken7_srgb8.jpg",
+                               "kueken8_srgb8.jpg")
+
+            for(file in files) {
+
+                val uri = uriOf(file)
+                val path = Paths.get(uri).toAbsolutePath().toString()
+
+                val bytes = ByteBuffer.wrap(FileInputStream (path).readBytes())
+
+                gli.load(bytes, file.substringAfterLast('.'))
             }
         }
     }

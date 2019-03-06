@@ -34,10 +34,7 @@ interface load {
         "ktx" -> gli.loadKtx(path)
         "jpeg", "jpg", "png", "gif", "bmp", "wbmp" -> loadImage(path, flipY)
         "tga" -> {
-            if (!tgaAdded) {
-                IIORegistry.getDefaultInstance().registerServiceProvider(TgaImageReaderSpi())
-                tgaAdded = true
-            }
+            registerTga()
             loadImage(path, flipY)
         }
         else -> throw Error("unsupported extension: ${path.fileName}")
@@ -53,14 +50,18 @@ interface load {
                 gli.createTexture(image)
             }
             "tga"  -> {
-                if(!tgaAdded){
-                    IIORegistry.getDefaultInstance().registerServiceProvider(TgaImageReaderSpi())
-                    tgaAdded = true
-                }
+                registerTga()
                 val image = ImageIO.read(ByteBufferBackedInputStream(buffer)).also { if(flipY) it.flipY() }
                 createTexture(image)
             }
             else -> throw IllegalArgumentException("Type not supported")
+        }
+    }
+
+    private fun registerTga() {
+        if (!tgaAdded) {
+            IIORegistry.getDefaultInstance().registerServiceProvider(TgaImageReaderSpi())
+            tgaAdded = true
         }
     }
 
