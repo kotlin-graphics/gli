@@ -1,6 +1,8 @@
 package gli_
 
-import java.awt.image.BufferedImage
+import kool.*
+import kool.lib.*
+import org.lwjgl.*
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.file.Path
@@ -15,14 +17,21 @@ fun uriOf(str: String): URI = ClassLoader.getSystemResource(str).toURI()
 
 val Path.extension get() = toString().substringAfterLast(".").toLowerCase()
 
-fun BufferedImage.flipY(): BufferedImage {      // TODO what do I do here?
-    var scanline1: Any? = null
-    var scanline2: Any? = null
-    for (i in 0 until height / 2) {
-        scanline1 = raster.getDataElements(0, i, width, 1, scanline1)
-        scanline2 = raster.getDataElements(0, height - i - 1, width, 1, scanline2)
-        raster.setDataElements(0, i, width, 1, scanline2)
-        raster.setDataElements(0, height - i - 1, width, 1, scanline1)
+internal fun flipY(buffer: ByteBuffer, width: Int, height: Int)
+        = flipY(buffer.toByteArray(), width, height)
+
+internal fun flipY(buffer: ByteArray, width: Int, height: Int) : ByteBuffer {
+
+    val result = BufferUtils.createByteBuffer(buffer.size)
+
+    for(scanLineIndex in 0 until height) {
+        val srcScanLineStart = width * scanLineIndex
+        val dstScanLineStart = width * (height - scanLineIndex - 1)
+
+        result.pos = dstScanLineStart
+        result.put(buffer, srcScanLineStart, width)
     }
-    return this
+    result.pos = 0
+
+    return result
 }

@@ -49,7 +49,7 @@ interface load {
         val height: Int
         val compCount: Int
 
-        val imageBuffer: ByteBuffer
+        var imageBuffer: ByteBuffer
 
         Stack.with { mem ->
             val widthBuf = mem.ints(1)
@@ -64,7 +64,9 @@ interface load {
             compCount = compCountBuf.get()
         }
 
-        if(flipY) TODO("flipY not yet implemented")
+        if(flipY) {
+	        imageBuffer = flipY(imageBuffer, width, height)
+        }
 
 		return createTexture(imageBuffer, width, height, compCount)
 	}
@@ -75,7 +77,7 @@ interface load {
         val height: Int
         val compCount: Int
 
-        val imageBuffer: ByteBuffer
+        var imageBuffer: ByteBuffer
 
         Stack.with { mem ->
             val widthBuf = mem.ints(1)
@@ -90,7 +92,9 @@ interface load {
             compCount = compCountBuf.get()
         }
 
-        if(flipY) TODO("flipY not yet implemented")
+		if(flipY) {
+			imageBuffer = flipY(imageBuffer, width, height)
+		}
 
         return createTexture(imageBuffer, width, height, compCount)
     }
