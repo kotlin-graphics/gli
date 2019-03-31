@@ -100,7 +100,7 @@ interface load {
     }
 
     /**
-     * creates a texture from a buffer containing the buffer.
+     * creates a texture from a buffer containing the image.
      *
      * Each pixel is [compCount] bytes in size.
      *
