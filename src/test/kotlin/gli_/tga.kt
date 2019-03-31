@@ -2,12 +2,11 @@ package gli_
 
 import gli_.tga.TgaImageReaderSpi
 import io.kotlintest.specs.StringSpec
-//import sun.awt.image.IntegerInterleavedRaster
 import java.awt.image.DirectColorModel
 import javax.imageio.ImageIO
 import javax.imageio.spi.IIORegistry
 
-class tga : StringSpec() {
+class tga : StringSpec() { // TODO The tga reader is obsolete after the move to stbi
 
     init {
 //        "tga fail" {

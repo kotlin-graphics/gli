@@ -15,7 +15,7 @@ fun uriOf(str: String): URI = ClassLoader.getSystemResource(str).toURI()
 
 val Path.extension get() = toString().substringAfterLast(".").toLowerCase()
 
-fun BufferedImage.flipY(): BufferedImage {
+fun BufferedImage.flipY(): BufferedImage {      // TODO what do I do here?
     var scanline1: Any? = null
     var scanline2: Any? = null
     for (i in 0 until height / 2) {

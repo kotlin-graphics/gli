@@ -36,7 +36,7 @@ import javax.imageio.spi.ImageReaderSpi
 import javax.imageio.stream.ImageInputStream
 
 
-class TgaImageReaderSpi : ImageReaderSpi(
+class TgaImageReaderSpi : ImageReaderSpi( // TODO The tga reader is obsolete after the move to stbi
         VENDOR_NAME, VERSION, FORMAT_NAMES, SUFFIXES, MIME_TYPES,
         READER_CLASSNAME,
         arrayOf(ImageInputStream::class.java),
@@ -141,7 +141,7 @@ class TgaImageReaderSpi : ImageReaderSpi(
 }
 
 // TODO:  incorporate the x and y origins
-class TGAImageReader(originatingProvider: ImageReaderSpi) : ImageReader(originatingProvider) {
+class TGAImageReader(originatingProvider: ImageReaderSpi) : ImageReader(originatingProvider) { // TODO The tga reader is obsolete after the move to stbi
 
     /** The {@link ImageInputStream} from which the TGA is read.  This may be <code>null</code> if
      *  {@link ImageReader#setInput(Object)} (or the other forms of <code>setInput()</code>) has not been called.

@@ -80,7 +80,7 @@ interface load {
     /**
      * creates a texture from an BufferedImage
      */
-    fun createTexture(image: BufferedImage): Texture {
+    fun createTexture(image: BufferedImage): Texture {          // TODO refactor and switch to stb
         val extent = Vec3i(image.width, image.height, 1)
         return when (image.type) {
             TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)
