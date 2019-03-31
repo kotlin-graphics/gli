@@ -1,20 +1,15 @@
 package gli_
 
-import gli_.tga.TgaImageReaderSpi
-import kool.set
 import glm_.vec3.Vec3i
-import java.awt.image.BufferedImage
-import java.awt.image.BufferedImage.*
-import java.awt.image.DataBufferByte
-import java.awt.image.DataBufferInt
-import java.awt.image.DataBufferUShort
+import kool.*
+import org.lwjgl.stb.*
+import org.lwjgl.stb.STBImage.stbi_load_from_memory
+import java.io.*
 import java.lang.IllegalArgumentException
 import java.net.URI
 import java.nio.*
 import java.nio.file.Path
 import java.nio.file.Paths
-import javax.imageio.ImageIO
-import javax.imageio.spi.IIORegistry
 
 /**
  * Created by elect on 01/05/17.
@@ -32,11 +27,7 @@ interface load {
         "dds" -> gli.loadDds(path)
         "kmg" -> gli.loadKmg(path)
         "ktx" -> gli.loadKtx(path)
-        "jpeg", "jpg", "png", "gif", "bmp", "wbmp" -> loadImage(path, flipY)
-        "tga" -> {
-            registerTga()
-            loadImage(path, flipY)
-        }
+        "jpeg", "jpg", "png", "gif", "bmp", "tga" -> loadImage(path.toFile(), flipY)
         else -> throw Error("unsupported extension: ${path.fileName}")
     }
 
@@ -45,149 +36,95 @@ interface load {
             "dds"  -> gli.loadDds(buffer)
             "kmg"  -> gli.loadKmg(buffer)
             "ktx"  -> gli.loadKtx(buffer)
-            "jpeg", "jpg", "png", "gif", "bmp", "wbmp" -> {
-                val image = ImageIO.read(ByteBufferBackedInputStream(buffer))
-                gli.createTexture(image)
-            }
-            "tga"  -> {
-                registerTga()
-                val image = ImageIO.read(ByteBufferBackedInputStream(buffer)).also { if(flipY) it.flipY() }
-                createTexture(image)
-            }
+            "jpeg", "jpg", "png", "gif", "bmp", "tga" -> loadImageFromMem(buffer, flipY)
             else -> throw IllegalArgumentException("Type not supported")
         }
     }
 
-    private fun registerTga() {
-        if (!tgaAdded) {
-            IIORegistry.getDefaultInstance().registerServiceProvider(TgaImageReaderSpi())
-            tgaAdded = true
+    private fun loadImage(file: File, flipY: Boolean): Texture {
+
+        if(!file.exists()) throw NoSuchFileException(file)
+
+        val width: Int
+        val height: Int
+        val compCount: Int
+
+        val imageBuffer: ByteBuffer
+
+        Stack.with { mem ->
+            val widthBuf = mem.ints(1)
+            val heightBuf = mem.ints(1)
+            val compCountBuf = mem.ints(1)
+
+            imageBuffer = STBImage.stbi_load(file.absolutePath, widthBuf, heightBuf, compCountBuf, 0)
+                          ?: throw IOException("Couldn't load image at $file.")
+
+            width = widthBuf.get()
+            height = heightBuf.get()
+            compCount = compCountBuf.get()
         }
-    }
 
-    fun loadImage(filename: String, flipY: Boolean = false) = loadImage(Paths.get(filename), flipY)
+        if(flipY) TODO("flipY not yet implemented")
 
-    fun loadImage(uri: URI, flipY: Boolean = false) = loadImage(Paths.get(uri), flipY)
+		return createTexture(imageBuffer, width, height, compCount)
+	}
 
-    /** Loads a texture storage_linear from DDS memory. Returns an empty storage_linear in case of failure.
-     *  @param uri Uri of the file to open including filaname and filename extension */
-    fun loadImage(path: Path, flipY: Boolean = false): Texture {
-        val image = ImageIO.read(path.toFile())
-        if (flipY) image.flipY()
-        return createTexture(image)
+	private fun loadImageFromMem(buffer: ByteBuffer, flipY: Boolean): Texture {
+
+        val width: Int
+        val height: Int
+        val compCount: Int
+
+        val imageBuffer: ByteBuffer
+
+        Stack.with { mem ->
+            val widthBuf = mem.ints(1)
+            val heightBuf = mem.ints(1)
+            val compCountBuf = mem.ints(1)
+
+            imageBuffer = stbi_load_from_memory(buffer, widthBuf, heightBuf, compCountBuf, 0)
+                          ?: throw IOException("Couldn't load image")
+
+            width = widthBuf.get()
+            height = heightBuf.get()
+            compCount = compCountBuf.get()
+        }
+
+        if(flipY) TODO("flipY not yet implemented")
+
+        return createTexture(imageBuffer, width, height, compCount)
     }
 
     /**
-     * creates a texture from an BufferedImage
+     * creates a texture from a buffer containing the buffer.
+     *
+     * Each pixel is [compCount] bytes in size.
+     *
+     * [compCount]:
+     *
+     * 1 : gray
+     *
+     * 2 : gray alpha
+     *
+     * 3 : red green blue
+     *
+     * 4 : red green blue alpha
+     *
+     * @param compCount the number of color-components per pixel
      */
-    fun createTexture(image: BufferedImage): Texture {          // TODO refactor and switch to stb
-        val extent = Vec3i(image.width, image.height, 1)
-        return when (image.type) {
-            TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                            dst[i++] = it ushr 16
-                            dst[i++] = it ushr 8
-                            dst[i++] = it
-                        }
-                    }
-            TYPE_INT_ARGB -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // push alpha at the end
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                            dst[i++] = it ushr 16
-                            dst[i++] = it ushr 8
-                            dst[i++] = it
-                            dst[i++] = it ushr 24
-                        }
-                    }
-            TYPE_INT_ARGB_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // push alpha at the end and demultiply
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                            val a = it ushr 24
-                            dst[i++] = (it ushr 16) / a
-                            dst[i++] = (it ushr 8) / a
-                            dst[i++] = it / a
-                            dst[i++] = a
-                        }
-                    }
-            TYPE_INT_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // switch blue and red
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                            dst[i++] = it
-                            dst[i++] = it ushr 8
-                            dst[i++] = it ushr 16
-                        }
-                    }
-            TYPE_3BYTE_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // switch blue and red
-                        val dst = data()
-                        val src = (image.raster.dataBuffer as DataBufferByte).data
-                        for (i in src.indices step 3) {
-                            dst[i] = src[i + 2]
-                            dst[i + 1] = src[i + 1]
-                            dst[i + 2] = src[i]
-                        }
-                    }
-            TYPE_4BYTE_ABGR -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // invert
-                        val dst = data()
-                        val src = (image.raster.dataBuffer as DataBufferByte).data
-                        for (i in src.indices step 4) {
-                            dst[i] = src[i + 3]
-                            dst[i + 1] = src[i + 2]
-                            dst[i + 2] = src[i + 1]
-                            dst[i + 3] = src[i]
-                        }
-                    }
-            TYPE_4BYTE_ABGR_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // invert and demultiply
-                        val dst = data()
-                        val src = (image.raster.dataBuffer as DataBufferByte).data
-                        for (i in src.indices step 4) {
-                            val a = src[i]
-                            dst[i] = src[i + 3] / a
-                            dst[i + 1] = src[i + 2] / a
-                            dst[i + 2] = src[i + 1] / a
-                            dst[i + 3] = a
-                        }
-                    }
-            TYPE_USHORT_565_RGB -> Texture(Target._2D, Format.R5G6B5_UNORM_PACK16, extent, 1, 1, 1)
-                    .apply {
-                        // 1 to 1
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferUShort).data.forEach { dst[i++] = it }
-                    }
-            TYPE_USHORT_555_RGB -> throw Error("TYPE_USHORT_555_RGB unsupported, implement? What about alpha?")
-            TYPE_BYTE_GRAY -> Texture(Target._2D, Format.R8_UNORM_PACK8, extent, 1, 1, 1)
-                    .apply {
-                        // 1 to 1
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferInt).data.forEach { dst[i++] = it }
-                    }
-            TYPE_USHORT_GRAY -> Texture(Target._2D, Format.R16_UNORM_PACK16, extent, 1, 1, 1)
-                    .apply {
-                        // 1 to 1
-                        val dst = data()
-                        var i = 0
-                        (image.raster.dataBuffer as DataBufferInt).data.forEach { dst[i++] = it }
-                    }
-            else -> throw Error("not yet supported")
+    fun createTexture(buffer: ByteBuffer, width: Int, height: Int, compCount: Int = 4): Texture {
+        val extent = Vec3i(width, height, 1)
+        return when(compCount) {
+            1 -> Texture(Target._2D, Format.R8_UNORM_PACK8, extent, 1, 1, 1)
+            2 -> Texture(Target._2D, Format.RG8_UNORM_PACK8, extent, 1, 1, 1)
+            3 -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1)
+            4 -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1)
+            else -> throw IllegalArgumentException("compCount should be in range 1..4")
+        }.apply {
+            // 1 to 1
+            val dst = data()
+            assert(dst.rem >= buffer.rem)
+            dst.put(buffer)
         }
     }
 

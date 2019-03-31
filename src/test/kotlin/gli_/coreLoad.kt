@@ -117,10 +117,14 @@ class coreLoad : StringSpec() {
 
             for(file in files) {
 
+                println("loading $file from mem")
+
                 val uri = uriOf(file)
                 val path = Paths.get(uri).toAbsolutePath().toString()
 
-                val bytes = ByteBuffer.wrap(FileInputStream (path).readBytes())
+                val fis = FileInputStream(path)
+                val bytes = ByteBuffer.wrap(fis.readBytes())
+                fis.close()
 
                 gli.load(bytes, file.substringAfterLast('.'))
             }
