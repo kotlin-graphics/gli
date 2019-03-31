@@ -150,10 +150,11 @@ class coreLoad : StringSpec() {
                 val path = Paths.get(uri).toAbsolutePath().toString()
 
                 val fis = FileInputStream(path)
-                val bytes = ByteBuffer.wrap(fis.readBytes())
+                val bytes = fis.readBytes()
+                val buffer = BufferUtils.createByteBuffer(bytes.size).also { it.put(bytes); it.flip() }
                 fis.close()
 
-                gli.load(bytes, file.substringAfterLast('.'))
+                gli.load(buffer, file.substringAfterLast('.'))
             }
         }
     }
