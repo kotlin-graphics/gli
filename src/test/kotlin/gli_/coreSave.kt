@@ -71,5 +71,21 @@ class coreSave : StringSpec() {
             texture shouldBe textureRGBA8unormKTX
             textureRGBA8unormDDS shouldBe textureRGBA8unormKTX
         }
+
+        "using stbi" {
+            val texture = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4))
+            texture clear Vec4b(255, 127, 255, 255)
+
+            val extensions = listOf("bmp", "jpg", "tga", "png")
+
+            for(ext in extensions) {
+                val filename = "temp$ext.$ext"
+                gli.save(texture, filename)
+
+                gli.load(filename)
+
+                Files.delete(pathOf(filename))
+            }
+        }
     }
 }
