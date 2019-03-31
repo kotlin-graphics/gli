@@ -2,6 +2,8 @@ package gli_
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import kool.*
+import org.lwjgl.*
 import java.io.*
 import java.nio.*
 import java.nio.file.*
@@ -107,6 +109,31 @@ class coreLoad : StringSpec() {
             for(file in files) {
                 gli.load(uriOf(file))
             }
+        }
+
+        "temp - strange crash" {
+            val file = "kueken7_srgb8.png"
+
+            println("loading $file from mem")
+
+            val uri = uriOf(file)
+            val path = Paths.get(uri).toAbsolutePath().toString()
+
+            val fis = FileInputStream(path)
+            val bytes = fis.readBytes()
+            fis.close()
+
+            val buffer = BufferUtils.createByteBuffer(bytes.size).also { it.put(bytes); it.flip() } // DirectByteBuffer
+            val buffer2 = ByteBuffer.wrap(bytes)                                                    // HeapByteBuffer
+
+            buffer.rem shouldBe buffer2.rem
+            for(i in 0 until buffer.rem){
+                buffer[i] shouldBe buffer2[i]
+            }
+            buffer.equals(buffer2) shouldBe true
+
+            gli.load(buffer, "png")
+            gli.load(buffer2, "png")
         }
 
         "loadFromMemory" {

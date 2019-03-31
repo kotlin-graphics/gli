@@ -127,8 +127,6 @@ interface load {
             dst.put(buffer)
         }
     }
-
-//fun BufferedImage.toByteBuffer() = (raster.dataBuffer as DataBufferByte).data.toByteBuffer() TODO
 }
 
 private var tgaAdded = false
