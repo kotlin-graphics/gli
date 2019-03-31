@@ -3,8 +3,10 @@ package gli_
 import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4b
+import io.kotlintest.matchers.numerics.*
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import kool.*
 
 class core : StringSpec() {
 
@@ -46,6 +48,22 @@ class core : StringSpec() {
             b shouldBe 4
             c shouldBe 8
             d shouldBe 8
+        }
+
+        "flipY" {
+            val original = ByteArray(16) { it.toByte() }
+            val expected = byteArrayOf(
+                    12, 13, 14, 15,
+                    8, 9, 10, 11,
+                    4, 5, 6, 7,
+                    0, 1, 2, 3)
+
+            val result = flipY(original, 4, 4)
+            result.pos shouldBe 0
+            result.rem shouldBeGreaterThanOrEqual 16
+            for(i in 0 until 16) {
+                result[i] shouldBe expected[i]
+            }
         }
     }
 }

@@ -104,6 +104,12 @@ class coreLoad : StringSpec() {
             gli.load(uriOf(filename))
         }
 
+        "loadTga" {
+            val filename = "PlyonTexture.tga"
+
+            gli.load(uriOf(filename))
+        }
+
         "loadJpg" {
             val files = listOf("kueken7_rgb8.jpg", "kueken7_srgb8.jpg", "kueken8_srgb8.jpg")
             for(file in files) {
