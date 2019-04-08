@@ -9,7 +9,7 @@
 
 This is the Kotlin port of the original [OpenGL Image](http://gli.g-truc.net/) (*GLI*), written by [g-truc](https://github.com/Groovounet) ([repository](https://github.com/g-truc/gli)), a header only C++ image library for graphics software.
 
-*GLI* provides classes and functions to load image files (*[KTX](https://www.khronos.org/opengles/sdk/tools/KTX/)* and *[DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943990%28v=vs.85%29.aspx)*), facilitate graphics APIs texture creation, compare textures, access texture texels, sample textures, convert textures, generate mipmaps, etc.
+*GLI* provides classes and functions to load image files, facilitate graphics APIs texture creation, compare textures, access texture texels, sample textures, convert textures, generate mipmaps, etc.
 
 This library works perfectly with *[OpenGL](https://www.opengl.org)* or *[Vulkan](https://www.khronos.org/vulkan)* but it also ensures interoperability with other third party libraries and SDK.
 It is a good candidate for software rendering (raytracing / rasterization), image processing, image based software testing or any development context that requires a simple and convenient image library.
@@ -110,3 +110,14 @@ public static int createTexture(String filename) {
     return texName
 }
 ```
+
+### Supported Image Formats
+
+* [KTX](https://www.khronos.org/opengles/sdk/tools/KTX/) 
+* [DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943990%28v=vs.85%29.aspx)
+* KMG
+* jpg
+* png
+* gif
+* bmp
+* tga
