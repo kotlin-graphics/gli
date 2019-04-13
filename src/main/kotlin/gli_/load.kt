@@ -79,6 +79,8 @@ interface load {
 
         var imageBuffer: ByteBuffer
 
+        require(buffer.isDirect) { "loading images requires a direct buffer" }
+
         Stack.with { mem ->
             val widthBuf = mem.ints(1)
             val heightBuf = mem.ints(1)
