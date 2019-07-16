@@ -16,7 +16,7 @@ ext {
     kotlin = 'org.jetbrains.kotlin:kotlin'
     kotlin_version = '1.3.41'
     kotlintest_version = '3.3.3'
-    glm_version = '62dff2baa0b4cab738d55d7e41dee4c796e6cdfc'
+    glm_version = 'a329abaa87fedc6db19a073393644bdc769d7b43'
     unsigned_version = 'a530a8f63eda75a499e06beac468f0398526f5a4'
     kool_version = '1d9a690fd33e62621d55bcb6843042390a21ae31'
     lwjgl_version = "3.2.2"
