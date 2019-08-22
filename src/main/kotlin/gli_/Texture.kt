@@ -375,7 +375,7 @@ open class Texture {
 
         assert(size == b.size)
 
-        if (data() == b.data()) return true
+        if (data().adr == b.data().adr) return true
 
         for (layerIndex in 0 until layers())
             for (faceIndex in 0 until faces())
