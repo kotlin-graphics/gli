@@ -1,5 +1,6 @@
 module com.github.kotlin_graphics.gli {
 
+    requires java.desktop;
     requires kotlin.stdlib;
 
     requires org.lwjgl;
