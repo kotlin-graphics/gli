@@ -16,9 +16,9 @@ ext {
     kotlin = 'org.jetbrains.kotlin:kotlin'
     kotlin_version = '1.3.41'
     kotlintest_version = '3.3.3'
-    glm_version = '6048c31425ae6110258e4b42165f1e636f8b5603'
-    unsigned_version = 'ba1b5c2ab0231aabbef753df5fa0d0de98142360'
-    kool_version = 'd052c5e18a06642fcdf9f5942198ee9c4cee1a3f'
+    glm_version = '0c65ecbbb5016ffa610c6b5c40150e2cc7a3d941'
+    unsigned_version = 'ce9ebcbdde1d018fd3bf78c4b13b4a234249ed89'
+    kool_version = '617c3ae6a2010dd50d18ad5a391407500b21804a'
     lwjgl_version = "3.2.2"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }
@@ -71,7 +71,7 @@ jar {
 compileKotlin {
     // Enable Kotlin compilation to Java 8 class files with method parameter name metadata
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
 //        javaParameters = true
     }
     // As per https://stackoverflow.com/a/47669720
@@ -81,7 +81,7 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
 //        javaParameters = true
     }
 }
