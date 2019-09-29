@@ -101,9 +101,7 @@ compileTestKotlin {
 compileJava {
     dependsOn(':compileKotlin')
     doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--patch-module', "$moduleName=${sourceSets["main"].output.asPath}"]
+        options.compilerArgs = ['--module-path', classpath.asPath,]
         classpath = files()
     }
 }
