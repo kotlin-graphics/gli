@@ -55,7 +55,7 @@ object gl {
         /*  Important, filter internalFormat by i, because some values may be double, such as:
             Internal.LUMINANCE8 has same value of Internal.L8   */
         val format = tableF.find { it.internal.i == internalFormat.i && it.external == externalFormat && it.type == type }
-        return if (format == null) gli_.Format.INVALID
+        return if (format == null) gli_.Format.UNDEFINED
         else gli_.Format.of(tableF.indexOf(format) + 1) // +1 to offset UNDEFINED
     }
 

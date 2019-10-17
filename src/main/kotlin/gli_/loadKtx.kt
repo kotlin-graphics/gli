@@ -66,7 +66,7 @@ interface loadKtx {
                 gl.InternalFormat.of(header.glInternalFormat),
                 gl.ExternalFormat.of(header.glFormat),
                 gl.TypeFormat.of(header.glType))
-        assert(format != Format.INVALID)
+        assert(format != Format.UNDEFINED)
 
         val blockSize = format.blockSize
 

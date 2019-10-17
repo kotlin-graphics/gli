@@ -24,7 +24,7 @@ open class Texture {
 
     var target = Target.INVALID
 
-    var format = Format.INVALID
+    var format = Format.UNDEFINED
         private set
 
     var baseLayer = 0

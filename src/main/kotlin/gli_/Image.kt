@@ -20,7 +20,7 @@ class Image {
 
     private var storage: Storage? = null
 
-    var format = Format.INVALID
+    var format = Format.UNDEFINED
         private set
 
     var baseLevel = 0
