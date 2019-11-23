@@ -12,7 +12,7 @@ class coreFormat : StringSpec() {
 
             for (format in FORMAT_FIRST .. FORMAT_LAST)
                 format.isValid shouldBe true
-            Format.INVALID.isValid shouldBe false
+            Format.UNDEFINED.isValid shouldBe false
         }
 
         "component" {

@@ -13,7 +13,6 @@ import java.nio.IntBuffer
 /** Texture data format */
 enum class Format {
 
-    INVALID,
     UNDEFINED,
 
     RG4_UNORM_PACK8,
@@ -257,10 +256,10 @@ enum class Format {
 
     RG3B2_UNORM_PACK8;
 
-    val i = ordinal - 1   // INVALID -> -1
+    val i = ordinal   // INVALID -> -1
 
     companion object {
-        infix fun of(i: Int) = values().find { it.i == i } ?: INVALID
+        infix fun of(i: Int) = values().find { it.i == i } ?: UNDEFINED
     }
 
     val isValid get() = this in FORMAT_FIRST..FORMAT_LAST

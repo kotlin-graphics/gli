@@ -115,13 +115,17 @@ interface loadDds {
         }
 
         val mipMapCount = if (header.flags has detail.DdsFlag.MIPMAPCOUNT.i) header.mipMapLevels else 1
-        var faceCount = 1
-        if (header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP.i)
-            faceCount = glm.bitCount(header.cubemapFlags and detail.DdsCubemapFlag.CUBEMAP_ALLFACES.i)
+        val faceCount = when {
+            header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP.i ->
+                glm.bitCount(header.cubemapFlags and detail.DdsCubemapFlag.CUBEMAP_ALLFACES.i)
+            header10.miscFlag has detail.D3d10resourceMiscFlag.TEXTURECUBE -> 6
+            else -> 1
+        }
 
-        var depthCount = 1
-        if (header.cubemapFlags has detail.DdsCubemapFlag.VOLUME.i)
-            depthCount = header.depth
+        val depthCount = when {
+            header.cubemapFlags has detail.DdsCubemapFlag.VOLUME.i -> header.depth
+            else -> 1
+        }
 
         val texture = Texture(getTarget(header, header10), format, Vec3i(header.width, header.height, depthCount),
                 glm.max(header10.arraySize, 1), faceCount, mipMapCount)
@@ -135,7 +139,7 @@ interface loadDds {
 
     fun getTarget(header: detail.DdsHeader, header10: detail.DdsHeader10) = when {
 
-        header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP ->
+        header.cubemapFlags has detail.DdsCubemapFlag.CUBEMAP || header10.miscFlag has detail.D3d10resourceMiscFlag.TEXTURECUBE ->
             if (header10.arraySize > 1) Target.CUBE_ARRAY
             else Target.CUBE
 

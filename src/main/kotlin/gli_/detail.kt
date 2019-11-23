@@ -465,6 +465,8 @@ object detail {
         GDI_COMPATIBLE(0x20)
     }
 
+    infix fun Int.has(b: D3d10resourceMiscFlag): Boolean = and(b.i) != 0
+
     enum class DdsAlphaMode {
         UNKNOWN,
         STRAIGHT,

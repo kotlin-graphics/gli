@@ -1,7 +1,7 @@
 package gli_
 
-import glm_.vec3.Vec3i
 import glm_.glm
+import glm_.vec3.Vec3i
 import kool.adr
 
 /** Pre compute at texture instance creation some information for faster access to texels   */
@@ -11,14 +11,14 @@ class Cache {
     val levels: Int
 
     private val baseAddresses : LongArray
-    private val imageExtent = Array(16, { Vec3i() })
+    private val imageExtent = Array(16) { Vec3i() }
     private val imageMemorySize = IntArray(16)
 
     private val globalMemorySize: Int
 
     constructor(
             storage: Storage,
-            format: gli_.Format,
+            format: Format,
             baseLayer: Int, layers: Int,
             baseFace: Int, maxFace: Int,
             baseLevel: Int, maxLevel: Int
