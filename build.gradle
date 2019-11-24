@@ -16,9 +16,9 @@ ext {
     kotlin = 'org.jetbrains.kotlin:kotlin'
     kotlin_version = '1.3.50'
     kotlintest_version = '3.4.0'
-    glm_version = '9ef4a28e25f238c9b9f7e88abd98e583d9034621'
+    glm_version = 'ce6c8247b325f8c4a54c6ecc51de3323465a8856'
     unsigned_version = 'c81c2e39fb9e10403650c1b371b8573fc745bfb4'
-    kool_version = 'a11f4bf3929bac4a297970b31b898b63660b8a47'
+    kool_version = '9aa78d4977'
     lwjgl_version = "3.2.3"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }
