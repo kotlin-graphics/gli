@@ -6,6 +6,7 @@ import glm_.BYTES
 import kool.pos
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4i
+import kool.BYTES
 import java.nio.ByteBuffer
 
 /**

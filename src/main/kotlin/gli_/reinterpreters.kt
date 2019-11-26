@@ -7,6 +7,7 @@ import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*
 import glm_.vec4.*
+import kool.BYTES
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
