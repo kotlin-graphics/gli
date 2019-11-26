@@ -16,10 +16,10 @@ fun URI.toPath(): Path = Paths.get(this)
 
 val Path.extension get() = toString().substringAfterLast(".").toLowerCase()
 
-internal fun flipY(buffer: ByteBuffer, width: Int, height: Int)
+fun flipY(buffer: ByteBuffer, width: Int, height: Int)
         = flipY(buffer.toByteArray(), width, height)
 
-internal fun flipY(buffer: ByteArray, width: Int, height: Int) : ByteBuffer {
+fun flipY(buffer: ByteArray, width: Int, height: Int) : ByteBuffer {
 
     val result = BufferUtils.createByteBuffer(buffer.size)
 
