@@ -12,7 +12,7 @@ class coreLoadGenRect : StringSpec() {
         "load rect" {
 
             for (target in Target.RECT..Target.RECT_ARRAY)
-                for (format in FORMAT_FIRST..FORMAT_LAST) {
+                for (format in Format.FIRST .. Format.LAST) {
 
                     if (format.isCompressed && target == Target._3D)
                         continue

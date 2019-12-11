@@ -21,7 +21,7 @@ class coreTexture2dArray : StringSpec() {
 
             val sizes = intArrayOf(16, 32, 15, 17, 1)
 
-            for (format in FORMAT_FIRST..FORMAT_LAST)
+            for (format in Format.FIRST .. Format.LAST)
                 sizes.forEach {
 
                     val size = Vec2i(it)

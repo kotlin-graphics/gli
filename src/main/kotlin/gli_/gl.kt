@@ -27,15 +27,15 @@ object gl {
         updateTable()
     }
 
-    fun translate(texture: Texture) = translate(texture.target) to translate(texture.format, texture.swizzles)
+    fun translate(texture: Texture): Pair<Target, Format> = translate(texture.target) to translate(texture.format, texture.swizzles)
 
-    fun translate(target: gli_.Target) = tableT[target.i]
+    fun translate(target: gli_.Target): Target = tableTargets[target.i]
 
     fun translate(format: gli_.Format, swizzles: gli_.Swizzles): Format {
 
-        assert(format in FORMAT_FIRST..FORMAT_LAST)
+        assert(format.isValid)
 
-        val formatDesc = tableF[format.i - FORMAT_FIRST.i]
+        val formatDesc = tableFormatDesc[format - gli_.Format.FIRST]
 
         return Format(formatDesc.internal, formatDesc.external, formatDesc.type, computeSwizzle(formatDesc, swizzles))
     }
@@ -54,26 +54,27 @@ object gl {
     fun find(internalFormat: InternalFormat, externalFormat: ExternalFormat, type: TypeFormat): gli_.Format {
         /*  Important, filter internalFormat by i, because some values may be double, such as:
             Internal.LUMINANCE8 has same value of Internal.L8   */
-        val format = tableF.find { it.internal.i == internalFormat.i && it.external == externalFormat && it.type == type }
-        return if (format == null) gli_.Format.UNDEFINED
-        else gli_.Format.of(tableF.indexOf(format) + 1) // +1 to offset UNDEFINED
+        val format = tableFormatDesc.find { it.internal.i == internalFormat.i && it.external == externalFormat && it.type == type }
+        return when (format) {
+            null -> gli_.Format.UNDEFINED
+            else -> gli_.Format.of(tableFormatDesc.indexOf(format) + gli_.Format.FIRST.i) // +FIRST to offset UNDEFINED
+        }
     }
 
-    private val tableT by lazy {
-        val table = arrayOf(
-                gl.Target._1D,
-                gl.Target._1D_ARRAY,
-                gl.Target._2D,
-                gl.Target._2D_ARRAY,
-                gl.Target._3D,
-                gl.Target.RECT,
-                gl.Target.RECT_ARRAY,
-                gl.Target.CUBE,
-                gl.Target.CUBE_ARRAY)
-
-        assert(table.size == TARGET_COUNT, { "GLI error: target descriptor list doesn't match number of supported targets" })
-
-        table
+    private val tableTargets: Array<Target> by lazy {
+        arrayOf(
+                Target._1D,
+                Target._1D_ARRAY,
+                Target._2D,
+                Target._2D_ARRAY,
+                Target._3D,
+                Target.RECT,
+                Target.RECT_ARRAY,
+                Target.CUBE,
+                Target.CUBE_ARRAY)
+                .apply {
+                    assert(size == gli_.Target.COUNT) { "GLI error: target descriptor list doesn't match number of supported targets" }
+                }
     }
 
     private class FormatDesc(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val properties: Int)
@@ -426,13 +427,13 @@ object gl {
             else -> throw Error()
         }
 
-        infix fun to(buffer: ByteBuffer):ByteBuffer  = buffer.putInt(0, r.i).putInt(1, g.i).putInt(2, b.i).putInt(3, a.i)
+        infix fun to(buffer: ByteBuffer): ByteBuffer = buffer.putInt(0, r.i).putInt(1, g.i).putInt(2, b.i).putInt(3, a.i)
         infix fun to(intBuffer: IntBuffer): IntBuffer = intBuffer.put(0, r.i).put(1, g.i).put(2, b.i).put(3, a.i)
     }
 
     class Format(val internal: InternalFormat, val external: ExternalFormat, val type: TypeFormat, val swizzles: Swizzles)
 
-    private lateinit var tableF: Array<FormatDesc>
+    private lateinit var tableFormatDesc: Array<FormatDesc>
 
     fun updateTable() {
 
@@ -462,7 +463,7 @@ object gl {
 
         val typeF16 = if (profile == Profile.ES20) TypeFormat.F16_OES else TypeFormat.F16
 
-        tableF = arrayOf(
+        tableFormatDesc = arrayOf(
                 FormatDesc(RG4_EXT, RG, UINT8_RG4_REV_GTC, 0), //FORMAT_R4G4_UNORM,
                 FormatDesc(RGBA4, RGBA, UINT16_RGBA4_REV, 0), //FORMAT_RGBA4_UNORM,
                 FormatDesc(RGBA4, RGBA, UINT16_RGBA4, FORMAT_PROPERTY_BGRA_TYPE_BIT), //FORMAT_BGRA4_UNORM,
@@ -704,6 +705,6 @@ object gl {
 
                 FormatDesc(RG3B2, RGB, UINT8_RG3B2_REV, 0)                    //FORMAT_RG3B2_UNORM,
         )
-                .apply { assert(size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" }) }
+                .apply { assert(size == gli_.Format.COUNT) { "GLI error: format descriptor list doesn't match number of supported formats" } }
     }
 }

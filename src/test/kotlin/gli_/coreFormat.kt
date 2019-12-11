@@ -10,14 +10,14 @@ class coreFormat : StringSpec() {
 
         "valid" {
 
-            for (format in FORMAT_FIRST .. FORMAT_LAST)
+            for (format in Format.FIRST .. Format.LAST)
                 format.isValid shouldBe true
             Format.UNDEFINED.isValid shouldBe false
         }
 
         "component" {
 
-            for (formatIndex in FORMAT_FIRST.i until FORMAT_COUNT) {
+            for (formatIndex in Format.FIRST.i until Format.COUNT) {
                 val components = Format.values().first { it.i == formatIndex }.componentCount
                 (components in 1..4) shouldBe true
             }

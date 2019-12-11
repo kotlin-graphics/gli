@@ -11,7 +11,7 @@ class coreLoadGen2d : StringSpec() {
 
         "load 2d" {
 
-            for (format in FORMAT_FIRST..FORMAT_LAST) {
+            for (format in Format.FIRST .. Format.LAST) {
 
                 val target = Target._2D
 

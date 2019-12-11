@@ -2,7 +2,7 @@ package gli_
 
 import gli_.detail.Cap.*
 import gli_.detail.has
-import gli_.detail.tableF
+import gli_.detail.tableFormatInfos
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -256,15 +256,21 @@ enum class Format {
 
     RG3B2_UNORM_PACK8;
 
-    val i = ordinal   // INVALID -> -1
+    val i = ordinal
 
     companion object {
-        infix fun of(i: Int) = values().find { it.i == i } ?: UNDEFINED
+        val FIRST: Format = RG4_UNORM_PACK8
+        val LAST: Format = RG3B2_UNORM_PACK8
+        val COUNT = LAST.i - FIRST.i + 1
+        infix fun of(i: Int): Format = values().find { it.i == i } ?: UNDEFINED
     }
 
-    val isValid get() = this in FORMAT_FIRST..FORMAT_LAST
+    val isValid: Boolean
+        get() = this != UNDEFINED
 
-    val formatInfo by lazy { tableF[i - FORMAT_FIRST.i] }
+    /** *get_format_info */
+    val formatInfo: detail.FormatInfo
+        get() = tableFormatInfos[i - FIRST.i].also { assert(isValid) }
 
     val bitsPerPixel by lazy { formatInfo.blockSize * 8 / (formatInfo.blockExtend.x * formatInfo.blockExtend.y * formatInfo.blockExtend.z) }
 
@@ -315,8 +321,11 @@ enum class Format {
             override fun hasNext() = next < endInclusive
         }
 
-        override fun contains(value: Format) = value.i in start.i..endInclusive.i
+        override fun contains(value: Format): Boolean =
+                value.i in start.i..endInclusive.i
     }
+
+    operator fun minus(format: Format): Int = i - format.i
 }
 
 
@@ -332,25 +341,20 @@ enum class Swizzle {
     val i = ordinal
 
     companion object {
-        infix fun of(i: Int) = values().first { it.i == i }
+        val FIRST = RED
+        val LAST = ONE
+        val CHANNEL_FIRST = RED
+        val CHANNEL_LAST = ALPHA
+        val COUNT = LAST.i - FIRST.i + 1
+        infix fun of(i: Int): Swizzle = values().first { it.i == i }
     }
 
-    fun isChannel() = this in SWIZZLE_CHANNEL_FIRST..SWIZZLE_CHANNEL_LAST
+    val isChannel: Boolean
+        get () = this in CHANNEL_FIRST..CHANNEL_LAST
 }
 
-val FORMAT_FIRST = Format.RG4_UNORM_PACK8
-val FORMAT_LAST = Format.RG3B2_UNORM_PACK8
-val FORMAT_INVALID = -1
-val FORMAT_COUNT = FORMAT_LAST.i - FORMAT_FIRST.i + 1
-
-val SWIZZLE_FIRST = Swizzle.RED
-val SWIZZLE_LAST = Swizzle.ONE
-val SWIZZLE_CHANNEL_FIRST = Swizzle.RED
-val SWIZZLE_CHANNEL_LAST = Swizzle.ALPHA
-val SWIZZLE_COUNT = SWIZZLE_LAST.i - SWIZZLE_FIRST.i + 1
-
 data class Swizzles(var r: Swizzle, var g: Swizzle, var b: Swizzle, var a: Swizzle) {
-    constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle.of(x), Swizzle.of(y), Swizzle.of(z), Swizzle.of(w))
+    constructor(x: Int, y: Int, z: Int, w: Int) : this(Swizzle of x, Swizzle of y, Swizzle of z, Swizzle of w)
     constructor(swizzle: Swizzle) : this(swizzle, swizzle, swizzle, swizzle)
     constructor(swizzles: Swizzles) : this(swizzles.r, swizzles.g, swizzles.b, swizzles.a)
     constructor() : this(Swizzle.RED, Swizzle.GREEN, Swizzle.BLUE, Swizzle.ALPHA)

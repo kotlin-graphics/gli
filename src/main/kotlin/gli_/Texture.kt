@@ -47,10 +47,10 @@ open class Texture {
             val formatSwizzle = format.formatInfo.swizzles
             return with(field) {
                 Swizzles(
-                        if (r.isChannel()) formatSwizzle[r.i] else r,
-                        if (g.isChannel()) formatSwizzle[g.i] else g,
-                        if (b.isChannel()) formatSwizzle[b.i] else b,
-                        if (a.isChannel()) formatSwizzle[a.i] else a)
+                        if (r.isChannel) formatSwizzle[r.i] else r,
+                        if (g.isChannel) formatSwizzle[g.i] else g,
+                        if (b.isChannel) formatSwizzle[b.i] else b,
+                        if (a.isChannel) formatSwizzle[a.i] else a)
             }
         }
         private set

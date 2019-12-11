@@ -11,7 +11,7 @@ class coreLoadGenCube : StringSpec() {
 
         "load cube" {
 
-            for (format in FORMAT_FIRST..FORMAT_LAST) {
+            for (format in Format.FIRST .. Format.LAST) {
 
                 val target = Target.CUBE
 

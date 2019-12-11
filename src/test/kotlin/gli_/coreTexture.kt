@@ -26,9 +26,9 @@ class coreTexture : StringSpec() {
 
             val sizes = intArrayOf(16, 32, 15, 17, 1)
 
-            for (target in TARGET_FIRST..TARGET_LAST)
+            for (target in Target.FIRST..Target.LAST)
 
-                for (format in FORMAT_FIRST..FORMAT_LAST) {
+                for (format in Format.FIRST .. Format.LAST) {
 
                     val faces = if (target.isTargetCube) 6 else 1
 
@@ -361,8 +361,8 @@ class coreTexture : StringSpec() {
 
                 var error = 0
 
-                val textures = ArrayList<Texture2d>(FORMAT_COUNT)
-                for (format in FORMAT_FIRST..FORMAT_LAST)
+                val textures = ArrayList<Texture2d>(Format.COUNT)
+                for (format in Format.FIRST .. Format.LAST)
                     with(Texture2d(format, Vec2i(4), 9)) {
                         textures += this
                         error += if (this.empty()) 1 else 0
@@ -446,8 +446,8 @@ class coreTexture : StringSpec() {
 
                 var error = 0
 
-                val textures = ArrayList<TextureCubeArray>(FORMAT_COUNT)
-                for (format in FORMAT_FIRST..FORMAT_LAST)
+                val textures = ArrayList<TextureCubeArray>(Format.COUNT)
+                for (format in Format.FIRST .. Format.LAST)
                     with(TextureCubeArray(format, Vec2i(4), 3, 3)) {
                         textures += this
                         error += if (this.empty()) 1 else 0
@@ -533,7 +533,7 @@ class coreTexture : StringSpec() {
 
                 val ns = measureNanoTime {
                     for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
+                        for (format in Format.FIRST .. Format.LAST) {
                             val texture = Texture(Target._2D_ARRAY, format, Vec3i(4, 4, 1), 1, 1, 3)
                             error += if (texture.empty()) 1 else 0
                         }
@@ -549,7 +549,7 @@ class coreTexture : StringSpec() {
 
                 val ns = measureNanoTime {
                     for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
+                        for (format in Format.FIRST .. Format.LAST) {
                             val texture = Texture2dArray(format, Vec2i(4), 1, 3)
                             error += if (texture.empty()) 1 else 0
                         }
@@ -565,7 +565,7 @@ class coreTexture : StringSpec() {
 
                 val ns = measureNanoTime {
                     for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
+                        for (format in Format.FIRST .. Format.LAST) {
                             val texture = Texture2d(format, Vec2i(4), 3)
                             error += if (texture.empty()) 1 else 0
                         }
@@ -581,7 +581,7 @@ class coreTexture : StringSpec() {
 
                 val ns = measureNanoTime {
                     for (index in 0 until iterations)
-                        for (format in FORMAT_FIRST..FORMAT_LAST) {
+                        for (format in Format.FIRST .. Format.LAST) {
                             val texture = TextureCubeArray(format, Vec2i(4), 1, 3)
                             error += if (texture.empty()) 1 else 0
                         }

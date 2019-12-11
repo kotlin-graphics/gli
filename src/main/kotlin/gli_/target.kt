@@ -46,11 +46,9 @@ enum class Target {
     }
 
     companion object {
-        infix fun of(int: Int) = values().first { it.i == int }
+        val FIRST = _1D
+        val LAST = CUBE_ARRAY
+        val COUNT = LAST.i - FIRST.i + 1
+        infix fun of(int: Int): Target = values().first { it.i == int }
     }
 }
-
-val TARGET_FIRST = Target._1D
-val TARGET_LAST = Target.CUBE_ARRAY
-val TARGET_COUNT = Target.values().size - 1 // INVALID
-val TARGET_INVALID = -1

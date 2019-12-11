@@ -11,7 +11,7 @@ class coreLoadGen1dArray : StringSpec() {
 
         "load 1d array" {
 
-            for (format in FORMAT_FIRST..FORMAT_LAST) {
+            for (format in Format.FIRST .. Format.LAST) {
 
                 val target = Target._1D_ARRAY
 

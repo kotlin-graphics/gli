@@ -34,3 +34,6 @@ fun flipY(buffer: ByteArray, width: Int, height: Int) : ByteBuffer {
 
     return result
 }
+
+operator fun Array<dx.Format>.get(index: Format): dx.Format =
+        get(index.i - Format.FIRST.i)

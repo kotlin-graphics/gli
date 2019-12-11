@@ -8,6 +8,7 @@ import glm_.i
 import glm_.vec4.Vec4i
 import gli_.detail.has
 import gli_.detail.hasnt
+import gli_.get
 
 /**
  * Created by elect on 02/04/17.
@@ -17,36 +18,32 @@ import gli_.detail.hasnt
 object dx {
 
     fun translate(format: gli_.Format): dx.Format {
-        assert(format.i in FORMAT_FIRST.i..FORMAT_LAST.i)
-        return table[format.i - FORMAT_FIRST.i]
+        assert(format.isValid)
+        return table[format]
     }
 
-    fun find(fourCC: D3dfmt) = gli_.Format.of((FORMAT_FIRST.i..FORMAT_LAST.i)
-            .firstOrNull { table[it - FORMAT_FIRST.i].d3DFormat == fourCC } ?: FORMAT_INVALID)
+    fun find(fourCC: D3dfmt): gli_.Format =
+            (gli_.Format.FIRST..gli_.Format.LAST)
+                    .firstOrNull { table[it].d3DFormat == fourCC }
+                    ?: gli_.Format.UNDEFINED
 
     fun find(fourCC: D3dfmt, format: DxgiFormat): gli_.Format {
 
         assert(fourCC == DX10 || fourCC == GLI1)
 
-        var result = FORMAT_INVALID
-
-        for (currentFormat in FORMAT_FIRST..FORMAT_LAST) {
+        for (currentFormat in gli_.Format.FIRST..gli_.Format.LAST) {
 
             val info = currentFormat.formatInfo
 
-            val dxFormat = table[currentFormat.i - FORMAT_FIRST.i]
+            val dxFormat = table[currentFormat]
 
-            if (fourCC == GLI1 && info.flags has detail.Cap.DDS_GLI_EXT_BIT && dxFormat.dxgiFormat.gli == format.gli) {
-                result = currentFormat.i
-                break
-            }
+            if (fourCC == GLI1 && info.flags has detail.Cap.DDS_GLI_EXT_BIT && dxFormat.dxgiFormat.gli == format.gli)
+                return currentFormat
 
-            if (fourCC == DX10 && info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT && dxFormat.dxgiFormat.dds == format.dds) {
-                result = currentFormat.i
-                break
-            }
+            if (fourCC == DX10 && info.flags hasnt detail.Cap.DDS_GLI_EXT_BIT && dxFormat.dxgiFormat.dds == format.dds)
+                return currentFormat
         }
-        return gli_.Format.of(result)
+        return gli_.Format.UNDEFINED
     }
 
     fun isDdsExt(target: Target, format: gli_.Format): Boolean {
@@ -519,8 +516,8 @@ object dx {
                 : this(ddPixelFormat, d3DFormat, DxgiFormat(dxgiFormatGLI), mask)
     }
 
-    private val table by lazy {
-        val table = arrayOf(
+    private val table: Array<Format> by lazy {
+        arrayOf(
                 Format(FOURCC, GLI1, RG4_UNORM_GLI, Vec4i(0x000F, 0x00F0, 0x0000, 0x0000)), //FORMAT_RG4_UNORM,
                 Format(FOURCC, GLI1, RGBA4_UNORM_GLI, Vec4i(0x000F, 0x00F0, 0x0F00, 0xF000)), //FORMAT_RGBA4_UNORM,
                 Format(FOURCC, A4R4G4B4, B4G4R4A4_UNORM, Vec4i(0x0F00, 0x00F0, 0x000F, 0xF000)), //FORMAT_BGRA4_UNORM,
@@ -761,10 +758,8 @@ object dx {
                 Format(FOURCC, DX10, B8G8R8X8_UNORM_SRGB, Vec4i(0x00FF0000, 0x0000FF00, 0x000000FF, 0x00000000)), //FORMAT_BGR8_SRGB_PACK32,
 
                 Format(FOURCC, GLI1, R3G3B2_UNORM_GLI, Vec4i(0x70, 0x38, 0xC0, 0x00))                                    //FORMAT_RG3B2_UNORM,
-        )
-
-        assert(table.size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" })
-
-        table
+        ).apply {
+            assert(size == gli_.Format.COUNT) { "GLI error: format descriptor list doesn't match number of supported formats" }
+        }
     }
 }

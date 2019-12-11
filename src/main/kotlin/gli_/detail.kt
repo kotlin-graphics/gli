@@ -52,9 +52,8 @@ object detail {
 
     class FormatInfo(val blockSize: Int, val blockExtend: Vec3i, val component: Int, val swizzles: Swizzles, val flags: Int)
 
-    internal val tableF by lazy {
-
-        val table = arrayOf(
+    internal val tableFormatInfos: Array<FormatInfo> by lazy {
+        arrayOf(
                 FormatInfo(1, Vec3i(1, 1, 1), 2, Swizzles(RED, GREEN, ZERO, ONE), PACKED8_BIT or NORMALIZED_BIT or UNSIGNED_BIT or DDS_GLI_EXT_BIT),                //FORMAT_R4G4_UNORM,
                 FormatInfo(2, Vec3i(1, 1, 1), 4, Swizzles(RED, GREEN, BLUE, ALPHA), PACKED16_BIT or NORMALIZED_BIT or UNSIGNED_BIT or DDS_GLI_EXT_BIT),            //FORMAT_RGBA4_UNORM,
                 FormatInfo(2, Vec3i(1, 1, 1), 4, Swizzles(BLUE, GREEN, RED, ALPHA), PACKED16_BIT or NORMALIZED_BIT or UNSIGNED_BIT),                                //FORMAT_BGRA4_UNORM,
@@ -296,17 +295,16 @@ object detail {
 
                 FormatInfo(1, Vec3i(1, 1, 1), 3, Swizzles(RED, GREEN, BLUE, ONE), PACKED8_BIT or NORMALIZED_BIT or UNSIGNED_BIT or DDS_GLI_EXT_BIT)                                        //FORMAT_RG3B2_UNORM_PACK8,
         )
-
-        assert(table.size == FORMAT_COUNT, { "GLI error: format descriptor list doesn't match number of supported formats" })
-
-        table
+                .apply {
+                    assert(size == Format.COUNT) { "GLI error: format descriptor list doesn't match number of supported formats" }
+                }
     }
 
     internal val tableS by lazy {
 
         val table = arrayOf(gl.Swizzle.RED, gl.Swizzle.GREEN, gl.Swizzle.BLUE, gl.Swizzle.ALPHA, gl.Swizzle.ZERO, gl.Swizzle.ONE)
 
-        assert(table.size == SWIZZLE_COUNT, { "GLI error: swizzle descriptor list doesn't match number of supported swizzles" })
+        assert(table.size == Swizzle.COUNT) { "GLI error: swizzle descriptor list doesn't match number of supported swizzles" }
 
         table
     }

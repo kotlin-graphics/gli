@@ -23,7 +23,6 @@ interface saveDds {
 
 
     fun getDimension(target: Target): Int {
-
         val table = arrayOf(
                 detail.D3d10resourceDimension.TEXTURE1D,        //TARGET_1D,
                 detail.D3d10resourceDimension.TEXTURE1D,        //TARGET_1D_ARRAY,
@@ -35,7 +34,7 @@ interface saveDds {
                 detail.D3d10resourceDimension.TEXTURE2D,        //TARGET_CUBE,
                 detail.D3d10resourceDimension.TEXTURE2D         //TARGET_CUBE_ARRAY
         )
-        assert(table.size == TARGET_COUNT, { "Table needs to be updated" })
+        assert(table.size == Target.COUNT) { "Table needs to be updated" }
         return table[target.i].i
     }
 

@@ -31,11 +31,13 @@ object gli :
         LINEAR;
 
         val i = ordinal - 1
-    }
 
-    val FILTER_FIRST = Filter.NEAREST
-    val FILTER_LAST = Filter.LINEAR
-    val FILTER_COUNT = FILTER_LAST.i - FILTER_FIRST.i + 1
+        companion object {
+            val FIRST = NEAREST
+            val LAST = LINEAR
+            val COUNT = LAST.i - FIRST.i + 1
+        }
+    }
 }
 
 
@@ -54,5 +56,5 @@ const val GLI_VERSION_MAJOR = 0
 const val GLI_VERSION_MINOR = 8
 const val GLI_VERSION_PATCH = 3
 const val GLI_VERSION_REVISION = 0
-const val GLI_VERSION_BUILD = 12
+const val GLI_VERSION_BUILD = 13
 const val GLI_VERSION = GLI_VERSION_MAJOR * 1_000 + GLI_VERSION_MINOR * 100 + GLI_VERSION_PATCH * 10 + GLI_VERSION_REVISION + GLI_VERSION_BUILD / 10f
