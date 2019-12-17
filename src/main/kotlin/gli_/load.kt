@@ -69,37 +69,25 @@ interface load {
             compCount = compCountBuf.get()
         }
 
-        if (flipY) {
-            imageBuffer = flipY(imageBuffer, width, height)
-        }
+        if (flipY) imageBuffer.flipY(width, height)
 
         return createTexture(imageBuffer, width, height, compCount)
     }
 
-    private fun loadImageFromMem(buffer: ByteBuffer, flipY: Boolean): Texture {
+    private fun loadImageFromMem(buffer: ByteBuffer, flipY: Boolean): Texture = Stack { mem ->
 
-        val width: Int
-        val height: Int
-        val compCount: Int
+        val pWidth = mem.ints(1)
+        val pHeight = mem.ints(1)
+        val pCompCount = mem.ints(1)
 
-        var imageBuffer: ByteBuffer
+        val imageBuffer = stbi_load_from_memory(buffer, pWidth, pHeight, pCompCount, 0)
+                ?: throw IOException("Couldn't load image")
 
-        Stack.with { mem ->
-            val widthBuf = mem.ints(1)
-            val heightBuf = mem.ints(1)
-            val compCountBuf = mem.ints(1)
+        val width = pWidth[0]
+        val height = pHeight[0]
+        val compCount = pCompCount[0]
 
-            imageBuffer = stbi_load_from_memory(buffer, widthBuf, heightBuf, compCountBuf, 0)
-                    ?: throw IOException("Couldn't load image")
-
-            width = widthBuf.get()
-            height = heightBuf.get()
-            compCount = compCountBuf.get()
-        }
-
-        if (flipY) {
-            imageBuffer = flipY(imageBuffer, width, height)
-        }
+        if (flipY) imageBuffer.flipY(width, height)
 
         return createTexture(imageBuffer, width, height, compCount)
     }
@@ -139,7 +127,7 @@ interface load {
 
     fun load(image: BufferedImage, flipY: Boolean = false): Texture {
         val extent = Vec3i(image.width, image.height, 1)
-        if(flipY)
+        if (flipY)
             image.flipY()
         return when (image.type) {
             TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {

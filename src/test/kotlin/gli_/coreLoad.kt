@@ -2,11 +2,10 @@ package gli_
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import kool.*
-import org.lwjgl.*
-import java.io.*
-import java.nio.*
-import java.nio.file.*
+import org.lwjgl.BufferUtils
+import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 class coreLoad : StringSpec() {

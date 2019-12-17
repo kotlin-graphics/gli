@@ -1,12 +1,13 @@
 package gli_
 
+import glm_.b
 import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4b
-import io.kotlintest.matchers.numerics.*
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import kool.*
+import java.nio.ByteOrder
 
 class core : StringSpec() {
 
@@ -51,18 +52,34 @@ class core : StringSpec() {
         }
 
         "flipY" {
-            val original = ByteArray(16) { it.toByte() }
-            val expected = byteArrayOf(
-                    12, 13, 14, 15,
-                    8, 9, 10, 11,
-                    4, 5, 6, 7,
-                    0, 1, 2, 3)
+            run {
+                val buffer = java.nio.ByteBuffer.allocate(16)
+                for (i in 0..15)
+                    buffer[i] = i.b
+                val expected = byteArrayOf(
+                        12, 13, 14, 15,
+                        8, 9, 10, 11,
+                        4, 5, 6, 7,
+                        0, 1, 2, 3)
 
-            val result = flipY(original, 4, 4)
-            result.pos shouldBe 0
-            result.rem shouldBeGreaterThanOrEqual 16
-            for(i in 0 until 16) {
-                result[i] shouldBe expected[i]
+                buffer.flipY(Vec2i(4))
+                for (i in 0..15)
+                    buffer[i] shouldBe expected[i]
+            }
+            run {
+                val buffer = java.nio.ByteBuffer.allocate(20)
+                for (i in 0..19)
+                    buffer[i] = i.b
+                val expected = byteArrayOf(
+                        16, 17, 18, 19,
+                        12, 13, 14, 15,
+                        8, 9, 10, 11,
+                        4, 5, 6, 7,
+                        0, 1, 2, 3)
+
+                buffer.flipY(Vec2i(4, 5))
+                for (i in 0..19)
+                    buffer[i] shouldBe expected[i]
             }
         }
     }
