@@ -72,7 +72,7 @@ class coreSave : StringSpec() {
             textureRGBA8unormDDS shouldBe textureRGBA8unormKTX
         }
 
-        "using stbi" {
+        "using ImageIO" {
             val texture = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4))
             texture clear Vec4b(255, 127, 255, 255)
 

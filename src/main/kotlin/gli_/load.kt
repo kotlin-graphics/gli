@@ -1,20 +1,17 @@
 package gli_
 
+import glm_.or
 import glm_.vec3.Vec3i
 import kool.*
-import org.lwjgl.stb.*
-import org.lwjgl.stb.STBImage.stbi_load_from_memory
-import java.awt.image.BufferedImage
+import java.awt.image.*
 import java.awt.image.BufferedImage.*
-import java.awt.image.DataBufferByte
-import java.awt.image.DataBufferInt
-import java.awt.image.DataBufferUShort
-import java.io.*
-import java.lang.IllegalArgumentException
+import java.io.ByteArrayInputStream
+import java.io.File
 import java.net.URI
-import java.nio.*
+import java.nio.ByteBuffer
 import java.nio.file.Path
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 
 /**
  * Created by elect on 01/05/17.
@@ -28,68 +25,37 @@ interface load {
     fun load(filename: String) = load(Paths.get(filename))
     fun load(filename: String, flipY: Boolean) = load(Paths.get(filename), flipY)
 
-    fun load(path: Path, flipY: Boolean = false) = when (path.extension) {
+    fun load(path: Path, flipY: Boolean = false) = when (val ext = path.extension) {
         "dds" -> gli.loadDds(path)
         "kmg" -> gli.loadKmg(path)
         "ktx" -> gli.loadKtx(path)
         "jpeg", "jpg", "png", "gif", "bmp", "tga" -> loadImage(path.toFile(), flipY)
-        else -> throw Error("unsupported extension: ${path.fileName}")
+        else -> throw Error("unsupported extension: $ext")
     }
 
-    fun load(buffer: ByteBuffer, type: String, flipY: Boolean = false): Texture {
-        return when (type) {
-            "dds" -> gli.loadDds(buffer)
-            "kmg" -> gli.loadKmg(buffer)
-            "ktx" -> gli.loadKtx(buffer)
-            "jpeg", "jpg", "png", "gif", "bmp", "tga" -> loadImageFromMem(buffer, flipY)
-            else -> throw IllegalArgumentException("Type not supported")
-        }
+    fun load(buffer: ByteBuffer, type: String, flipY: Boolean = false): Texture = when (type) {
+        "dds" -> gli.loadDds(buffer)
+        "kmg" -> gli.loadKmg(buffer)
+        "ktx" -> gli.loadKtx(buffer)
+        "jpeg", "jpg", "png", "gif", "bmp", "tga" -> loadImageFromMem(buffer, flipY)
+        else -> throw IllegalArgumentException("Type not supported")
     }
 
     private fun loadImage(file: File, flipY: Boolean): Texture {
 
         if (!file.exists()) throw NoSuchFileException(file)
 
-        val width: Int
-        val height: Int
-        val compCount: Int
-
-        var imageBuffer: ByteBuffer
-
-        Stack.with { mem ->
-            val widthBuf = mem.ints(1)
-            val heightBuf = mem.ints(1)
-            val compCountBuf = mem.ints(1)
-
-            imageBuffer = STBImage.stbi_load(file.absolutePath, widthBuf, heightBuf, compCountBuf, 0)
-                    ?: throw IOException("Couldn't load image at $file.")
-
-            width = widthBuf.get()
-            height = heightBuf.get()
-            compCount = compCountBuf.get()
-        }
-
-        if (flipY) imageBuffer.flipY(width, height)
-
-        return createTexture(imageBuffer, width, height, compCount)
+        val image = ImageIO.read(file)
+        return load(image, flipY)
     }
 
-    private fun loadImageFromMem(buffer: ByteBuffer, flipY: Boolean): Texture = Stack { mem ->
+    private fun loadImageFromMem(buffer: ByteBuffer, flipY: Boolean): Texture {
 
-        val pWidth = mem.ints(1)
-        val pHeight = mem.ints(1)
-        val pCompCount = mem.ints(1)
+        assert(buffer.hasArray())
 
-        val imageBuffer = stbi_load_from_memory(buffer, pWidth, pHeight, pCompCount, 0)
-                ?: throw IOException("Couldn't load image")
+        val image = ImageIO.read(ByteBufferBackedInputStream(buffer))
 
-        val width = pWidth[0]
-        val height = pHeight[0]
-        val compCount = pCompCount[0]
-
-        if (flipY) imageBuffer.flipY(width, height)
-
-        return createTexture(imageBuffer, width, height, compCount)
+        return load(image, flipY)
     }
 
     /**
@@ -209,22 +175,61 @@ interface load {
                 // 1 to 1
                 val dst = data()
                 var i = 0
-                (image.raster.dataBuffer as DataBufferUShort).data.forEach { dst[i++] = it }
+                (image.raster.dataBuffer as DataBufferUShort).data.forEach {
+                    dst.putShort(i++ * Short.BYTES, it)
+                }
             }
-            TYPE_USHORT_555_RGB -> throw Error("TYPE_USHORT_555_RGB unsupported, implement? What about alpha?")
+            TYPE_USHORT_555_RGB -> Texture(Target._2D, Format.A1RGB5_UNORM_PACK16, extent, 1, 1, 1).apply {
+                // ~ 1 to 1
+                val dst = data()
+                var i = 0
+                (image.raster.dataBuffer as DataBufferUShort).data.forEach {
+                    val a1rgb5 = it or 0b1000_0000_0000 // hardcode alpha to 1, opaque
+                    dst.putShort(i++ * Short.BYTES, a1rgb5)
+                }
+            }
             TYPE_BYTE_GRAY -> Texture(Target._2D, Format.R8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // 1 to 1
                 val dst = data()
                 var i = 0
-                (image.raster.dataBuffer as DataBufferInt).data.forEach { dst[i++] = it }
+                val dataBuffer = image.raster.dataBuffer as DataBufferByte
+                dataBuffer.data.forEach { dst[i++] = it }
             }
             TYPE_USHORT_GRAY -> Texture(Target._2D, Format.R16_UNORM_PACK16, extent, 1, 1, 1).apply {
                 // 1 to 1
                 val dst = data()
                 var i = 0
-                (image.raster.dataBuffer as DataBufferInt).data.forEach { dst[i++] = it }
+                val dataBuffer = image.raster.dataBuffer as DataBufferUShort
+                dataBuffer.data.forEach { dst.putShort(i++ * Short.BYTES, it) }
             }
-            else -> throw Error("not yet supported")
+            TYPE_BYTE_BINARY, TYPE_BYTE_INDEXED -> {
+                val c = image.colorModel as IndexColorModel
+                val colors = IntArray(c.mapSize)
+                c.getRGBs(colors)
+                val dataBuffer = image.raster.dataBuffer as DataBufferByte
+                val src = dataBuffer.data
+                when {
+                    c.hasAlpha() -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
+                        val dst = data()
+                        for (i in src.indices step 4) {
+                            dst[i + 0] = src[i + 1]   // r
+                            dst[i + 1] = src[i + 2]   // g
+                            dst[i + 2] = src[i + 3]   // b
+                            dst[i + 3] = src[i + 0]   // a
+                        }
+                    }
+                    else -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
+                        val dst = data()
+                        var j = 0
+                        for (i in src.indices step 4) {
+                            dst[j++] = src[i + 1]   // r
+                            dst[j++] = src[i + 2]   // g
+                            dst[j++] = src[i + 3]   // b
+                        }
+                    }
+                }
+            }
+            else -> error("not yet supported")
         }
     }
 

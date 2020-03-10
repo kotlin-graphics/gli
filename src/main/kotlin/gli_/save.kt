@@ -1,6 +1,5 @@
 package gli_
 
-import org.lwjgl.stb.*
 import java.net.URI
 import java.nio.*
 import java.nio.file.Path
@@ -17,10 +16,7 @@ interface save {
         "dds" -> gli.saveDds(texture, path)
         "kmg" -> gli.saveKmg(texture, path)
         "ktx" -> gli.saveKtx(texture, path)
-        "png" -> savePng(texture, path)
-        "bmp" -> saveBmp(texture, path)
-        "jpg" -> saveJpg(texture, path)
-        "tga" -> saveTga(texture, path)
+        "png", "bmp", "jpg", "tga" -> saveImage(texture, path)
         else -> throw Error()
     }
 
@@ -38,51 +34,42 @@ interface save {
      *  @return Returns false if the function fails to save the file.   */
     fun save(texture: Texture, uri: URI) = save(texture, Paths.get(uri))
 
-    private inline fun saveUsingStbi(texture: Texture, path: Path, stbiCall: (String, Int, Int, Int, ByteBuffer, Int) -> Boolean): Boolean {
+    fun saveImage(texture: Texture, path: Path): Boolean {
 
         if (texture.empty()) return false
 
-        val width = texture.extent(0).x
-        val height = texture.extent(0).y
+        val (w, h, _) = texture.extent(0)
         val format = texture.format
         val compCount = format.formatInfo.component
 
-        // TODO is better way to get component size in bits?
-        if(format.bitsPerPixel / compCount != 8 && format.bitsPerPixel % 8 == 0) {
-            System.err.println("Only textures with 8 bit per color channel are supported")
-            return false
-        }
+        when(format) {
+            Format.RGB8_UNORM_PACK8 -> {
 
+            }
+        }
         val stride = width * texture.format.bitsPerPixel / 8
 
         return stbiCall(path.toAbsolutePath().toString(), width, height, compCount, texture.data(), stride)
     }
 
-    fun savePng(texture: Texture, path: Path): Boolean {
-        return saveUsingStbi(texture, path) { file, width, height, comp, data, stride ->
-
-            STBImageWrite.stbi_write_png(file, width, height, comp, data, stride)
-        }
-    }
-
-    /**
-     * @param quality Jpg quality from 1 to 100
-     */
-    fun saveJpg(texture: Texture, path: Path, quality: Int = 80) : Boolean {
-        return saveUsingStbi(texture, path) { file, width, height, comp, data, _ ->
-            STBImageWrite.stbi_write_jpg(file, width, height, comp, data, quality)
-        }
-    }
-
-    fun saveBmp(texture: Texture, path: Path): Boolean {
-        return saveUsingStbi(texture, path) { file, width, height, comp, data, _ ->
-            STBImageWrite.stbi_write_bmp(file, width, height, comp, data)
-        }
-    }
-
-    fun saveTga(texture: Texture, path: Path) : Boolean {
-        return saveUsingStbi(texture, path) { file, width, height, comp, data, _ ->
-            STBImageWrite.stbi_write_tga(file, width, height, comp, data)
-        }
-    }
+//    /**
+//     * @param quality Jpg quality from 1 to 100
+//     */
+//    fun saveJpg(texture: Texture, path: Path, quality: Int = 80) : Boolean {
+//        return saveUsingStbi(texture, path) { file, width, height, comp, data, _ ->
+//            STBImageWrite.stbi_write_jpg(file, width, height, comp, data, quality)
+//        }
+//    }
+//
+//    fun saveBmp(texture: Texture, path: Path): Boolean {
+//        return saveUsingStbi(texture, path) { file, width, height, comp, data, _ ->
+//            STBImageWrite.stbi_write_bmp(file, width, height, comp, data)
+//        }
+//    }
+//
+//    fun saveTga(texture: Texture, path: Path) : Boolean {
+//        return saveUsingStbi(texture, path) { file, width, height, comp, data, _ ->
+//            STBImageWrite.stbi_write_tga(file, width, height, comp, data)
+//        }
+//    }
 }

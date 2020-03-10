@@ -8,6 +8,7 @@ import glm_.glm
 import glm_.i
 import glm_.vec3.Vec3i
 import kool.*
+import java.io.File
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

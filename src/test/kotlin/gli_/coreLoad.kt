@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import org.lwjgl.BufferUtils
 import java.io.FileInputStream
+import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -129,10 +130,8 @@ class coreLoad : StringSpec() {
                 val uri = uriOf(file)
                 val path = Paths.get(uri).toAbsolutePath().toString()
 
-                val fis = FileInputStream(path)
-                val bytes = fis.readBytes()
-                val buffer = BufferUtils.createByteBuffer(bytes.size).also { it.put(bytes); it.flip() }
-                fis.close()
+                val bytes = FileInputStream(path).use { it.readBytes() }
+                val buffer = ByteBuffer.wrap(bytes)
 
                 gli.load(buffer, file.substringAfterLast('.'))
             }

@@ -1,10 +1,9 @@
 import static org.gradle.internal.os.OperatingSystem.*
 
 plugins {
-    id 'maven'
     id 'java'
     id 'java-library'
-    id "org.jetbrains.kotlin.jvm" version "1.3.61"
+    id "org.jetbrains.kotlin.jvm" version "1.3.70"
     id "com.github.johnrengelman.shadow" version '5.2.0'
 }
 
@@ -14,11 +13,11 @@ group = 'com.github.kotlin_graphics'
 ext {
     moduleName = "${group}.gli"
     kotlin = 'org.jetbrains.kotlin:kotlin'
-    kotlin_version = '1.3.61'
+    kotlin_version = '1.3.70'
     kotlintest_version = '3.4.2'
-    glm_version = '1b4ac18dd1a3c23440d3f33596688aac60bc0141'
-    unsigned_version = '18131d0fe0b7465a145a4502d31452c5ae0e59a1'
-    kool_version = 'fcf04b2c03b8949d9d9a8b0a580082e927903510'
+    glm_version = 'b77a7017aabf5f9af8b567e81aa8b35a08cc1e72'
+    unsigned_version = '821f8f3784e651bf03fae5183647977bde661248'
+    kool_version = 'ec7dbd0314120a2d5bbfc0f6a9ddbdcb06ae7994'
     lwjgl_version = "3.2.3"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }
@@ -32,13 +31,25 @@ dependencies {
     implementation "$kx:kool:$kool_version"
     implementation "$kx:kotlin-unsigned:$unsigned_version"
 
-    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
+    // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
+    ["", /*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
+     "-psd", "-sgi", "-tga", "-thumbsdb", "-tiff",     /*"-reference", "-clippath", "-hdr"*/].each {
+        implementation "com.twelvemonkeys.imageio:imageio$it:3.5"
+    }
+    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
+    //implementation "org.apache.xmlgraphics:batik-transcoder:1.12"
 
-    testImplementation "${kx}.glm:glm:$glm_version"
 
-    ["", "-glfw", "-jemalloc", "-openal", "-opengl", "-stb"].each {
+    ["", "-jemalloc"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
-        runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
+        runtimeOnly "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
+    }
+
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
+    testImplementation "${kx}.glm:glm:$glm_version"
+    ["", "-jemalloc", "-opengl"].each {
+        testImplementation "org.lwjgl:lwjgl$it:$lwjgl_version"
+        testRuntimeOnly "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
     }
 }
 
@@ -76,7 +87,7 @@ compileKotlin {
     }
     // As per https://stackoverflow.com/a/47669720
     // See also https://discuss.kotlinlang.org/t/kotlin-support-for-java-9-module-system/2499/9
-    destinationDir = compileJava.destinationDir
+//    destinationDir = compileJava.destinationDir
 }
 
 compileTestKotlin {
@@ -89,10 +100,22 @@ compileTestKotlin {
 compileJava {
     dependsOn(':compileKotlin')
     doFirst {
-        options.compilerArgs = ['--module-path', classpath.asPath,]
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                "--patch-module", "$moduleName=${sourceSets["main"].output.asPath}"]
         classpath = files()
     }
 }
+
+//compileTestJava {
+//    dependsOn(':compileTestKotlin')
+//    doFirst {
+//        options.compilerArgs = [
+//                '--module-path', classpath.asPath,
+//                "--patch-module", "$moduleName=${sourceSets["main"].output.asPath}"]
+//        classpath = files()
+//    }
+//}
 
 test {
     useJUnitPlatform()
