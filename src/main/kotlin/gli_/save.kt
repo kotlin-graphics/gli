@@ -4,6 +4,7 @@ import java.net.URI
 import java.nio.*
 import java.nio.file.Path
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 
 interface save {
 
@@ -42,12 +43,14 @@ interface save {
         val format = texture.format
         val compCount = format.formatInfo.component
 
-        when(format) {
+        val image = when(format) {
             Format.RGB8_UNORM_PACK8 -> {
-
+//https://stackoverflow.com/questions/34318373/java-creating-a-bufferedimage-from-a-bytearray
             }
+            else -> return false
         }
-        val stride = width * texture.format.bitsPerPixel / 8
+//        ImageIO.wr
+//        val stride = width * texture.format.bitsPerPixel / 8
 
         return stbiCall(path.toAbsolutePath().toString(), width, height, compCount, texture.data(), stride)
     }
