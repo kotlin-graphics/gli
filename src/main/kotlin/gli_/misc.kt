@@ -33,3 +33,14 @@ fun ByteBuffer.flipY(width: Int, height: Int) {
 
 operator fun Array<dx.Format>.get(index: Format): dx.Format =
         get(index.i - Format.FIRST.i)
+
+fun BufferedImage.flipY() {
+    lateinit var scanline1: Any
+    lateinit var scanline2: Any
+    for (i in 0 until height / 2) {
+        scanline1 = raster.getDataElements(0, i, width, 1, scanline1)
+        scanline2 = raster.getDataElements(0, height - i - 1, width, 1, scanline2)
+        raster.setDataElements(0, i, width, 1, scanline2)
+        raster.setDataElements(0, height - i - 1, width, 1, scanline1)
+    }
+}

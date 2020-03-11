@@ -5,18 +5,27 @@ import org.lwjgl.system.MemoryUtil
 
 
 object gli :
+
         clear,
+
         copy,
+
         duplicate,
+
         load,
         loadDds,
         loadKmg,
         loadKtx,
+        loadImage,
+
         makeTexture,
+
         save,
         saveDds,
         saveKmg,
         saveKtx,
+        saveImage,
+
         view {
 
     @JvmField

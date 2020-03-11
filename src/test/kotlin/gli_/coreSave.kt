@@ -78,9 +78,9 @@ class coreSave : StringSpec() {
 
             val extensions = listOf("bmp", "jpg", "tga", "png")
 
-            for(ext in extensions) {
-                val filename = "temp$ext.$ext"
-                gli.save(texture, filename)
+            for (ext in extensions) {
+                val filename = "temp${ext.toUpperCase()}.$ext"
+                gli.save(texture, filename) shouldBe true
 
                 gli.load(filename)
 
