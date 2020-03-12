@@ -28,7 +28,8 @@ interface load {
         "dds" -> gli.loadDds(path)
         "kmg" -> gli.loadKmg(path)
         "ktx" -> gli.loadKtx(path)
-        "jpeg", "jpg", "png", "gif", "bmp", "tga" -> gli.loadImage(path.toFile(), flipY)
+        "bmp", "gif", "ico", "icns", "iff", "jpeg", "jpg", "pam", "pbm", "pct", "pgm", "pict", "png", "pnm", "ppm",
+        "targa", "tga", "tif", "tiff", "wbmp" -> gli.loadImage(path.toFile(), flipY)
         else -> error("unsupported extension: $ext")
     }
 
@@ -36,7 +37,8 @@ interface load {
         "dds" -> gli.loadDds(buffer)
         "kmg" -> gli.loadKmg(buffer)
         "ktx" -> gli.loadKtx(buffer)
-        "jpeg", "jpg", "png", "gif", "bmp", "tga" -> gli.loadImageFromMem(buffer, flipY)
+        "bmp", "gif", "ico", "icns", "iff", "jpeg", "jpg", "pam", "pbm", "pct", "pgm", "pict", "png", "pnm", "ppm",
+        "targa", "tga", "tif", "tiff", "wbmp" -> gli.loadImageFromMem(buffer, flipY)
         else -> error("Type not supported")
     }
 }

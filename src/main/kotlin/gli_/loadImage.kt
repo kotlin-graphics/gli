@@ -36,7 +36,7 @@ interface loadImage {
         if (flipY)
             image.flipY()
         return when (image.type) {
-            BufferedImage.TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_INT_RGB -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 val dst = data()
                 var i = 0
                 (image.raster.dataBuffer as DataBufferInt).data.forEach {
@@ -45,7 +45,7 @@ interface loadImage {
                     dst[i++] = it
                 }
             }
-            BufferedImage.TYPE_INT_ARGB -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_INT_ARGB -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // push alpha at the end
                 val dst = data()
                 var i = 0
@@ -56,7 +56,7 @@ interface loadImage {
                     dst[i++] = it ushr 24
                 }
             }
-            BufferedImage.TYPE_INT_ARGB_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_INT_ARGB_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // push alpha at the end and demultiply
                 val dst = data()
                 var i = 0
@@ -68,7 +68,7 @@ interface loadImage {
                     dst[i++] = a
                 }
             }
-            BufferedImage.TYPE_INT_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_INT_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // switch blue and red
                 val dst = data()
                 var i = 0
@@ -78,7 +78,7 @@ interface loadImage {
                     dst[i++] = it ushr 16
                 }
             }
-            BufferedImage.TYPE_3BYTE_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_3BYTE_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // switch blue and red
                 val dst = data()
                 val src = (image.raster.dataBuffer as DataBufferByte).data
@@ -88,7 +88,7 @@ interface loadImage {
                     dst[i + 2] = src[i]
                 }
             }
-            BufferedImage.TYPE_4BYTE_ABGR -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_4BYTE_ABGR -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // invert
                 val dst = data()
                 val src = (image.raster.dataBuffer as DataBufferByte).data
@@ -99,7 +99,7 @@ interface loadImage {
                     dst[i + 3] = src[i]
                 }
             }
-            BufferedImage.TYPE_4BYTE_ABGR_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_4BYTE_ABGR_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // invert and demultiply
                 val dst = data()
                 val src = (image.raster.dataBuffer as DataBufferByte).data
@@ -111,7 +111,7 @@ interface loadImage {
                     dst[i + 3] = a
                 }
             }
-            BufferedImage.TYPE_USHORT_565_RGB -> Texture(Target._2D, Format.R5G6B5_UNORM_PACK16, extent, 1, 1, 1).apply {
+            TYPE_USHORT_565_RGB -> Texture(Target._2D, Format.R5G6B5_UNORM_PACK16, extent, 1, 1, 1).apply {
                 // 1 to 1
                 val dst = data()
                 var i = 0
@@ -119,7 +119,7 @@ interface loadImage {
                     dst.putShort(i++ * Short.BYTES, it)
                 }
             }
-            BufferedImage.TYPE_USHORT_555_RGB -> Texture(Target._2D, Format.A1RGB5_UNORM_PACK16, extent, 1, 1, 1).apply {
+            TYPE_USHORT_555_RGB -> Texture(Target._2D, Format.A1RGB5_UNORM_PACK16, extent, 1, 1, 1).apply {
                 // ~ 1 to 1
                 val dst = data()
                 var i = 0
@@ -128,21 +128,21 @@ interface loadImage {
                     dst.putShort(i++ * Short.BYTES, a1rgb5)
                 }
             }
-            BufferedImage.TYPE_BYTE_GRAY -> Texture(Target._2D, Format.R8_UNORM_PACK8, extent, 1, 1, 1).apply {
+            TYPE_BYTE_GRAY -> Texture(Target._2D, Format.R8_UNORM_PACK8, extent, 1, 1, 1).apply {
                 // 1 to 1
                 val dst = data()
                 var i = 0
                 val dataBuffer = image.raster.dataBuffer as DataBufferByte
                 dataBuffer.data.forEach { dst[i++] = it }
             }
-            BufferedImage.TYPE_USHORT_GRAY -> Texture(Target._2D, Format.R16_UNORM_PACK16, extent, 1, 1, 1).apply {
+            TYPE_USHORT_GRAY -> Texture(Target._2D, Format.R16_UNORM_PACK16, extent, 1, 1, 1).apply {
                 // 1 to 1
                 val dst = data()
                 var i = 0
                 val dataBuffer = image.raster.dataBuffer as DataBufferUShort
                 dataBuffer.data.forEach { dst.putShort(i++ * Short.BYTES, it) }
             }
-            BufferedImage.TYPE_BYTE_BINARY, BufferedImage.TYPE_BYTE_INDEXED -> {
+            TYPE_BYTE_BINARY, TYPE_BYTE_INDEXED -> {
                 val c = image.colorModel as IndexColorModel
                 val colors = IntArray(c.mapSize)
                 c.getRGBs(colors)

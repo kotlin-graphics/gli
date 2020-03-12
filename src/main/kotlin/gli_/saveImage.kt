@@ -2,9 +2,7 @@ package gli_
 
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferByte
-import java.net.URI
 import java.nio.file.Path
-import java.nio.file.Paths
 import javax.imageio.ImageIO
 
 interface saveImage {
@@ -37,10 +35,13 @@ interface saveImage {
                     dst[i + 3] = src[i + 0]
                 }
             }
-            else -> return false
+            else -> error("unsupported format")
         }
 
-        return ImageIO.write(image, path.fileName.toString(), path.toFile())
+        val ext = path.fileName.toString().substringAfterLast('.')
+        val file = path.toFile()
+        file.createNewFile()
+        return ImageIO.write(image, ext, file)
     }
 
 //    /**

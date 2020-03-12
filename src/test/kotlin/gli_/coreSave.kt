@@ -3,6 +3,7 @@ package gli_
 import glm_.vec1.Vec1b
 import glm_.vec2.Vec2b
 import glm_.vec2.Vec2i
+import glm_.vec3.Vec3b
 import glm_.vec4.Vec4b
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -73,18 +74,43 @@ class coreSave : StringSpec() {
         }
 
         "using ImageIO" {
-            val texture = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4))
-            texture clear Vec4b(255, 127, 255, 255)
+            // without alpha
+            run {
+                val texture = Texture2d(Format.RGB8_UNORM_PACK8, Vec2i(4)) // no alpha, jpeg cant handle that
+                texture clear Vec3b(255, 127, 255)
 
-            val extensions = listOf("bmp", "jpg", "tga", "png")
+                // ico and bmp cant handle not 4 component images
+                // icns and wbmp always fail
+                val extensions = listOf(/*"bmp",*/ "gif", /*"ico",*/ /*"icns",*/ "iff", "jpeg", "jpg",
+                        "pam", "pbm", "pct", "pgm", "pict", "png", "pnm", "ppm", "targa", "tga", "tif", "tiff"/*, "wbmp"*/)
 
-            for (ext in extensions) {
-                val filename = "temp${ext.toUpperCase()}.$ext"
-                gli.save(texture, filename) shouldBe true
+                for (ext in extensions) {
+                    val filename = "temp.$ext"
+                    gli.save(texture, filename) shouldBe true
 
-                gli.load(filename)
+                    gli.load(filename)
 
-                Files.delete(pathOf(filename))
+                    Files.delete(pathOf(filename))
+                }
+            }
+            // with alpha
+            run {
+                val texture = Texture2d(Format.RGBA8_UNORM_PACK8, Vec2i(4))
+                texture clear Vec4b(255, 127, 255, 255)
+
+                // jpeg cant handle transparency,
+                // icns, targa and wbmp always fail
+                val extensions = listOf("bmp", "gif", "ico", /*"icns",*/ "iff", /*"jpeg", "jpg",*/
+                        "pam", "pbm", "pct", "pgm", "pict", "png", "pnm", "ppm", /*"targa", "tga",*/ "tif", "tiff"/*, "wbmp"*/)
+
+                for (ext in extensions) {
+                    val filename = "temp.$ext"
+                    gli.save(texture, filename) shouldBe true
+
+                    gli.load(filename)
+
+                    Files.delete(pathOf(filename))
+                }
             }
         }
     }

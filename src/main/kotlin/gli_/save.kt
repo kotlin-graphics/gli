@@ -18,7 +18,8 @@ interface save {
         "dds" -> gli.saveDds(texture, path)
         "kmg" -> gli.saveKmg(texture, path)
         "ktx" -> gli.saveKtx(texture, path)
-        "png", "bmp", "jpg", "tga" -> gli.saveImage(texture, path)
+        "bmp", "gif", "ico", "icns", "iff", "jpeg", "jpg", "pam", "pbm", "pct", "pgm", "pict", "png", "pnm", "ppm",
+        "targa", "tga", "tif", "tiff", "wbmp" -> gli.saveImage(texture, path)
         else -> error("unsupported extension: $ext")
     }
 

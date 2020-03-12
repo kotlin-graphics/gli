@@ -20,6 +20,8 @@ import kotlin.reflect.KClass
 
 open class Texture {
 
+    var name = ""
+
     protected var storage: Storage? = null
 
     var target = Target.INVALID
