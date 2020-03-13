@@ -73,14 +73,14 @@ object byteData : reinterpreter<Byte> {
 
 object intData : reinterpreter<Int> {
     override lateinit var data: ByteBuffer
-    override operator fun get(index: Int) = data.getInt(index * Int.BYTES)
-    override fun set(index: Int, value: Int) = data.putInt(index * Int.BYTES, value)
+    override operator fun get(index: Int) = data.getInt(index * Integer.BYTES)
+    override fun set(index: Int, value: Int) = data.putInt(index * Integer.BYTES, value)
 }
 
 object longData : reinterpreter<Long> {
     override lateinit var data: ByteBuffer
-    override operator fun get(index: Int) = data.getLong(index * Long.BYTES)
-    override fun set(index: Int, value: Long) = data.putLong(index * Long.BYTES, value)
+    override operator fun get(index: Int) = data.getLong(index * java.lang.Long.BYTES)
+    override fun set(index: Int, value: Long) = data.putLong(index * java.lang.Long.BYTES, value)
 }
 
 object vec1ubData : reinterpreter<Vec1ub> {
@@ -184,10 +184,10 @@ fun <T> getReinterpreter(clazz: KClass<*>) = when (clazz) {
 } as reinterpreter<T>
 
 fun getSize(clazz: KClass<*>) = when (clazz) {
-    java.lang.Byte::class -> Byte.BYTES
-    java.lang.Integer::class -> Int.BYTES
-    java.lang.Short::class -> Short.BYTES
-    java.lang.Long::class -> Long.BYTES
+    java.lang.Byte::class -> java.lang.Byte.BYTES
+    java.lang.Integer::class -> Integer.BYTES
+    java.lang.Short::class -> java.lang.Short.BYTES
+    java.lang.Long::class -> java.lang.Long.BYTES
     Vec1b::class -> Vec1b.size
     Vec2b::class -> Vec2b.size
     Vec3b::class -> Vec3b.size
@@ -214,56 +214,56 @@ fun getSize(clazz: KClass<*>) = when (clazz) {
 
 fun _clear(data: ByteBuffer, texel: Any) = when (texel) {
     is Byte -> for (i in 0 until data.cap) data[i] = texel
-    is Short -> for (i in 0 until data.cap step Short.BYTES) data.putShort(i, texel)
-    is Int -> for (i in 0 until data.cap step Int.BYTES) data.putInt(i, texel)
-    is Long -> for (i in 0 until data.cap step Long.BYTES) data.putLong(i, texel)
+    is Short -> for (i in 0 until data.cap step java.lang.Short.BYTES) data.putShort(i, texel)
+    is Int -> for (i in 0 until data.cap step Integer.BYTES) data.putInt(i, texel)
+    is Long -> for (i in 0 until data.cap step java.lang.Long.BYTES) data.putLong(i, texel)
     is Vec1b -> for (i in 0 until data.cap) data[i] = texel.x
     is Vec2b -> for (i in 0 until data.cap step Vec2b.size) {
         data[i] = texel.x
-        data[i + Byte.BYTES] = texel.y
+        data[i + java.lang.Byte.BYTES] = texel.y
     }
     is Vec3b -> for (i in 0 until data.cap step Vec3b.size) {
         data[i] = texel.x
-        data[i + Byte.BYTES] = texel.y
-        data[i + Byte.BYTES * 2] = texel.z
+        data[i + java.lang.Byte.BYTES] = texel.y
+        data[i + java.lang.Byte.BYTES * 2] = texel.z
     }
     is Vec4b -> for (i in 0 until data.cap step Vec4b.size) {
         data[i] = texel.x
-        data[i + Byte.BYTES] = texel.y
-        data[i + Byte.BYTES * 2] = texel.z
-        data[i + Byte.BYTES * 3] = texel.w
+        data[i + java.lang.Byte.BYTES] = texel.y
+        data[i + java.lang.Byte.BYTES * 2] = texel.z
+        data[i + java.lang.Byte.BYTES * 3] = texel.w
     }
     is Vec1ub -> for (i in 0 until data.cap) data[i] = texel.x.v
     is Vec2ub -> for (i in 0 until data.cap step Vec2ub.size) {
         data[i] = texel.x.v
-        data[i + Byte.BYTES] = texel.y.v
+        data[i + java.lang.Byte.BYTES] = texel.y.v
     }
     is Vec3ub -> for (i in 0 until data.cap step Vec3ub.size) {
         data[i] = texel.x.v
-        data[i + Byte.BYTES] = texel.y.v
-        data[i + Byte.BYTES * 2] = texel.z.v
+        data[i + java.lang.Byte.BYTES] = texel.y.v
+        data[i + java.lang.Byte.BYTES * 2] = texel.z.v
     }
     is Vec4ub -> for (i in 0 until data.cap step Vec4ub.size) {
         data[i] = texel.x.v
-        data[i + Byte.BYTES] = texel.y.v
-        data[i + Byte.BYTES * 2] = texel.z.v
-        data[i + Byte.BYTES * 3] = texel.w.v
+        data[i + java.lang.Byte.BYTES] = texel.y.v
+        data[i + java.lang.Byte.BYTES * 2] = texel.z.v
+        data[i + java.lang.Byte.BYTES * 3] = texel.w.v
     }
     is Vec1 -> for (i in 0 until data.cap step Vec1.size) data.putFloat(i, texel.x)
     is Vec2 -> for (i in 0 until data.cap step Vec2.size) {
         data.putFloat(i, texel.x)
-        data.putFloat(i + Float.BYTES, texel.y)
+        data.putFloat(i + java.lang.Float.BYTES, texel.y)
     }
     is Vec3 -> for (i in 0 until data.cap step Vec3.size) {
         data.putFloat(i, texel.x)
-        data.putFloat(i + Float.BYTES, texel.y)
-        data.putFloat(i + Float.BYTES * 2, texel.z)
+        data.putFloat(i + java.lang.Float.BYTES, texel.y)
+        data.putFloat(i + java.lang.Float.BYTES * 2, texel.z)
     }
     is Vec4 -> for (i in 0 until data.cap step Vec4.size) {
         data.putFloat(i, texel.x)
-        data.putFloat(i + Float.BYTES, texel.y)
-        data.putFloat(i + Float.BYTES * 2, texel.z)
-        data.putFloat(i + Float.BYTES * 3, texel.w)
+        data.putFloat(i + java.lang.Float.BYTES, texel.y)
+        data.putFloat(i + java.lang.Float.BYTES * 2, texel.z)
+        data.putFloat(i + java.lang.Float.BYTES * 3, texel.w)
     }
     else -> throw Error()
 }

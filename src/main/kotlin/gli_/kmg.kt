@@ -30,7 +30,7 @@ object kmg {
         var maxLevel = 0
 
         companion object {
-            val size = 16 * Int.BYTES
+            val size = 16 * Integer.BYTES
         }
 
         constructor()

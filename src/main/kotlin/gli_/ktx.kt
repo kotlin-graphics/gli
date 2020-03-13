@@ -76,7 +76,7 @@ object ktx {
             }
 
         companion object {
-            val size = 13 * Int.BYTES
+            val size = 13 * Integer.BYTES
         }
     }
 }

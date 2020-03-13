@@ -384,7 +384,7 @@ object detail {
                 .putInt(mask.w)
 
         companion object {
-            val SIZE = 4 * Int.BYTES + Vec4i.size
+            val SIZE = 4 * Integer.BYTES + Vec4i.size
         }
     }
 
@@ -411,11 +411,11 @@ object detail {
             pitch = buffer.int
             depth = buffer.int
             mipMapLevels = buffer.int
-            buffer.pos += reserved1.size * Int.BYTES
+            buffer.pos += reserved1.size * Integer.BYTES
             format = DdsPixelFormat(buffer)
             surfaceFlags = buffer.int
             cubemapFlags = buffer.int
-            buffer.pos += reserved2.size * Int.BYTES
+            buffer.pos += reserved2.size * Integer.BYTES
         }
 
         constructor()
@@ -429,16 +429,16 @@ object detail {
                     .putInt(pitch)
                     .putInt(depth)
                     .putInt(mipMapLevels)
-            data.pos += reserved1.size * Int.BYTES
+            data.pos += reserved1.size * Integer.BYTES
             format to data
             data
                     .putInt(surfaceFlags)
                     .putInt(cubemapFlags)
-            data.pos += reserved2.size * Int.BYTES
+            data.pos += reserved2.size * Integer.BYTES
         }
 
         companion object {
-            val SIZE = (7 + 11 + 2 + 3) * Int.BYTES + DdsPixelFormat.SIZE
+            val SIZE = (7 + 11 + 2 + 3) * Integer.BYTES + DdsPixelFormat.SIZE
         }
 
         init {
@@ -504,7 +504,7 @@ object detail {
                 .putInt(alphaFlags)
 
         companion object {
-            val SIZE = 5 * Int.BYTES
+            val SIZE = 5 * Integer.BYTES
         }
 
         init {
