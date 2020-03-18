@@ -23,11 +23,8 @@ interface loadImage {
     }
 
     fun loadImageFromMem(buffer: ByteBuffer, flipY: Boolean): Texture {
-
-        assert(buffer.hasArray())
-
-        val image = ImageIO.read(ByteBufferBackedInputStream(buffer))
-
+        val input = ByteBufferBackedInputStream(buffer)
+        val image = ImageIO.read(input)
         return loadImage(image, flipY)
     }
 
