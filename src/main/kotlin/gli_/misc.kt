@@ -5,10 +5,12 @@ import kool.lib.toByteArray
 import kool.pos
 import org.lwjgl.BufferUtils
 import java.awt.image.BufferedImage
+import java.io.File
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.file.Path
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 
 infix fun Int.has(b: Int) = (this and b) != 0
 infix fun Int.hasnt(b: Int) = (this and b) == 0
@@ -35,8 +37,8 @@ operator fun Array<dx.Format>.get(index: Format): dx.Format =
         get(index.i - Format.FIRST.i)
 
 fun BufferedImage.flipY() {
-    lateinit var scanline1: Any
-    lateinit var scanline2: Any
+    var scanline1: Any? = null
+    var scanline2: Any? = null
     for (i in 0 until height / 2) {
         scanline1 = raster.getDataElements(0, i, width, 1, scanline1)
         scanline2 = raster.getDataElements(0, height - i - 1, width, 1, scanline2)
@@ -44,3 +46,11 @@ fun BufferedImage.flipY() {
         raster.setDataElements(0, height - i - 1, width, 1, scanline1)
     }
 }
+
+//fun main() {
+//    val file = File("C:\\Users\\elect\\Pictures\\1.png")
+//    println(file.exists() && file.canRead())
+//    val image = ImageIO.read(file)
+//    image.flipY()
+//    ImageIO.write(image, "png", File("flipped.png"))
+//}
