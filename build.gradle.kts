@@ -16,9 +16,9 @@ val moduleName = "$group.gli"
 
 val kotestVersion = "4.2.0"
 val kx = "com.github.kotlin-graphics"
-val unsignedVersion = "87630c4d"
-val koolVersion = "3be0cc2f"
-val glmVersion = "3cb433d5"
+val unsignedVersion = "2e1fd0d7"
+val koolVersion = "0200c2a0"
+val glmVersion = "bd5f9bb7"
 val lwjglVersion = "3.2.3"
 val lwjglNatives = "natives-" + when (current()) {
     WINDOWS -> "windows"
@@ -95,6 +95,12 @@ val sourceJar = task("sourceJar", Jar::class) {
     dependsOn(tasks.classes)
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
+}
+
+artifacts {
+    archives(dokkaJavadocJar)
+    archives(dokkaHtmlJar)
+    archives(sourceJar)
 }
 
 // == Add access to the 'modular' variant of kotlin("stdlib"): Put this into a buildSrc plugin and reuse it in all your subprojects
