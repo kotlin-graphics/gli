@@ -1,8 +1,8 @@
 package gli_;
 
 import glm_.vec3.Vec3i;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.GL12C;
+import org.lwjgl.opengl.GL33C;
 
 import java.nio.IntBuffer;
 
@@ -33,11 +33,11 @@ public class test {
         IntBuffer textureName = IntBuffer(1);
         glGenTextures(textureName);
         glBindTexture(target.getI(), textureName.get(0));
-        glTexParameteri(target.getI(), GL12.GL_TEXTURE_BASE_LEVEL, 0);
-        glTexParameteri(target.getI(), GL12.GL_TEXTURE_MAX_LEVEL, texture.levels() - 1);
+        glTexParameteri(target.getI(), GL12C.GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(target.getI(), GL12C.GL_TEXTURE_MAX_LEVEL, texture.levels() - 1);
         IntBuffer swizzles = IntBuffer(4);
         texture.getSwizzles().to(swizzles);
-        glTexParameteriv(target.getI(), GL33.GL_TEXTURE_SWIZZLE_RGBA, swizzles);
+        glTexParameteriv(target.getI(), GL33C.GL_TEXTURE_SWIZZLE_RGBA, swizzles);
         Vec3i extent = texture.extent(0);
         glTexStorage2D(target.getI(), texture.levels(), format.getInternal().getI(), extent.getX(), extent.getY());
         for (int level = 0; level < texture.levels(); level++) {

@@ -4,8 +4,8 @@ import glm_.b
 import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4b
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import kool.*
 import java.nio.ByteOrder
 

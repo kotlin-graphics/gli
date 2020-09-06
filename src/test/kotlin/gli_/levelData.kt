@@ -1,6 +1,6 @@
 package gli_
 
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
 
 /**
  * Created by GBarbieri on 21.04.2017.
