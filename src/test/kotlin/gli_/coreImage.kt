@@ -3,8 +3,8 @@ package gli_
 import glm_.vec3.Vec3i
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4ub
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.core.spec.style.StringSpec
 
 /**
  * Created by elect on 08/04/17.

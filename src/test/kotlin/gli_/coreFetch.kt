@@ -9,8 +9,8 @@ import glm_.vec3.Vec3
 import glm_.vec3.Vec3b
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.core.spec.style.StringSpec
 import java.nio.file.Files
 
 class coreFetch : StringSpec() {

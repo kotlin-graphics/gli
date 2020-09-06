@@ -5,8 +5,8 @@ import glm_.vec1.*
 import glm_.vec2.*
 import glm_.vec3.*
 import glm_.vec4.*
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.core.spec.style.StringSpec
 
 /**
  * Created by GBarbieri on 04.04.2017.

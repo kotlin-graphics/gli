@@ -2,7 +2,7 @@
 //
 //import glm_.vec1.Vec1i
 //import glm_.vec4.Vec4ub
-//import io.kotlintest.specs.StringSpec
+//import io.kotest.core.spec.style.StringSpec
 //
 //class transform : StringSpec() {
 //
