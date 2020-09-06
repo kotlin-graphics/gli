@@ -238,21 +238,21 @@ class coreTexture1d : StringSpec() {
                 execute(Format.R8_SRGB_PACK8, it)
             }
 
-//            arrayOf(
-//                    Vec2ub(255, 0),
-//                    Vec2ub(255, 128),
-//                    Vec2ub(255, 255),
-//                    Vec2ub(128, 255),
-//                    Vec2ub(0, 255),
-//                    Vec2ub(0, 255),
-//                    Vec2ub(0, 0),
-//                    Vec2ub(255, 0)).let {
-//
-//                execute(Format.RG8_UINT_PACK8, it)
-//                execute(Format.RG8_UNORM_PACK8, it)
-//                execute(Format.RG8_SRGB_PACK8, it)
-//            }
-//
+            arrayOf(
+                    Vec2ub(255, 0),
+                    Vec2ub(255, 128),
+                    Vec2ub(255, 255),
+                    Vec2ub(128, 255),
+                    Vec2ub(0, 255),
+                    Vec2ub(0, 255),
+                    Vec2ub(0, 0),
+                    Vec2ub(255, 0)).let {
+
+                execute(Format.RG8_UINT_PACK8, it)
+                execute(Format.RG8_UNORM_PACK8, it)
+                execute(Format.RG8_SRGB_PACK8, it)
+            }
+
 //            arrayOf(
 //                    Vec3ub(255, 0, 0),
 //                    Vec3ub(255, 128, 0),
@@ -267,7 +267,7 @@ class coreTexture1d : StringSpec() {
 //                execute(Format.RGB8_UNORM_PACK8, it)
 //                execute(Format.RGB8_SRGB_PACK8, it)
 //            }
-//
+
 //            arrayOf(
 //                    Vec4ub(255, 0, 0, 255),
 //                    Vec4ub(255, 128, 0, 255),
