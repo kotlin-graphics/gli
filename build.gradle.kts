@@ -16,9 +16,9 @@ val moduleName = "$group.gli"
 
 val kotestVersion = "4.2.5"
 val kx = "com.github.kotlin-graphics"
-val unsignedVersion = "1e2fda82"
-val koolVersion = "b393e4c2"
-val glmVersion = "a4185eec"
+val unsignedVersion = "95391df4"
+val koolVersion = "4d2e943d"
+val glmVersion = "027b69e6"
 val lwjglVersion = "3.2.3"
 val lwjglNatives = "natives-" + when (current()) {
     WINDOWS -> "windows"
