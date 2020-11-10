@@ -40,7 +40,7 @@ dependencies {
     implementation("$kx:glm:$glmVersion")
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
-    listOf("", /*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
+    listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
             "-psd", "-sgi", "-tga", "-thumbsdb", "-tiff"/*, "-reference", "-clippath", "-hdr"*/).forEach {
         implementation("com.twelvemonkeys.imageio:imageio$it:3.5")
     }
