@@ -16,9 +16,9 @@ val moduleName = "$group.gli"
 
 val kotestVersion = "4.2.5"
 val kx = "com.github.kotlin-graphics"
-val unsignedVersion = "f2cd9c97"
-val koolVersion = "b4ff3661"
-val glmVersion = "3466fcde"
+val unsignedVersion: String by project
+val koolVersion: String by project
+val glmVersion: String by project
 val lwjglVersion = "3.2.3"
 val lwjglNatives = "natives-" + when (current()) {
     WINDOWS -> "windows"
@@ -35,8 +35,10 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("$kx:kotlin-unsigned:$unsignedVersion")
-    implementation("$kx:kool:$koolVersion")
+    implementation(platform("$kx.glm:bom:$glmVersion"))
+
+    implementation("$kx:kotlin-unsigned")
+    implementation("$kx:kool")
     implementation("$kx:glm:$glmVersion")
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
