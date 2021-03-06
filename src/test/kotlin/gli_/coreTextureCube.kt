@@ -215,218 +215,218 @@ class coreTextureCube : StringSpec() {
 
         "load store" {
 
-//            run(Format.R32_SFLOAT_PACK32, arrayOf(
-//                    Vec1(+0.0f),
-//                    Vec1(+1.0f),
-//                    Vec1(-1.0f),
-//                    Vec1(+0.5f),
-//                    Vec1(-0.5f),
-//                    Vec1(+0.2f)))
-//
-//            run(Format.RG32_SFLOAT_PACK32, arrayOf(
-//                    Vec2(-1.0f, -1.0f),
-//                    Vec2(-0.5f, -0.5f),
-//                    Vec2(+0.0f, +0.0f),
-//                    Vec2(+0.5f, +0.5f),
-//                    Vec2(+1.0f, +1.0f),
-//                    Vec2(-1.0f, +1.0f)))
-//
-//            run(Format.RGB32_SFLOAT_PACK32, arrayOf(
-//                    Vec3(-1.0f, +0.0f, +1.0f),
-//                    Vec3(-0.5f, +0.0f, +0.5f),
-//                    Vec3(-0.2f, +0.0f, +0.2f),
-//                    Vec3(-0.0f, +0.0f, +0.0f),
-//                    Vec3(+0.1f, +0.2f, +0.3f),
-//                    Vec3(-0.1f, -0.2f, -0.3f)))
-//
-//            run(Format.RGBA32_SFLOAT_PACK32, arrayOf(
-//                    Vec4(-1.0f, +0.0f, +1.0f, 1.0f),
-//                    Vec4(-0.5f, +0.0f, +0.5f, 1.0f),
-//                    Vec4(-0.2f, +0.0f, +0.2f, 1.0f),
-//                    Vec4(-0.0f, +0.0f, +0.0f, 1.0f),
-//                    Vec4(+0.1f, +0.2f, +0.3f, 1.0f),
-//                    Vec4(-0.1f, -0.2f, -0.3f, 1.0f)))
-//
-//            arrayOf(
-//                    Vec1b(-128),
-//                    Vec1b(-127),
-//                    Vec1b(+127),
-//                    Vec1b(+64),
-//                    Vec1b(-64),
-//                    Vec1b(+1)).let {
-//
-//                run(Format.R8_SINT_PACK8, it)
-//                run(Format.R8_SNORM_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec2b(-128, -96),
-//                    Vec2b(-64, 96),
-//                    Vec2b(-128, 64),
-//                    Vec2b(127, 32),
-//                    Vec2b(0, 126),
-//                    Vec2b(-48, 48)).let {
-//
-//                run(Format.RG8_UINT_PACK8, it)
-//                run(Format.RG8_UNORM_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec3b(-128, 0, 0),
-//                    Vec3b(-128, 127, 0),
-//                    Vec3b(-128, -96, 0),
-//                    Vec3b(127, -128, 0),
-//                    Vec3b(0, 127, 0),
-//                    Vec3b(0, 127, -127)).let {
-//
-//                run(Format.RGB8_SINT_PACK8, it)
-//                run(Format.RGB8_SNORM_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec4b(-127, 0, 0, 127),
-//                    Vec4b(-128, 96, 0, -128),
-//                    Vec4b(127, 64, 0, 1),
-//                    Vec4b(0, -64, 0, 2),
-//                    Vec4b(-95, 32, 0, 3),
-//                    Vec4b(95, -32, 127, 4)).let {
-//
-//                run(Format.RGBA8_SINT_PACK8, it)
-//                run(Format.RGBA8_SNORM_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec1ub(255),
-//                    Vec1ub(224),
-//                    Vec1ub(192),
-//                    Vec1ub(128),
-//                    Vec1ub(64),
-//                    Vec1ub(32)).let {
-//
-//                run(Format.R8_UINT_PACK8, it)
-//                run(Format.R8_UNORM_PACK8, it)
-//                run(Format.R8_SRGB_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec2ub(255, 0),
-//                    Vec2ub(255, 128),
-//                    Vec2ub(255, 255),
-//                    Vec2ub(128, 255),
-//                    Vec2ub(0, 255),
-//                    Vec2ub(0, 255)).let {
-//
-//                run(Format.RG8_UINT_PACK8, it)
-//                run(Format.RG8_UNORM_PACK8, it)
-//                run(Format.RG8_SRGB_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec3ub(255, 0, 0),
-//                    Vec3ub(255, 128, 0),
-//                    Vec3ub(255, 255, 0),
-//                    Vec3ub(128, 255, 0),
-//                    Vec3ub(0, 255, 0),
-//                    Vec3ub(0, 255, 255)).let {
-//
-//                run(Format.RGB8_UINT_PACK8, it)
-//                run(Format.RGB8_UNORM_PACK8, it)
-//                run(Format.RGB8_SRGB_PACK8, it)
-//            }
-//
-//            arrayOf(
-//                    Vec4ub(255, 0, 0, 255),
-//                    Vec4ub(255, 128, 0, 255),
-//                    Vec4ub(255, 255, 0, 255),
-//                    Vec4ub(128, 255, 0, 255),
-//                    Vec4ub(0, 255, 0, 255),
-//                    Vec4ub(0, 255, 255, 255)).let {
-//
-//                run(Format.RGBA8_UINT_PACK8, it)
-//                run(Format.RGBA8_UNORM_PACK8, it)
-//                run(Format.RGBA8_SRGB_PACK8, it)
-//            }
-//
-//
-//            arrayOf(
-//                    Vec1us(65535),
-//                    Vec1us(32767),
-//                    Vec1us(192),
-//                    Vec1us(128),
-//                    Vec1us(64),
-//                    Vec1us(32)).let {
-//
-//                run(Format.R16_UINT_PACK16, it)
-//                run(Format.R16_UNORM_PACK16, it)
-//            }
-//
-//            arrayOf(
-//                    Vec2us(255, 0),
-//                    Vec2us(255, 128),
-//                    Vec2us(255, 255),
-//                    Vec2us(128, 255),
-//                    Vec2us(0, 255),
-//                    Vec2us(0, 255)).let {
-//
-//                run(Format.RG16_UINT_PACK16, it)
-//                run(Format.RG16_UNORM_PACK16, it)
-//            }
-//
-//            arrayOf(
-//                    Vec3us(255, 0, 0),
-//                    Vec3us(255, 128, 0),
-//                    Vec3us(255, 255, 0),
-//                    Vec3us(128, 255, 0),
-//                    Vec3us(0, 255, 0),
-//                    Vec3us(0, 255, 255)).let {
-//
-//                run(Format.RGB16_UINT_PACK16, it)
-//                run(Format.RGB16_UNORM_PACK16, it)
-//            }
-//
-//            arrayOf(
-//                    Vec4us(255, 0, 0, 255),
-//                    Vec4us(255, 128, 0, 255),
-//                    Vec4us(255, 255, 0, 255),
-//                    Vec4us(128, 255, 0, 255),
-//                    Vec4us(0, 255, 0, 255),
-//                    Vec4us(0, 255, 255, 255)).let {
-//
-//                run(Format.RGBA16_UINT_PACK16, it)
-//                run(Format.RGBA16_UNORM_PACK16, it)
-//            }
-//
-//            run(Format.R32_UINT_PACK32, arrayOf(
-//                Vec1ui(65535),
-//                Vec1ui(32767),
-//                Vec1ui(192),
-//                Vec1ui(128),
-//                Vec1ui(64),
-//                Vec1ui(32)))
-//
-//            run(Format.RG32_UINT_PACK32, arrayOf(
-//                Vec2ui(255, 0),
-//                Vec2ui(255, 128),
-//                Vec2ui(255, 255),
-//                Vec2ui(128, 255),
-//                Vec2ui(0, 255),
-//                Vec2ui(0, 255)))
-//
-//            run(Format.RGB32_UINT_PACK32, arrayOf(
-//                Vec3ui(255, 0, 0),
-//                Vec3ui(255, 128, 0),
-//                Vec3ui(255, 255, 0),
-//                Vec3ui(128, 255, 0),
-//                Vec3ui(0, 255, 0),
-//                Vec3ui(0, 255, 255)))
-//
-//            run(Format.RGBA32_UINT_PACK32, arrayOf(
-//                Vec4ui(255, 0, 0, 255),
-//                Vec4ui(255, 128, 0, 255),
-//                Vec4ui(255, 255, 0, 255),
-//                Vec4ui(128, 255, 0, 255),
-//                Vec4ui(0, 255, 0, 255),
-//                Vec4ui(0, 255, 255, 255)))
+            run(Format.R32_SFLOAT_PACK32, arrayOf(
+                    Vec1(+0.0f),
+                    Vec1(+1.0f),
+                    Vec1(-1.0f),
+                    Vec1(+0.5f),
+                    Vec1(-0.5f),
+                    Vec1(+0.2f)))
+
+            run(Format.RG32_SFLOAT_PACK32, arrayOf(
+                    Vec2(-1.0f, -1.0f),
+                    Vec2(-0.5f, -0.5f),
+                    Vec2(+0.0f, +0.0f),
+                    Vec2(+0.5f, +0.5f),
+                    Vec2(+1.0f, +1.0f),
+                    Vec2(-1.0f, +1.0f)))
+
+            run(Format.RGB32_SFLOAT_PACK32, arrayOf(
+                    Vec3(-1.0f, +0.0f, +1.0f),
+                    Vec3(-0.5f, +0.0f, +0.5f),
+                    Vec3(-0.2f, +0.0f, +0.2f),
+                    Vec3(-0.0f, +0.0f, +0.0f),
+                    Vec3(+0.1f, +0.2f, +0.3f),
+                    Vec3(-0.1f, -0.2f, -0.3f)))
+
+            run(Format.RGBA32_SFLOAT_PACK32, arrayOf(
+                    Vec4(-1.0f, +0.0f, +1.0f, 1.0f),
+                    Vec4(-0.5f, +0.0f, +0.5f, 1.0f),
+                    Vec4(-0.2f, +0.0f, +0.2f, 1.0f),
+                    Vec4(-0.0f, +0.0f, +0.0f, 1.0f),
+                    Vec4(+0.1f, +0.2f, +0.3f, 1.0f),
+                    Vec4(-0.1f, -0.2f, -0.3f, 1.0f)))
+
+            arrayOf(
+                    Vec1b(-128),
+                    Vec1b(-127),
+                    Vec1b(+127),
+                    Vec1b(+64),
+                    Vec1b(-64),
+                    Vec1b(+1)).let {
+
+                run(Format.R8_SINT_PACK8, it)
+                run(Format.R8_SNORM_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec2b(-128, -96),
+                    Vec2b(-64, 96),
+                    Vec2b(-128, 64),
+                    Vec2b(127, 32),
+                    Vec2b(0, 126),
+                    Vec2b(-48, 48)).let {
+
+                run(Format.RG8_UINT_PACK8, it)
+                run(Format.RG8_UNORM_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec3b(-128, 0, 0),
+                    Vec3b(-128, 127, 0),
+                    Vec3b(-128, -96, 0),
+                    Vec3b(127, -128, 0),
+                    Vec3b(0, 127, 0),
+                    Vec3b(0, 127, -127)).let {
+
+                run(Format.RGB8_SINT_PACK8, it)
+                run(Format.RGB8_SNORM_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec4b(-127, 0, 0, 127),
+                    Vec4b(-128, 96, 0, -128),
+                    Vec4b(127, 64, 0, 1),
+                    Vec4b(0, -64, 0, 2),
+                    Vec4b(-95, 32, 0, 3),
+                    Vec4b(95, -32, 127, 4)).let {
+
+                run(Format.RGBA8_SINT_PACK8, it)
+                run(Format.RGBA8_SNORM_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec1ub(255),
+                    Vec1ub(224),
+                    Vec1ub(192),
+                    Vec1ub(128),
+                    Vec1ub(64),
+                    Vec1ub(32)).let {
+
+                run(Format.R8_UINT_PACK8, it)
+                run(Format.R8_UNORM_PACK8, it)
+                run(Format.R8_SRGB_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec2ub(255, 0),
+                    Vec2ub(255, 128),
+                    Vec2ub(255, 255),
+                    Vec2ub(128, 255),
+                    Vec2ub(0, 255),
+                    Vec2ub(0, 255)).let {
+
+                run(Format.RG8_UINT_PACK8, it)
+                run(Format.RG8_UNORM_PACK8, it)
+                run(Format.RG8_SRGB_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec3ub(255, 0, 0),
+                    Vec3ub(255, 128, 0),
+                    Vec3ub(255, 255, 0),
+                    Vec3ub(128, 255, 0),
+                    Vec3ub(0, 255, 0),
+                    Vec3ub(0, 255, 255)).let {
+
+                run(Format.RGB8_UINT_PACK8, it)
+                run(Format.RGB8_UNORM_PACK8, it)
+                run(Format.RGB8_SRGB_PACK8, it)
+            }
+
+            arrayOf(
+                    Vec4ub(255, 0, 0, 255),
+                    Vec4ub(255, 128, 0, 255),
+                    Vec4ub(255, 255, 0, 255),
+                    Vec4ub(128, 255, 0, 255),
+                    Vec4ub(0, 255, 0, 255),
+                    Vec4ub(0, 255, 255, 255)).let {
+
+                run(Format.RGBA8_UINT_PACK8, it)
+                run(Format.RGBA8_UNORM_PACK8, it)
+                run(Format.RGBA8_SRGB_PACK8, it)
+            }
+
+
+            arrayOf(
+                    Vec1us(65535),
+                    Vec1us(32767),
+                    Vec1us(192),
+                    Vec1us(128),
+                    Vec1us(64),
+                    Vec1us(32)).let {
+
+                run(Format.R16_UINT_PACK16, it)
+                run(Format.R16_UNORM_PACK16, it)
+            }
+
+            arrayOf(
+                    Vec2us(255, 0),
+                    Vec2us(255, 128),
+                    Vec2us(255, 255),
+                    Vec2us(128, 255),
+                    Vec2us(0, 255),
+                    Vec2us(0, 255)).let {
+
+                run(Format.RG16_UINT_PACK16, it)
+                run(Format.RG16_UNORM_PACK16, it)
+            }
+
+            arrayOf(
+                    Vec3us(255, 0, 0),
+                    Vec3us(255, 128, 0),
+                    Vec3us(255, 255, 0),
+                    Vec3us(128, 255, 0),
+                    Vec3us(0, 255, 0),
+                    Vec3us(0, 255, 255)).let {
+
+                run(Format.RGB16_UINT_PACK16, it)
+                run(Format.RGB16_UNORM_PACK16, it)
+            }
+
+            arrayOf(
+                    Vec4us(255, 0, 0, 255),
+                    Vec4us(255, 128, 0, 255),
+                    Vec4us(255, 255, 0, 255),
+                    Vec4us(128, 255, 0, 255),
+                    Vec4us(0, 255, 0, 255),
+                    Vec4us(0, 255, 255, 255)).let {
+
+                run(Format.RGBA16_UINT_PACK16, it)
+                run(Format.RGBA16_UNORM_PACK16, it)
+            }
+
+            run(Format.R32_UINT_PACK32, arrayOf(
+                Vec1ui(65535),
+                Vec1ui(32767),
+                Vec1ui(192),
+                Vec1ui(128),
+                Vec1ui(64),
+                Vec1ui(32)))
+
+            run(Format.RG32_UINT_PACK32, arrayOf(
+                Vec2ui(255, 0),
+                Vec2ui(255, 128),
+                Vec2ui(255, 255),
+                Vec2ui(128, 255),
+                Vec2ui(0, 255),
+                Vec2ui(0, 255)))
+
+            run(Format.RGB32_UINT_PACK32, arrayOf(
+                Vec3ui(255, 0, 0),
+                Vec3ui(255, 128, 0),
+                Vec3ui(255, 255, 0),
+                Vec3ui(128, 255, 0),
+                Vec3ui(0, 255, 0),
+                Vec3ui(0, 255, 255)))
+
+            run(Format.RGBA32_UINT_PACK32, arrayOf(
+                Vec4ui(255, 0, 0, 255),
+                Vec4ui(255, 128, 0, 255),
+                Vec4ui(255, 255, 0, 255),
+                Vec4ui(128, 255, 0, 255),
+                Vec4ui(0, 255, 0, 255),
+                Vec4ui(0, 255, 255, 255)))
         }
 
         "clear" {
