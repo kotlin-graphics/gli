@@ -4,19 +4,17 @@ import kx.kxImplementation
 import kx.lwjglImplementation
 
 plugins {
-    val build = "0.6.1"
+    val build = "0.6.6"
     id("kx.kotlin.11") version build
     id("kx.lwjgl") version build
     id("kx.dokka") version build
+    id("kx.jitpack") version build
     java
-    `maven-publish`
 }
 
-group = "com.github.kotlin.graphics"
 version = "0.8.3.0-17"
 
 repositories {
-    maven("https://repo.repsy.io/mvn/elect/kx")
     maven("https://jitpack.io")
 }
 
@@ -33,10 +31,4 @@ dependencies {
     //implementation "org.apache.xmlgraphics:batik-transcoder:1.12"
 
     lwjglImplementation(jemalloc, opengl)
-}
-
-publishing {
-    publications.create<MavenPublication>("mavenJava") {
-        from(components["java"])
-    }
 }
