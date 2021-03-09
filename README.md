@@ -121,3 +121,21 @@ public static int createTexture(String filename) {
 * gif
 * bmp
 * tga
+
+
+### Build-logic and platform dependencies
+
+The build logic has been extracted in dedicated [plugins](https://github.com/elect86/build-logic), as well as the versioning in specific platform [plugins](https://github.com/elect86/platforms).
+
+In order to import kool you need then to add the repository where these plugins are getting published for the time being.
+
+In Gradle KTS you can do that by adding the following to your `settings.gradle.kts`:
+
+```kotlin
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven("https://repo.repsy.io/mvn/elect/kx")
+    }
+}
+```
