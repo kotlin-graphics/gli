@@ -4,15 +4,15 @@ import kx.kxImplementation
 import kx.lwjglImplementation
 
 plugins {
-    val build = "0.6.6"
+    val build = "0.7.0+63"
     id("kx.kotlin.11") version build
     id("kx.lwjgl") version build
     id("kx.dokka") version build
-    id("kx.jitpack") version build
+    id("kx.publish") version build
     java
 }
 
-version = "0.8.3.0-17"
+version = "0.8.3.0-17+01"
 
 repositories {
     maven("https://jitpack.io")
