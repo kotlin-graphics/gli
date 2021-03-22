@@ -12,11 +12,7 @@ plugins {
     java
 }
 
-version = "0.8.3.0-16+19"
-
-repositories {
-    maven("https://jitpack.io")
-}
+version = "0.8.3.0-16+20"
 
 dependencies {
 
