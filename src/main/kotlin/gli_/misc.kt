@@ -10,6 +10,7 @@ import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
 import javax.imageio.ImageIO
 
 infix fun Int.has(b: Int) = (this and b) != 0
@@ -18,7 +19,7 @@ infix fun Int.hasnt(b: Int) = (this and b) == 0
 fun pathOf(filename: String, vararg more: String): Path = Paths.get(filename, *more)
 //fun URI.toPath(): Path = Paths.get(this)
 
-val Path.extension get() = toString().substringAfterLast(".").toLowerCase()
+val Path.extension get() = toString().substringAfterLast(".").lowercase(Locale.getDefault())
 
 fun ByteBuffer.flipY(size: Vec2i) = flipY(size.x, size.y)
 

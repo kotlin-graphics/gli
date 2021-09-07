@@ -1,22 +1,23 @@
-import kx.LwjglModules.*
-import kx.KxProject.*
-import kx.kxImplementation
-import kx.lwjglImplementation
+import kx.KxProject.glm
+import kx.KxProject.kool
+import kx.KxProject.unsigned
+import kx.Lwjgl
+import kx.Lwjgl.Modules.jemalloc
+import kx.Lwjgl.Modules.opengl
+import kx.implementation
 
 plugins {
-    val build = "0.7.0+79"
-    id("kx.kotlin.11") version build
-    id("kx.lwjgl") version build
-    id("kx.dokka") version build
+    val build = "0.7.3+41"
+    id("kx.kotlin") version build
+//    id("kx.dokka") version build
     id("kx.publish") version build
-    java
+    id("kx.dynamic-align") version build
+    id("kx.util") version build
 }
-
-version = "0.8.3.0-16+22"
 
 dependencies {
 
-    kxImplementation(unsigned, kool, glm)
+    implementation(unsigned, kool, glm)
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
     listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
@@ -26,5 +27,5 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
     //implementation "org.apache.xmlgraphics:batik-transcoder:1.12"
 
-    lwjglImplementation(jemalloc, opengl)
+    Lwjgl { implementation(jemalloc, opengl) }
 }

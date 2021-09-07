@@ -89,7 +89,7 @@ class Storage {
         val layerSize = layerSize(0, faces - 1, 0, levels - 1)
         val faceSize = faceSize(0, levels - 1)
 
-        return layerSize * layer + faceSize * face + (0 until level).sumBy { levelSize(it) }
+        return layerSize * layer + faceSize * face + (0 until level).sumOf { levelSize(it) }
     }
 
     fun imageOffset(coord: Int, extend: Int): Int {
@@ -146,7 +146,7 @@ class Storage {
         assert(baseLevel in 0 until levels)
         assert(baseLevel <= maxLevel)
         // The size of a face is the sum of the size of each level.
-        return (baseLevel..maxLevel).sumBy { levelSize(it) }
+        return (baseLevel..maxLevel).sumOf { levelSize(it) }
     }
 
     fun layerSize(baseFace: Int, maxFace: Int, baseLevel: Int, maxLevel: Int): Int {
