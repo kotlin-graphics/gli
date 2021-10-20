@@ -1,13 +1,10 @@
-import kx.KxProject.glm
-import kx.KxProject.kool
-import kx.KxProject.unsigned
-import kx.Lwjgl
+import kx.*
 import kx.Lwjgl.Modules.jemalloc
 import kx.Lwjgl.Modules.opengl
 import kx.implementation
 
 plugins {
-    val build = "0.7.3+43"
+    val build = "0.7.3+52"
     id("kx.kotlin") version build
 //    id("kx.dokka") version build
     id("kx.publish") version build
