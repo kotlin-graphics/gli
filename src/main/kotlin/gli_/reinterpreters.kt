@@ -1,6 +1,5 @@
 package gli_
 
-import glm_.BYTES
 import kool.cap
 import kool.set
 import glm_.vec1.*
@@ -156,9 +155,7 @@ object vec4uiData : reinterpreter<Vec4ui> {
 }
 
 @Suppress("UNCHECKED_CAST")
-@PublishedApi
-internal
-fun <T> getReinterpreter(clazz: KClass<*>): reinterpreter<T> = when (clazz) {
+fun <T> getReinterpreter(kClass: KClass<*>): reinterpreter<T> = when (kClass) {
     Vec1b::class -> vec1bData
     Vec2b::class -> vec2bData
     Vec3b::class -> vec3bData
@@ -185,7 +182,7 @@ fun <T> getReinterpreter(clazz: KClass<*>): reinterpreter<T> = when (clazz) {
     else -> throw Error()
 } as reinterpreter<T>
 
-fun getSize(clazz: KClass<*>) = when (clazz) {
+fun getSize(kClass: KClass<*>) = when (kClass) {
     java.lang.Byte::class -> Byte.BYTES
     java.lang.Integer::class -> Int.BYTES
     java.lang.Short::class -> Short.BYTES
@@ -211,7 +208,7 @@ fun getSize(clazz: KClass<*>) = when (clazz) {
     Vec2ui::class -> Vec2ui.size
     Vec3ui::class -> Vec3ui.size
     Vec4ui::class -> Vec4ui.size
-    else -> println(clazz).run { throw Error() }
+    else -> println(kClass).run { throw Error() }
 }
 
 fun _clear(data: ByteBuffer, texel: Any) = when (texel) {

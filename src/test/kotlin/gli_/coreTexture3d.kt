@@ -437,19 +437,19 @@ class coreTexture3d : StringSpec() {
         for (z in 0..1)
             for (y in 0..1)
                 for (x in 0..1)
-                    textureB.store(Vec3i(x, y, z), 1, testSamples[index3D(textureB, 1, x, y, z)])
+                    textureB.store(T::class, Vec3i(x, y, z), 1, testSamples[index3D(textureB, 1, x, y, z)])
 
-        val loadedSamplesA = Array<T?>(8, { null })
+        val loadedSamplesA = Array<T?>(8) { null }
         for (z in 0..1)
             for (y in 0..1)
                 for (x in 0..1)
-                    loadedSamplesA[index3D(textureB, 1, x, y, z)] = textureA.load(Vec3i(x, y, z), 1)
+                    loadedSamplesA[index3D(textureB, 1, x, y, z)] = textureA.load(T::class, Vec3i(x, y, z), 1)
 
-        val loadedSamplesB = Array<T?>(8, { null })
+        val loadedSamplesB = Array<T?>(8) { null }
         for (z in 0..1)
             for (y in 0..1)
                 for (x in 0..1)
-                    loadedSamplesB[index3D(textureB, 1, x, y, z)] = textureB.load(Vec3i(x, y, z), 1)
+                    loadedSamplesB[index3D(textureB, 1, x, y, z)] = textureB.load(T::class, Vec3i(x, y, z), 1)
 
         for (i in 0..7)
             loadedSamplesA[i] shouldBe testSamples[i]

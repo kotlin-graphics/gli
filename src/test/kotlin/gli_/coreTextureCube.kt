@@ -477,15 +477,15 @@ class coreTextureCube : StringSpec() {
         val textureB = TextureCube(format, dimensions)
         textureB.clear()
         for (faceIndex in 0..5)
-            textureB.store(Vec2i(0), faceIndex, 1, testSamples[faceIndex])
+            textureB.store(T::class, Vec2i(0), faceIndex, 1, testSamples[faceIndex])
 
-        val loadedSamplesA = Array<T?>(8, { null })
+        val loadedSamplesA = Array<T?>(8) { null }
         for (faceIndex in 0..5)
-            loadedSamplesA[faceIndex] = textureA.load<T>(Vec2i(0), faceIndex, 1)
+            loadedSamplesA[faceIndex] = textureA.load<T>(T::class, Vec2i(0), faceIndex, 1)
 
-        val loadedSamplesB = Array<T?>(8, { null })
+        val loadedSamplesB = Array<T?>(8) { null }
         for (faceIndex in 0..5)
-            loadedSamplesB[faceIndex] = textureB.load<T>(Vec2i(0), faceIndex, 1)
+            loadedSamplesB[faceIndex] = textureB.load<T>(T::class, Vec2i(0), faceIndex, 1)
 
         for (faceIndex in 0..5)
             loadedSamplesA[faceIndex] shouldBe testSamples[faceIndex]

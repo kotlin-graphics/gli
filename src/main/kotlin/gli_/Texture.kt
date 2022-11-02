@@ -230,17 +230,13 @@ open class Texture {
     }
 
     inline fun <reified T> data(layer: Int, face: Int, level: Int): reinterpreter<T> = data(T::class, layer, face, level)
-    @PublishedApi
-    internal fun <T> data(clazz: KClass<*>, layer: Int, face: Int, level: Int): reinterpreter<T> = getReinterpreter<T>(clazz).apply { data = data(layer, face, level) }
+    fun <T> data(kClass: KClass<*>, layer: Int, face: Int, level: Int): reinterpreter<T> = getReinterpreter<T>(kClass).apply { data = data(layer, face, level) }
     fun data(layer: Int, face: Int, level: Int): ByteBuffer {
         assert((notEmpty()))
         assert(layer in 0 until layers() && face in 0 until faces() && level in 0 until levels())
         val size = storage!!.levelSize(level)
         return memByteBuffer(cache.baseAddress(layer, face, level), size)
     }
-    @PublishedApi
-    internal
-    fun a() = 3
     fun extent(level: Int = 0): Vec3i {
         assert(notEmpty())
         assert(level in 0 until levels())
@@ -321,8 +317,8 @@ open class Texture {
     }
 
     inline fun <reified T> swizzles(swizzles: Swizzles) = swizzles(T::class, swizzles)
-    fun swizzles(clazz: KClass<*>, swizzles: Swizzles) {
-        when (clazz) {
+    fun swizzles(kClass: KClass<*>, swizzles: Swizzles) {
+        when (kClass) {
             Vec4b::class, Vec4ub::class -> {
                 val texel = Vec4b()
                 val data = data()
@@ -338,17 +334,17 @@ open class Texture {
 
     fun imageOffset(coord: Vec3i, extent: Vec3i) = storage!!.imageOffset(coord, extent)
     inline fun <reified T> load(texelCoord: Vec3i, layer: Int, face: Int, level: Int): T = load(T::class, texelCoord, layer, face, level)
-    fun <T> load(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
-        assert(notEmpty() && !format.isCompressed && format.blockSize == getSize(clazz))
+    fun <T> load(kClass: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int): T {
+        assert(notEmpty() && !format.isCompressed && format.blockSize == getSize(kClass))
         val imageOffset = imageOffset(texelCoord, extent(level))
         assert(imageOffset < size(level))
-        return data<T>(clazz, layer, face, level)[imageOffset]
+        return data<T>(kClass, layer, face, level)[imageOffset]
     }
 
     //    fun store(texelCoord: Vec1i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, 1, 1), layer, face, level, texel) TODO check
 //    fun store(texelCoord: Vec2i, layer: Int, face: Int, level: Int, texel: Any) = store(Vec3i(texelCoord.x, texelCoord.y, 1), layer, face, level, texel)
     inline fun <reified T> store(texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: T) = store(T::class, texelCoord, layer, face, level, texel)
-    fun <T> store(clazz: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: T) {
+    fun <T> store(kClass: KClass<*>, texelCoord: Vec3i, layer: Int, face: Int, level: Int, texel: T) {
 
         assert(notEmpty() && !format.isCompressed)
         val extent = extent(level)
@@ -356,9 +352,9 @@ open class Texture {
 
         val imageOffset = imageOffset(texelCoord, extent)
 
-        val blockSize = getSize(clazz)
+        val blockSize = getSize(kClass)
         assert(format.blockSize == blockSize && imageOffset < size(level) / blockSize)
-        data<T>(clazz, layer, face, level)[imageOffset] = texel
+        data<T>(kClass, layer, face, level)[imageOffset] = texel
     }
 
     open fun dispose() = storage?.dispose()

@@ -105,8 +105,8 @@ class Image {
      * genType size must match the block size corresponding to the image format.    */
     inline fun <reified T> size() = size(T::class)
 
-    fun size(clazz: KClass<*>): Int {
-        val blockSize = getSize(clazz)
+    fun size(kClass: KClass<*>): Int {
+        val blockSize = getSize(kClass)
         assert(blockSize <= storage!!.blockSize)
         return size / blockSize
     }
@@ -118,7 +118,7 @@ class Image {
     }
 
     inline fun <reified T> data(): reinterpreter<T> = data(T::class)
-    fun <T> data(clazz: KClass<*>) = getReinterpreter<T>(clazz).apply { data = data()!! }
+    fun <T> data(kClass: KClass<*>) = getReinterpreter<T>(kClass).apply { data = data()!! }
 
     /** Clear the entire image storage_linear with zeros    */
     fun clear() {

@@ -80,8 +80,8 @@ class Texture1d : Texture {
 
     fun extent_(level: Int = 0) = Vec1i(super.extent(level))
 
-     inline fun <reified T> load(texelCoord: Vec1i, level: Int): T = super.load<T>(Vec3i(texelCoord.x, 0, 0), 0, 0, level)
-    fun <T> load(clazz: KClass<*>, texelCoord: Vec1i, level: Int): T = super.load(clazz, Vec3i(texelCoord.x, 0, 0), 0, 0, level)
-    inline fun <reified T> store(texelCoord: Vec1i, level: Int, texel: T) = super.store(T::class, Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
-    fun <T> store(clazz: KClass<*>, texelCoord: Vec1i, level: Int, texel: T) = super.store(clazz, Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
+    internal inline fun <reified T> load(texelCoord: Vec1i, level: Int): T = super.load(Vec3i(texelCoord.x, 0, 0), 0, 0, level)
+    fun <T> load(kClass: KClass<*>, texelCoord: Vec1i, level: Int): T = super.load(kClass, Vec3i(texelCoord.x, 0, 0), 0, 0, level)
+    internal inline fun <reified T> store(texelCoord: Vec1i, level: Int, texel: T) = super.store(T::class, Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
+    fun <T> store(kClass: KClass<*>, texelCoord: Vec1i, level: Int, texel: T) = super.store(kClass, Vec3i(texelCoord.x, 0, 0), 0, 0, level, texel)
 }

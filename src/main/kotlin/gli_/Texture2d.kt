@@ -3,6 +3,7 @@ package gli_
 import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
+import kotlin.reflect.KClass
 
 /**
  * Created by GBarbieri on 03.04.2017.
@@ -59,6 +60,8 @@ class Texture2d : Texture {
 
     fun extent_(level: Int = 0) = Vec2i(super.extent(level))
 
+    internal inline fun <reified T> load(texelCoord: Vec2i, level: Int): T = super.load(Vec3i(texelCoord, 0), 0, 0, level)
+    fun <T> load(kclass: KClass<*>, texelCoord: Vec2i, level: Int): T = super.load(kclass, Vec3i(texelCoord, 0), 0, 0, level)
     internal inline fun <reified T> store(texelCoord: Vec2i, level: Int, texel: T) = super.store(Vec3i(texelCoord, 0), 0, 0, level, texel)
-    internal inline fun <reified T> load(texelCoord: Vec2i, level: Int) = super.load<T>(Vec3i(texelCoord, 0), 0, 0, level)
+    fun <T> store(kclass: KClass<*>, texelCoord: Vec2i, level: Int, texel: T) = super.store(kclass, Vec3i(texelCoord, 0), 0, 0, level, texel)
 }

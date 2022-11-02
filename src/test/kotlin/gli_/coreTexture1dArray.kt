@@ -406,12 +406,12 @@ class coreTexture1dArray : StringSpec() {
         val textureB = Texture1dArray(format, dimensions, 3)
         textureB.clear()
         testSamples.forEachIndexed { i, test ->
-            textureB.store(texelCoord[i], 2, 1, test)
+            textureB.store(T::class, texelCoord[i], 2, 1, test)
         }
 
-        val loadedSamplesA = Array(8) { textureA.load<T>(texelCoord[it], 2, 1) }
+        val loadedSamplesA = Array(8) { textureA.load<T>(T::class, texelCoord[it], 2, 1) }
 
-        val loadedSamplesB = Array(8) { textureB.load<T>(texelCoord[it], 2, 1) }
+        val loadedSamplesB = Array(8) { textureB.load<T>(T::class, texelCoord[it], 2, 1) }
 
         for (i in 0..7)
             loadedSamplesA[i] shouldBe testSamples[i]

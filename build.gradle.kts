@@ -24,7 +24,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
     listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
-            "-psd", "-sgi", "-tga", "-thumbsdb", "-tiff"/*, "-reference", "-clippath", "-hdr"*/).forEach {
+           "-psd", "-sgi", "-tga", "-thumbsdb", "-tiff"/*, "-reference", "-clippath", "-hdr"*/).forEach {
         implementation("com.twelvemonkeys.imageio:imageio$it:3.5")
     }
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
@@ -47,6 +47,7 @@ tasks {
             freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
         }
     }
+    withType<Test>().configureEach { useJUnitPlatform() }
 }
 
 publishing {

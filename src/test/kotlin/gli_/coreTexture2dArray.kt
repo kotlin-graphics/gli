@@ -497,12 +497,12 @@ class coreTexture2dArray : StringSpec() {
         val textureB = Texture2dArray(format, dimensions, 3)
         textureB.clear()
         testSamples.forEachIndexed { i, test ->
-            textureB.store(Vec2i(i % 4, i / 4), 2, 1, test)
+            textureB.store(T::class, Vec2i(i % 4, i / 4), 2, 1, test)
         }
 
-        val loadedSamplesA = Array(8, { textureA.load<T>(Vec2i(it % 4, it / 4), 2, 1) })
+        val loadedSamplesA = Array(8) { textureA.load<T>(T::class, Vec2i(it % 4, it / 4), 2, 1) }
 
-        val loadedSamplesB = Array(8, { textureB.load<T>(Vec2i(it % 4, it / 4), 2, 1) })
+        val loadedSamplesB = Array(8) { textureB.load<T>(T::class, Vec2i(it % 4, it / 4), 2, 1) }
 
         for (i in 0..7)
             loadedSamplesA[i] shouldBe testSamples[i]

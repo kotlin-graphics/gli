@@ -495,11 +495,11 @@ class coreTextureCubeArray : StringSpec() {
         val textureB = TextureCubeArray(format, dimensions, 3)
         textureB.clear()
         for (faceIndex in 0..5)
-            textureB.store(Vec2i(0), layer, faceIndex, level, testSamples[faceIndex])
+            textureB.store(T::class, Vec2i(0), layer, faceIndex, level, testSamples[faceIndex])
 
-        val loadedSamplesA = Array(6, { textureA.load<T>(Vec2i(0), layer, it, level) })
+        val loadedSamplesA = Array(6) { textureA.load<T>(T::class, Vec2i(0), layer, it, level) }
 
-        val loadedSamplesB = Array(6, { textureB.load<T>(Vec2i(0), layer, it, level) })
+        val loadedSamplesB = Array(6) { textureB.load<T>(T::class, Vec2i(0), layer, it, level) }
 
         for (faceIndex in 0..5)
             loadedSamplesA[faceIndex] shouldBe testSamples[faceIndex]

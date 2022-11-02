@@ -3,6 +3,7 @@ package gli_
 import glm_.glm
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3i
+import kotlin.reflect.KClass
 
 /**
  * Created by GBarbieri on 04.04.2017.
@@ -57,9 +58,9 @@ class Texture2dArray : Texture {
 
     fun extent_(level: Int = 0) = Vec2i(super.extent(level))
 
-    internal inline fun <reified T> load(texelCoord: Vec2i, layer: Int, level: Int) =
-            super.load<T>(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level)
+    internal inline fun <reified T> load(texelCoord: Vec2i, layer: Int, level: Int): T = super.load(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level)
+    fun <T> load(kClass: KClass<*>, texelCoord: Vec2i, layer: Int, level: Int): T = super.load(kClass, Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level)
 
-    internal inline fun <reified T> store(texelCoord: Vec2i, layer: Int, level: Int, texel: T) =
-            super.store(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level, texel)
+    internal inline fun <reified T> store(texelCoord: Vec2i, layer: Int, level: Int, texel: T) = super.store(Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level, texel)
+    fun <T> store(kClass: KClass<*>, texelCoord: Vec2i, layer: Int, level: Int, texel: T) = super.store(kClass, Vec3i(texelCoord.x, texelCoord.y, 0), layer, 0, level, texel)
 }
