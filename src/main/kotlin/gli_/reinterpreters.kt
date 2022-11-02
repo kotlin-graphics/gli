@@ -156,7 +156,9 @@ object vec4uiData : reinterpreter<Vec4ui> {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T> getReinterpreter(clazz: KClass<*>) = when (clazz) {
+@PublishedApi
+internal
+fun <T> getReinterpreter(clazz: KClass<*>): reinterpreter<T> = when (clazz) {
     Vec1b::class -> vec1bData
     Vec2b::class -> vec2bData
     Vec3b::class -> vec3bData

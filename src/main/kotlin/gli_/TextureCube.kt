@@ -55,9 +55,9 @@ class TextureCube : Texture {
 
     fun extent_(level: Int = 0) = Vec2i(super.extent(level))
 
-    inline fun <reified T> load(texelCoord: Vec2i, face: Int, level: Int) =
+    internal inline fun <reified T> load(texelCoord: Vec2i, face: Int, level: Int) =
             super.load<T>(Vec3i(texelCoord, 0), 0, face, level)
 
-    inline fun <reified T> store(texelCoord: Vec2i, face: Int, level: Int, texel: T) =
+    internal inline fun <reified T> store(texelCoord: Vec2i, face: Int, level: Int, texel: T) =
             super.store(Vec3i(texelCoord, 0), 0, face, level, texel)
 }

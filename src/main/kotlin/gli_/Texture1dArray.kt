@@ -74,9 +74,9 @@ class Texture1dArray : Texture {
 
     fun extent_(level: Int = 0) = Vec1i(super.extent(level))
 
-    inline fun <reified T> load(texelCoord: Vec1i, layer: Int, level: Int) =
+    internal inline fun <reified T> load(texelCoord: Vec1i, layer: Int, level: Int) =
             super.load<T>(Vec3i(texelCoord.x, 0, 0), layer, 0, level)
 
-    inline fun <reified T> store(texelCoord: Vec1i, layer: Int, level: Int, texel: T) =
+    internal inline fun <reified T> store(texelCoord: Vec1i, layer: Int, level: Int, texel: T) =
             super.store(Vec3i(texelCoord.x, 0, 0), layer, 0, level, texel)
 }

@@ -49,7 +49,7 @@ class Texture3d : Texture {
         return Image(storage!!, format, baseLayer, baseFace, baseLevel + level)
     }
 
-    inline fun <reified T> load(texelCoord: Vec3i, level: Int) = super.load<T>(texelCoord, 0, 0, level)
+    internal inline fun <reified T> load(texelCoord: Vec3i, level: Int) = super.load<T>(texelCoord, 0, 0, level)
 
-    inline fun <reified T> store(texelCoord: Vec3i, level: Int, texel: T) = super.store(texelCoord, 0, 0, level, texel)
+    internal inline fun <reified T> store(texelCoord: Vec3i, level: Int, texel: T) = super.store(texelCoord, 0, 0, level, texel)
 }
