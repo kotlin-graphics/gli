@@ -1,6 +1,7 @@
 package gli_
 
 import glm_.L
+import kool.Address
 import org.lwjgl.system.MemoryUtil
 
 
@@ -59,11 +60,12 @@ class Java {
 }
 
 fun memCopy(src: Long, dst: Long, bytes: Int) = MemoryUtil.memCopy(src, dst, bytes.L)
+fun memCopy(src: Address, dst: Address, bytes: Int) = memCopy(src.toLong(), dst.toLong(), bytes)
 
 
 const val GLI_VERSION_MAJOR = 0
 const val GLI_VERSION_MINOR = 8
 const val GLI_VERSION_PATCH = 3
 const val GLI_VERSION_REVISION = 0
-const val GLI_VERSION_BUILD = 18
+const val GLI_VERSION_BUILD = 19
 const val GLI_VERSION = GLI_VERSION_MAJOR * 1_000 + GLI_VERSION_MINOR * 100 + GLI_VERSION_PATCH * 10 + GLI_VERSION_REVISION + GLI_VERSION_BUILD / 10f

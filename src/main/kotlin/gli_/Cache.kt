@@ -38,7 +38,7 @@ class Cache {
 
                     val index = indexCache(layer, face, level)
                     val offset = storage.baseOffset(baseLayer + layer, baseFace + face, baseLevel + level)
-                    baseAddresses[index] = storage.data().adr + offset
+                    baseAddresses[index] = storage.data().adr.toLong() + offset
                 }
 
         for (level in 0 until levels) {

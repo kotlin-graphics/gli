@@ -5,6 +5,7 @@ import gli_.detail.FORMAT_PROPERTY_BGRA_TYPE_BIT
 import gli_.gl.ExternalFormat.*
 import gli_.gl.InternalFormat.*
 import gli_.gl.TypeFormat.*
+import glm_.has
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import gli_.gl.ExternalFormat.NONE as NONE_

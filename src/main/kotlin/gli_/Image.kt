@@ -39,7 +39,7 @@ class Image {
         storage = Storage(format, extent, 1, 1, 1)
         this.format = format
         baseLevel = 0
-        data = MemoryUtil.memByteBuffer(storage!!.data().adr, storage!!.data().remaining())
+        data = memByteBuffer(storage!!.data().adr.toLong(), storage!!.data().remaining())
         size = computeSize(0)
     }
 
@@ -51,7 +51,7 @@ class Image {
         storage = Storage(image.storage!!)
         this.format = format
         baseLevel = image.baseLevel
-        data = MemoryUtil.memByteBuffer(image.data!!.adr, image.data!!.remaining())
+        data = memByteBuffer(image.data!!.adr.toLong(), image.data!!.remaining())
         size = image.size
         assert(format.blockSize == image.format.blockSize)
     }
@@ -71,7 +71,7 @@ class Image {
 
     fun computeData(baseLayer: Int, baseFace: Int, baseLevel: Int): ByteBuffer {
         val baseOffset = storage!!.baseOffset(baseLayer, baseFace, baseLevel)
-        return memByteBuffer(storage!!.data().adr + baseOffset, storage!!.data().remaining() - baseOffset)
+        return memByteBuffer(storage!!.data().adr.toLong() + baseOffset, storage!!.data().remaining() - baseOffset)
     }
 
     fun computeSize(level: Int): Int {

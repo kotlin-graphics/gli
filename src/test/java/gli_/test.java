@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL33C;
 import java.nio.IntBuffer;
 
 import static gli_.Java.gli;
-import static kool.Fake_constructorsKt.IntBuffer;
+import static kool.BuildersKt.IntBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.glCompressedTexSubImage2D;
 import static org.lwjgl.opengl.GL42.glTexStorage2D;

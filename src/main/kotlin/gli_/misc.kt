@@ -1,20 +1,11 @@
 package gli_
 
 import glm_.vec2.Vec2i
-import kool.lib.toByteArray
-import kool.pos
-import org.lwjgl.BufferUtils
 import java.awt.image.BufferedImage
-import java.io.File
-import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
-import javax.imageio.ImageIO
-
-infix fun Int.has(b: Int) = (this and b) != 0
-infix fun Int.hasnt(b: Int) = (this and b) == 0
 
 fun pathOf(filename: String, vararg more: String): Path = Paths.get(filename, *more)
 //fun URI.toPath(): Path = Paths.get(this)
@@ -34,8 +25,7 @@ fun ByteBuffer.flipY(width: Int, height: Int) {
         }
 }
 
-operator fun Array<dx.Format>.get(index: Format): dx.Format =
-        get(index.i - Format.FIRST.i)
+operator fun Array<dx.Format>.get(index: Format): dx.Format = get(index.i - Format.FIRST.i)
 
 fun BufferedImage.flipY() {
     var scanline1: Any? = null

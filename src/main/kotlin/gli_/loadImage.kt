@@ -1,5 +1,6 @@
 package gli_
 
+import glm_.b
 import glm_.or
 import glm_.vec3.Vec3i
 import kool.*
@@ -37,9 +38,9 @@ interface loadImage {
                 val dst = data()
                 var i = 0
                 (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                    dst[i++] = it ushr 16
-                    dst[i++] = it ushr 8
-                    dst[i++] = it
+                    dst[i++] = (it ushr 16).b
+                    dst[i++] = (it ushr 8).b
+                    dst[i++] = it.b
                 }
             }
             TYPE_INT_ARGB -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
@@ -47,10 +48,10 @@ interface loadImage {
                 val dst = data()
                 var i = 0
                 (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                    dst[i++] = it ushr 16
-                    dst[i++] = it ushr 8
-                    dst[i++] = it
-                    dst[i++] = it ushr 24
+                    dst[i++] = (it ushr 16).b
+                    dst[i++] = (it ushr 8).b
+                    dst[i++] = it.b
+                    dst[i++] = (it ushr 24).b
                 }
             }
             TYPE_INT_ARGB_PRE -> Texture(Target._2D, Format.RGBA8_UNORM_PACK8, extent, 1, 1, 1).apply {
@@ -59,10 +60,10 @@ interface loadImage {
                 var i = 0
                 (image.raster.dataBuffer as DataBufferInt).data.forEach {
                     val a = it ushr 24
-                    dst[i++] = (it ushr 16) / a
-                    dst[i++] = (it ushr 8) / a
-                    dst[i++] = it / a
-                    dst[i++] = a
+                    dst[i++] = ((it ushr 16) / a).b
+                    dst[i++] = ((it ushr 8) / a).b
+                    dst[i++] = (it / a).b
+                    dst[i++] = a.b
                 }
             }
             TYPE_INT_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
@@ -70,9 +71,9 @@ interface loadImage {
                 val dst = data()
                 var i = 0
                 (image.raster.dataBuffer as DataBufferInt).data.forEach {
-                    dst[i++] = it
-                    dst[i++] = it ushr 8
-                    dst[i++] = it ushr 16
+                    dst[i++] = it.b
+                    dst[i++] = (it ushr 8).b
+                    dst[i++] = (it ushr 16).b
                 }
             }
             TYPE_3BYTE_BGR -> Texture(Target._2D, Format.RGB8_UNORM_PACK8, extent, 1, 1, 1).apply {
@@ -102,9 +103,9 @@ interface loadImage {
                 val src = (image.raster.dataBuffer as DataBufferByte).data
                 for (i in src.indices step 4) {
                     val a = src[i]
-                    dst[i] = src[i + 3] / a
-                    dst[i + 1] = src[i + 2] / a
-                    dst[i + 2] = src[i + 1] / a
+                    dst[i] = (src[i + 3] / a).b
+                    dst[i + 1] = (src[i + 2] / a).b
+                    dst[i + 2] = (src[i + 1] / a).b
                     dst[i + 3] = a
                 }
             }

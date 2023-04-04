@@ -374,7 +374,7 @@ class coreTexture : StringSpec() {
                             for (layerIndex in 0 until it.layers())
                                 for (levelIndex in 0 until it.levels()) {
                                     val baseAddress = it.data(layerIndex, 0, levelIndex).adr
-                                    error += if (baseAddress != NULL) 0 else 1
+                                    error += if (baseAddress != 0uL) 0 else 1
                                 }
                         }
                 }
@@ -433,7 +433,7 @@ class coreTexture : StringSpec() {
                                     error += if (extent.x != 0) 0 else 1
                                     error += if (extent.y != 0) 0 else 1
                                     error += if (size != 0) 0 else 1
-                                    error += if (baseAddress != NULL) 0 else 1
+                                    error += if (baseAddress != 0uL) 0 else 1
                                 }
                         }
                 }
@@ -459,7 +459,7 @@ class coreTexture : StringSpec() {
                             for (layerIndex in 0 until it.layers())
                                 for (levelIndex in 0 until it.levels()) {
                                     val baseAddress = it.data(layerIndex, 0, levelIndex).adr
-                                    error += if (baseAddress != NULL) 0 else 1
+                                    error += if (baseAddress != 0uL) 0 else 1
                                 }
                         }
                 }
@@ -518,7 +518,7 @@ class coreTexture : StringSpec() {
                                     error += if (extent.x != 0) 0 else 1
                                     error += if (extent.y != 0) 0 else 1
                                     error += if (size != 0) 0 else 1
-                                    error += if (baseAddress != NULL) 0 else 1
+                                    error += if (baseAddress != 0uL) 0 else 1
                                 }
                         }
                 }

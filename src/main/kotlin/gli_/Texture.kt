@@ -262,7 +262,7 @@ open class Texture {
             blockData: T
     ) {
         val baseOffset = storage!!.baseOffset(layer, face, level)
-        val baseAddress = storage!!.data().adr + baseOffset
+        val baseAddress = storage!!.data().adr.toLong() + baseOffset
 
         val blockOffset = texelOffset / storage!!.blockExtent
         val blockExtent = texelExtent / storage!!.blockExtent + blockOffset
