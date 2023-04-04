@@ -125,4 +125,15 @@ public static int createTexture(String filename) {
 
 ### How to retrieve it:
 
-You can find all the instructions by [mary](https://github.com/kotlin-graphics/mary)
+```kotlin
+repositories {
+    maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
+    // or with magik plugin
+    //github("kotlin-graphics/mary")
+}
+dependencies {
+    implementation("kotlin.graphics:gli:0.8.3.0-20")
+}
+```
+
+You can find more info by [mary](https://github.com/kotlin-graphics/mary)

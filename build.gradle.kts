@@ -9,6 +9,7 @@ plugins {
     id("org.lwjgl.plugin") version "0.0.34"
     id("elect86.magik") version "0.3.2"
     `maven-publish`
+//    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
@@ -18,7 +19,7 @@ repositories {
 
 dependencies {
 
-    api("kotlin.graphics:glm:0.9.9.1-6")
+    api("kotlin.graphics:glm:0.9.9.1-7")
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
     listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
@@ -38,9 +39,7 @@ kotlin.jvmToolchain { languageVersion.set(JavaLanguageVersion.of(8)) }
 
 tasks {
     withType<KotlinCompile<*>>().all {
-        kotlinOptions {
-            freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
-        }
+        kotlinOptions { freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn") }
     }
     test { useJUnitPlatform() }
 }
