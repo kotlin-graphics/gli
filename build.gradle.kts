@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
 
-    api("kotlin.graphics:glm:0.9.9.1-7")
+    api("kotlin.graphics:glm:0.9.9.1-8")
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
     listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
