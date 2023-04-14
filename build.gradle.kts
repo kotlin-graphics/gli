@@ -9,7 +9,7 @@ plugins {
     id("org.lwjgl.plugin") version "0.0.34"
     id("elect86.magik") version "0.3.2"
     `maven-publish`
-//    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
@@ -24,7 +24,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
     listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
            "-psd", "-sgi", "-tga", "-thumbsdb", "-tiff"/*, "-reference", "-clippath", "-hdr"*/).forEach {
-        implementation("com.twelvemonkeys.imageio:imageio$it:3.5")
+        implementation("com.twelvemonkeys.imageio:imageio$it:3.9.4")
     }
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
     //implementation "org.apache.xmlgraphics:batik-transcoder:1.12"

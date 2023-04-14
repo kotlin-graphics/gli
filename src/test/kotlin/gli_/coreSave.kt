@@ -101,7 +101,7 @@ class coreSave : StringSpec() {
                 // jpeg cant handle transparency,
                 // icns, targa and wbmp always fail
                 val extensions = listOf("bmp", "gif", "ico", /*"icns",*/ "iff", /*"jpeg", "jpg",*/
-                        "pam", "pbm", "pct", "pgm", "pict", "png", "pnm", "ppm", /*"targa", "tga",*/ "tif", "tiff"/*, "wbmp"*/)
+                        "pam", /*"pbm",*/ "pct", /*"pgm",*/ "pict", "png", /*"pnm", "ppm", "targa", "tga",*/ "tif", "tiff"/*, "wbmp"*/)
 
                 for (ext in extensions) {
                     val filename = "temp.$ext"

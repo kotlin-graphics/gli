@@ -1,11 +1,8 @@
 package gli_
 
-import java.awt.image.BufferedImage
-import java.awt.image.DataBufferByte
 import java.net.URI
 import java.nio.file.Path
 import java.nio.file.Paths
-import javax.imageio.ImageIO
 
 interface save {
 
