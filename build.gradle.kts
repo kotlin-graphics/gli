@@ -9,7 +9,7 @@ plugins {
     id("org.lwjgl.plugin") version "0.0.34"
     id("elect86.magik") version "0.3.2"
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+//    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
 
-    api("kotlin.graphics:glm:0.9.9.1-9")
+    api("kotlin.graphics:glm:0.9.9.1-10")
 
     // https://mvnrepository.com/artifact/com.twelvemonkeys.imageio/imageio-core
     listOf(/*"-batik",*/ "-bmp", "-core", "-icns", "-iff", "-jpeg", "-metadata", "-pcx", "-pdf", "-pict", "-pnm",
